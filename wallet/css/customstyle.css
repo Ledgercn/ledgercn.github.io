@@ -1,0 +1,15 @@
+.btn-my{
+    width: 60px;
+    height: 60px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    background: rgba(200,200,200,0.5);
+    color: rgba(0,0,0,0.5);
+    border: 1px solid;
+}
+
+.btn-my:hover {
+    background: rgba(128,128,128,0.5);
+    border: none;
+}
