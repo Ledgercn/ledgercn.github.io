@@ -1032,7 +1032,7 @@ function middleContextController($scope, $rootScope, $cookieStore, $http, $q, LA
                 }];
             } else {
                 $scope.innerContexts = [{
-                    title:'Please add public address form "Account" menu',
+                    title:'Please add public address from "Account" menu',
                     actived:"active"
                 }];
             }
