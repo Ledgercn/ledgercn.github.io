@@ -11,12 +11,11 @@
 
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
     <!--<link href="css/docs.min.css" rel="stylesheet" type="text/css">-->
-    <link href="//cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
     <link  href="css/customstyle.css" rel="stylesheet">
 
     <!--[if lt IE 9]>
-    <link href="//cdn.bootcss.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet">
     <script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
     <![endif]-->
     <script src="//cdn.bootcss.com/angular.js/1.4.7/angular.min.js"></script>
@@ -26,7 +25,7 @@
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <script src="js/stellar-base/stellar-base.min.js"></script>
 </head>
-<body onpageshow="walletbody.loading()" ng-app="myApp">
+<body onpageshow="walletbody.loading()" ng-app="homeapp">
     <div ng-controller="languageController">
         <i ng-model="currlanguage" ng-hide="true">{{currlanguage}}</i>
     </div>
@@ -34,260 +33,260 @@
     <!-- 顶部菜单 -->
     <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
         <div class="container-fluid" ng-controller="topMenuController as tMC">
-            <a class="navbar-brand icon-reply navbar-left" href="../index.html" ng-model="toMenuTitle"> {{toMenuTitle}}</a>
+            <a class="navbar-brand fa fa-reply navbar-left" href="/" ng-model="toMenuTitle"> {{toMenuTitle}}</a>
 
             <a type="button" class="btn navbar-brand navbar-right pull-right" ng-click="ChangeLanguageClick()">{{languageTitle}}</a>
         </div>
     </header>
 
     <div class="container-fluid" >
-        <!-- 中间部分 -->
-        <div class="row" style="padding-top: 50px">
-            <div class="bs-example" data-example-id="carousel-with-captions">
-                <div id="account-slide" class="carousel slide" data-ride="carousel"  ng-controller="middleContextController as mCC">
-                    <ol class="carousel-indicators">
-                        <li data-target="#account-slide" ng-repeat="indicate in indicators" data-slide-to="{{$index}}" class="{{indicate.actived}}"></li>
-                    </ol>
+    <!-- 中间部分 -->
+    <div class="row" style="padding-top: 50px">
+        <div class="bs-example" data-example-id="carousel-with-captions">
+            <div id="account-slide" class="carousel slide" data-ride="carousel"  ng-controller="middleContextController as mCC">
+                <ol class="carousel-indicators">
+                    <li data-target="#account-slide" ng-repeat="indicate in indicators" data-slide-to="{{$index}}" class="{{indicate.actived}}"></li>
+                </ol>
 
-                    <div class="carousel-inner" role="listbox">
-                        <div ng-repeat="innerContext in innerContexts" class="item {{innerContext.actived}} container-fluid" style="min-height: {{minHeight}}px">
-                            <div class="col-xs-1"></div>
-                            <div class="col-xs-10">
-                                <h3 class="text-center">{{innerContext.title}}</h3>
-                                <ul class="list-group" ng-show="innerContext.balance">
-                                    <li class="list-group-item text-center">
-                                        <a type="button" ng-click="innerContext.refreshClick($index)" class="btn {{innerContext.refreshBtnIcon}}" ></a>
-                                        <i style="word-wrap:break-word; word-break:normal;"> {{innerContext.balance}}:{{innerContext.balanceUnin.balanceValue}}</i>
-                                    </li>
+                <div class="carousel-inner" role="listbox">
+                    <div ng-repeat="innerContext in innerContexts" class="item {{innerContext.actived}} container-fluid" style="min-height: {{minHeight}}px">
+                        <div class="col-xs-1"></div>
+                        <div class="col-xs-10">
+                            <h3 class="text-center">{{innerContext.title}}</h3>
+                            <ul class="list-group" ng-show="innerContext.balance">
+                                <li class="list-group-item text-center">
+                                    <a type="button" ng-click="innerContext.refreshClick($index)" class="btn {{innerContext.refreshBtnIcon}}" ></a>
+                                    <i style="word-wrap:break-word; word-break:normal;"> {{innerContext.balance}}:{{innerContext.balanceUnin.balanceValue}}</i>
+                                </li>
 
-                                    <!-- 操作按键显示界面 -->
-                                    <li class="list-group-item text-center">
-                                        <button class="btn btn-my" data-toggle="tooltip" title="{{innerContext.searchBtnTooltip}}"
-                                                ng-click="innerContext.quaryInfo.viewShow = !innerContext.quaryInfo.viewShow">
-                                            <i class="icon-search icon-2x"></i>
-                                        </button>
-                                        <button class="btn btn-my" data-toggle="tooltip" title="{{innerContext.paymentBtnTooltip}}"
-                                                ng-click="innerContext.paymentInfo.viewShow = !innerContext.paymentInfo.viewShow">
-                                            <i class="icon-credit-card icon-2x"></i>
-                                        </button>
-                                        <button class="btn btn-my" data-toggle="tooltip" title="{{innerContext.mergeBtnTooltip}}"
-                                                ng-click="innerContext.mergeInfo.viewShow = !innerContext.mergeInfo.viewShow">
-                                            <i class="icon-magnet icon-2x"></i>
-                                        </button>
-                                    </li>
+                                <!-- 操作按键显示界面 -->
+                                <li class="list-group-item text-center">
+                                    <button class="btn btn-my" data-toggle="tooltip" title="{{innerContext.searchBtnTooltip}}"
+                                            ng-click="innerContext.quaryInfo.viewShow = !innerContext.quaryInfo.viewShow">
+                                        <i class="fa fa-search fa-2x"></i>
+                                    </button>
+                                    <button class="btn btn-my" data-toggle="tooltip" title="{{innerContext.paymentBtnTooltip}}"
+                                            ng-click="innerContext.paymentInfo.viewShow = !innerContext.paymentInfo.viewShow">
+                                        <i class="fa fa-credit-card fa-2x"></i>
+                                    </button>
+                                    <button class="btn btn-my" data-toggle="tooltip" title="{{innerContext.mergeBtnTooltip}}"
+                                            ng-click="innerContext.mergeInfo.viewShow = !innerContext.mergeInfo.viewShow">
+                                        <i class="fa fa-magnet fa-2x"></i>
+                                    </button>
+                                </li>
 
-                                    <!-- 账户基本信息显示页面 -->
-                                    <li class="list-group-item">
-                                        <div class="alert alert-danger" role="modal" ng-show="innerContext.errorMessage">
-                                            <a href="#" class="close icon-remove" data-dismiss="modal" ng-click="innerContext.errorMessage = '' "></a>
-                                            <strong>Error!</strong> {{innerContext.errorMessage}}
-                                        </div>
-                                        <div class="well-sm text-left" role="modal" ng-show="innerContext.datas">
-                                            <a href="#" class="close icon-remove" data-dismiss="modal" ng-click="innerContext.datas = '' "></a>
+                                <!-- 账户基本信息显示页面 -->
+                                <li class="list-group-item">
+                                    <div class="alert alert-danger" role="modal" ng-show="innerContext.errorMessage">
+                                        <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="innerContext.errorMessage = '' "></a>
+                                        <strong>Error!</strong> {{innerContext.errorMessage}}
+                                    </div>
+                                    <div class="well-sm text-left" role="modal" ng-show="innerContext.datas">
+                                        <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="innerContext.datas = '' "></a>
                                             <textarea ng-model="innerContext.datas" class="form-control text-left" rows="{{innerContext.dataRows}}" readonly>
                                             </textarea>
-                                        </div>
-                                        <div ng-show="innerContext.balanceUnin.credits.length">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Code</th>
-                                                        <th>balance</th>
-                                                        <!--<th>issuer</th>-->
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr ng-repeat="credit in innerContext.balanceUnin.credits">
-                                                        <th scope="row">{{$index+1}}</th>
-                                                        <td>{{credit.asset_code}}</td>
-                                                        <td>{{credit.balance}}</td>
-                                                        <!--<td>{{credit.issuer}}</td>-->
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </li>
+                                    </div>
+                                    <div ng-show="innerContext.balanceUnin.credits.length">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Code</th>
+                                                <th>balance</th>
+                                                <!--<th>issuer</th>-->
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="credit in innerContext.balanceUnin.credits">
+                                                <th scope="row">{{$index+1}}</th>
+                                                <td>{{credit.asset_code}}</td>
+                                                <td>{{credit.balance}}</td>
+                                                <!--<td>{{credit.issuer}}</td>-->
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </li>
 
-                                    <!-- Search配置页面 -->
-                                    <li class="list-group-item" ng-show="innerContext.quaryInfo.viewShow" style="margin: 0;padding: 0">
+                                <!-- Search配置页面 -->
+                                <li class="list-group-item" ng-show="innerContext.quaryInfo.viewShow" style="margin: 0;padding: 0">
 
-                                        <div class="panel-group" id="{{innerContext.quaryInfo.resultPanelID}}" role="tablist" aria-multiselectable="true">
-                                            <div class="panel text-center">
-                                                <a type="button" class="btn" ng-click="innerContext.quaryClick($index)">
-                                                    <h4><i class="{{innerContext.quaryInfo.btnStatus}}"></i> {{innerContext.quaryInfo.quaryBtnTitle}}</h4>
-                                                </a>
+                                    <div class="panel-group" id="{{innerContext.quaryInfo.resultPanelID}}" role="tablist" aria-multiselectable="true">
+                                        <div class="panel text-center">
+                                            <a type="button" class="btn" ng-click="innerContext.quaryClick($index)">
+                                                <h4><i class="{{innerContext.quaryInfo.btnStatus}}"></i> {{innerContext.quaryInfo.quaryBtnTitle}}</h4>
+                                            </a>
+                                        </div>
+                                        <div class="panel panel-info" ng-repeat="s_result in innerContext.quaryInfo.quaryResults">
+                                            <div class="panel-heading" role="tab" id="{{innerContext.quaryInfo.resultPanelID}}_SR_Head_ID_{{$index}}">
+                                                <h4 class="panel-title">
+                                                    <a role="button" data-toggle="collapse" data-parent="#{{innerContext.quaryInfo.resultPanelID}}"
+                                                       href="#{{innerContext.quaryInfo.resultPanelID}}_SR_Context_ID_{{$index}}" aria-expanded="false" aria-controls="{{innerContext.quaryInfo.resultPanelID}}_SR_Context_ID_{{$index}}">
+                                                        {{s_result.Title}}
+                                                    </a>
+                                                </h4>
                                             </div>
-                                            <div class="panel panel-info" ng-repeat="s_result in innerContext.quaryInfo.quaryResults">
-                                                <div class="panel-heading" role="tab" id="{{innerContext.quaryInfo.resultPanelID}}_SR_Head_ID_{{$index}}">
-                                                    <h4 class="panel-title">
-                                                        <a role="button" data-toggle="collapse" data-parent="#{{innerContext.quaryInfo.resultPanelID}}"
-                                                           href="#{{innerContext.quaryInfo.resultPanelID}}_SR_Context_ID_{{$index}}" aria-expanded="false" aria-controls="{{innerContext.quaryInfo.resultPanelID}}_SR_Context_ID_{{$index}}">
-                                                            {{s_result.Title}}
-                                                        </a>
-                                                    </h4>
-                                                </div>
-                                                <div id="{{innerContext.quaryInfo.resultPanelID}}_SR_Context_ID_{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{innerContext.quaryInfo.resultPanelID}}_SR_Head_ID_{{$index}}">
-                                                    <div class="panel-body" style="padding: 0;margin: 0">
-                                                        <textarea ng-model="s_result.Details" class="form-control text-left" rows="{{s_result.DetailRows}}" readonly></textarea>
-                                                        <!--{{s_result.Details}}-->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <nav ng-show="!innerContext.quaryInfo.quaryBtnVisible">
-                                            <ul class="pager" style="padding: 0 10px">
-                                                <li class="previous"><a class="btn" ng-click="innerContext.quaryClick($index,false)"><span class="icon-double-angle-left"></span> {{innerContext.quaryInfo.quaryPrevTitle}}</a></li>
-                                                <li class="next"><a class="btn" ng-click="innerContext.quaryClick($index,true)">{{innerContext.quaryInfo.quaryNextTitle}} <span class="icon-double-angle-right"></span></a></li>
-                                            </ul>
-                                        </nav>
-                                    </li>
-
-                                    <!-- Payment配置页面 -->
-                                    <li class="list-group-item" ng-show="innerContext.paymentInfo.viewShow"  style="margin: 0;padding: 0">
-                                        <div class="input-group">
-                                            <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
-                                                <div class="input-group col-xs-12" style="padding: 5px">
-                                                    <span class="icon-home"> {{innerContext.paymentInfo.destAddrTitle}}</span>
-                                                    <input type="text" class="form-control" ng-model="innerContext.paymentInfo.destAddr" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.destAddrTitle}}(G...)"
-                                                           onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="innerContext.paymentInfo.destAddr = innerContext.paymentInfo.destAddr.toUpperCase()">
-                                                </div>
-                                                <div class="input-group col-xs-12" style="padding: 5px">
-                                                    <span class="icon-money"> {{innerContext.paymentInfo.amountTitle}}</span>
-                                                    <input type="text" class="form-control" ng-model="innerContext.paymentInfo.amount" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.amountTitle}}(xx.xx)"
-                                                           onkeyup="value=value.replace(/[^\d|.]/g,'')">
-                                                </div>
-                                                <div class="input-group col-xs-12" style="padding: 5px">
-                                                    <span class="icon-pencil"> {{innerContext.paymentInfo.skeyTitle}}</span>
-                                                    <input type="password" class="form-control" ng-model="innerContext.paymentInfo.skey" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.skeyTitle}}(S...)"
-                                                           onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="innerContext.paymentInfo.skey = innerContext.paymentInfo.skey.toUpperCase()">
-                                                </div>
-                                                <div class="input-group col-xs-12" style="padding: 5px">
-                                                    <span class="icon-edit"> {{innerContext.paymentInfo.tmemoTitle}}</span>
-                                                    <input type="text" class="form-control" ng-model="innerContext.paymentInfo.tmemo" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.tmemoTitle}}">
+                                            <div id="{{innerContext.quaryInfo.resultPanelID}}_SR_Context_ID_{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="{{innerContext.quaryInfo.resultPanelID}}_SR_Head_ID_{{$index}}">
+                                                <div class="panel-body" style="padding: 0;margin: 0">
+                                                    <textarea ng-model="s_result.Details" class="form-control text-left" rows="{{s_result.DetailRows}}" readonly></textarea>
+                                                    <!--{{s_result.Details}}-->
                                                 </div>
                                             </div>
-                                            <span class="input-group-addon"><a type="button" class="btn" data-dismiss="modal" ng-click="innerContext.paymentClick($index)"><i class="{{innerContext.paymentInfo.btnStatus}} icon-2x"></i> </a></span>
                                         </div>
-                                    </li>
+                                    </div>
+                                    <nav ng-show="!innerContext.quaryInfo.quaryBtnVisible">
+                                        <ul class="pager" style="padding: 0 10px">
+                                            <li class="previous"><a class="btn" ng-click="innerContext.quaryClick($index,false)"><span class="fa fa-double-angle-left"></span> {{innerContext.quaryInfo.quaryPrevTitle}}</a></li>
+                                            <li class="next"><a class="btn" ng-click="innerContext.quaryClick($index,true)">{{innerContext.quaryInfo.quaryNextTitle}} <span class="fa fa-double-angle-right"></span></a></li>
+                                        </ul>
+                                    </nav>
+                                </li>
 
-                                    <!-- Merge配置页面 -->
-                                    <li class="list-group-item" ng-show="innerContext.mergeInfo.viewShow"  style="margin: 0;padding: 0">
-                                        <div class="input-group">
-                                            <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
-                                                <div class="input-group col-xs-12" style="padding: 5px">
-                                                    <span class="icon-home"> {{innerContext.mergeInfo.srcAddrTitle}}</span>
-                                                    <input type="text" class="form-control" ng-model="innerContext.mergeInfo.srcAddr" style="border-radius:4px" placeholder="{{innerContext.mergeInfo.srcAddrTitle}}(G...)"
-                                                           onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="mergeInfo.srcAddr = mergeInfo.srcAddr.toUpperCase()">
-                                                </div>
-                                                <div class="input-group col-xs-12" style="padding: 5px">
-                                                    <span class="icon-pencil"> {{innerContext.mergeInfo.srcKeyTitle}}</span>
-                                                    <input type="password" class="form-control" ng-model="innerContext.mergeInfo.srcKey" style="border-radius:4px" placeholder="{{innerContext.mergeInfo.srcKeyTitle}}(S...)"
-                                                           onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="innerContext.mergeInfo.srcKey = innerContext.mergeInfo.srcKey.toUpperCase()">
-                                                </div>
+                                <!-- Payment配置页面 -->
+                                <li class="list-group-item" ng-show="innerContext.paymentInfo.viewShow"  style="margin: 0;padding: 0">
+                                    <div class="input-group">
+                                        <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
+                                            <div class="input-group col-xs-12" style="padding: 5px">
+                                                <span class="fa fa-home"> {{innerContext.paymentInfo.destAddrTitle}}</span>
+                                                <input type="text" class="form-control" ng-model="innerContext.paymentInfo.destAddr" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.destAddrTitle}}(G...)"
+                                                       onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="innerContext.paymentInfo.destAddr = innerContext.paymentInfo.destAddr.toUpperCase()">
                                             </div>
-                                            <span class="input-group-addon"><a type="button" class="btn" data-dismiss="modal" ng-click="innerContext.mergeClick($index)"><i class="{{innerContext.mergeInfo.btnStatus}} icon-2x"></i> </a></span>
+                                            <div class="input-group col-xs-12" style="padding: 5px">
+                                                <span class="fa fa-money"> {{innerContext.paymentInfo.amountTitle}}</span>
+                                                <input type="text" class="form-control" ng-model="innerContext.paymentInfo.amount" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.amountTitle}}(xx.xx)"
+                                                       onkeyup="value=value.replace(/[^\d|.]/g,'')">
+                                            </div>
+                                            <div class="input-group col-xs-12" style="padding: 5px">
+                                                <span class="fa fa-pencil"> {{innerContext.paymentInfo.skeyTitle}}</span>
+                                                <input type="password" class="form-control" ng-model="innerContext.paymentInfo.skey" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.skeyTitle}}(S...)"
+                                                       onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="innerContext.paymentInfo.skey = innerContext.paymentInfo.skey.toUpperCase()">
+                                            </div>
+                                            <div class="input-group col-xs-12" style="padding: 5px">
+                                                <span class="fa fa-edit"> {{innerContext.paymentInfo.tmemoTitle}}</span>
+                                                <input type="text" class="form-control" ng-model="innerContext.paymentInfo.tmemo" style="border-radius:4px" placeholder="{{innerContext.paymentInfo.tmemoTitle}}">
+                                            </div>
+                                        </div>
+                                        <span class="input-group-addon"><a type="button" class="btn" data-dismiss="modal" ng-click="innerContext.paymentClick($index)"><i class="fa {{innerContext.paymentInfo.btnStatus}} fa-2x"></i> </a></span>
+                                    </div>
+                                </li>
 
-                                    </li>
-                                </ul>
-                                <br><br><br>
-                            </div>
+                                <!-- Merge配置页面 -->
+                                <li class="list-group-item" ng-show="innerContext.mergeInfo.viewShow"  style="margin: 0;padding: 0">
+                                    <div class="input-group">
+                                        <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
+                                            <div class="input-group col-xs-12" style="padding: 5px">
+                                                <span class="fa fa-home"> {{innerContext.mergeInfo.srcAddrTitle}}</span>
+                                                <input type="text" class="form-control" ng-model="innerContext.mergeInfo.srcAddr" style="border-radius:4px" placeholder="{{innerContext.mergeInfo.srcAddrTitle}}(G...)"
+                                                       onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="mergeInfo.srcAddr = mergeInfo.srcAddr.toUpperCase()">
+                                            </div>
+                                            <div class="input-group col-xs-12" style="padding: 5px">
+                                                <span class="fa fa-pencil"> {{innerContext.mergeInfo.srcKeyTitle}}</span>
+                                                <input type="password" class="form-control" ng-model="innerContext.mergeInfo.srcKey" style="border-radius:4px" placeholder="{{innerContext.mergeInfo.srcKeyTitle}}(S...)"
+                                                       onkeyup="if(this.value == ''){return false;}this.value = this.value.toUpperCase();" ng-blur="innerContext.mergeInfo.srcKey = innerContext.mergeInfo.srcKey.toUpperCase()">
+                                            </div>
+                                        </div>
+                                        <span class="input-group-addon"><a type="button" class="btn" data-dismiss="modal" ng-click="innerContext.mergeClick($index)"><i class="fa {{innerContext.mergeInfo.btnStatus}} fa-2x"></i> </a></span>
 
-                            <!-- 显示地址栏 -->
-                            <div class="carousel-caption text-center" ng-show="innerContext.address">
-                                <p class="col-xs-1"></p>
-                                <p>
-                                    <i class="label label-info col-xs-10" style="word-wrap:break-word; word-break:normal;white-space:normal;">
-                                        {{innerContext.address}}
-                                    </i>
-                                </p>
-                            </div>
+                                </li>
+                            </ul>
+                            <br><br><br>
                         </div>
-                        <!-- 左移按键 -->
-                        <a class="left carousel-control" href="#account-slide" role="button" data-slide="prev" style="width: 50px">
-                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <!-- 右移按键 -->
-                        <a class="right carousel-control" href="#account-slide" role="button" data-slide="next" style="width: 50px">
-                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+
+                        <!-- 显示地址栏 -->
+                        <div class="carousel-caption text-center" ng-show="innerContext.address">
+                            <p class="col-xs-1"></p>
+                            <p>
+                                <i class="label label-info col-xs-10" style="word-wrap:break-word; word-break:normal;white-space:normal;">
+                                    {{innerContext.address}}
+                                </i>
+                            </p>
+                        </div>
                     </div>
+                    <!-- 左移按键 -->
+                    <a class="left carousel-control" href="#account-slide" role="button" data-slide="prev" style="width: 50px">
+                        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <!-- 右移按键 -->
+                    <a class="right carousel-control" href="#account-slide" role="button" data-slide="next" style="width: 50px">
+                        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- 底部菜单 -->
-        <div ng-controller="bottomMenuController as bMC">
-            <div class="navbar navbar-default navbar-fixed-bottom navbar-inverse">
-                <i class="navbar-brand icon-xing" ng-model="bottomMenuTitle"> {{bottomMenuTitle}}</i>
-                <a type="button" class="navbar-brand icon-user btn" data-toggle="modal" data-target=".account-model"
-                   ng-model="bottomMenuAccount" ng-click="bMC.readCookie()" style="font-size: 16px"> {{bottomMenuAccount}}</a>
-                <a type="button" class="navbar-brand icon-globe btn" data-toggle="modal" data-target=".operations-model"
-                   ng-model="bottomMenuOperation" style="font-size: 16px"> {{bottomMenuOperation}}</a>
-                <a type="button" class="navbar-brand icon-wrench btn" data-toggle="modal" data-target=".config-model"
-                   ng-model="bottomMenuConfig" style="font-size: 16px"> {{bottomMenuConfig}}</a>
-            </div>
+    <!-- 底部菜单 -->
+    <div ng-controller="bottomMenuController as bMC">
+        <div class="navbar navbar-default navbar-fixed-bottom navbar-inverse">
+            <i class="navbar-brand fa fa-xing" ng-model="bottomMenuTitle"> {{bottomMenuTitle}}</i>
+            <a type="button" class="navbar-brand fa fa-user btn" data-toggle="modal" data-target=".account-model"
+               ng-model="bottomMenuAccount" ng-click="bMC.readCookie()" style="font-size: 16px"> {{bottomMenuAccount}}</a>
+            <a type="button" class="navbar-brand fa fa-globe btn" data-toggle="modal" data-target=".operations-model"
+               ng-model="bottomMenuOperation" style="font-size: 16px"> {{bottomMenuOperation}}</a>
+            <a type="button" class="navbar-brand fa fa-wrench btn" data-toggle="modal" data-target=".config-model"
+               ng-model="bottomMenuConfig" style="font-size: 16px"> {{bottomMenuConfig}}</a>
+        </div>
 
-            <!-- 账户View -->
-            <div class="modal fade account-model" tabindex="-1" role="dialog" aria-labelledby="accountinfos" style="display: none;">
-                <!--  onfocus="acc_dial_operations.loadDialog()"-->
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true" class="icon-remove"></span>
-                            </button>
-                            <h4 class="modal-title"><i class="icon-user"></i> {{bottomMenuAccount}}</h4>
+        <!-- 账户View -->
+        <div class="modal fade account-model" tabindex="-1" role="dialog" aria-labelledby="accountinfos" style="display: none;">
+            <!--  onfocus="acc_dial_operations.loadDialog()"-->
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true" class="fa fa-remove"></span>
+                        </button>
+                        <h4 class="modal-title"><i class="fa fa-user"></i> {{bottomMenuAccount}}</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <div class="input-group" ng-show="addressInputVew">
+                            <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="newPublicAddress = ''"><i class="fa fa-remove"></i> </button> </span>
+                            <input id="account_info_dialog_input" type="text" class="form-control" placeholder="{{AddAddressPlaceholder}}" ng-model="newPublicAddress">
+                            <span class="input-group-btn"><button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close" ng-click="bMC.onConfirmInput()"><i class="fa fa-check"></i> </button> </span>
                         </div>
-                        <div class="modal-body text-center">
-                            <div class="input-group" ng-show="addressInputVew">
-                                <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="newPublicAddress = ''"><i class="icon-remove"></i> </button> </span>
-                                <input id="account_info_dialog_input" type="text" class="form-control" placeholder="{{AddAddressPlaceholder}}" ng-model="newPublicAddress">
-                                <span class="input-group-btn"><button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close" ng-click="bMC.onConfirmInput()"><i class="icon-ok"></i> </button> </span>
-                            </div>
-                            <div ng-show="!addressInputVew">
-                                <div class="input-group" style="margin-top: 10px" ng-repeat="address in currAddresses">
+                        <div ng-show="!addressInputVew">
+                            <div class="input-group" style="margin-top: 10px" ng-repeat="address in currAddresses">
                                 <input type="text" class="form-control" readonly ng-model="address">
-                                <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="bMC.removeAddress(address)"><i class="icon-remove"></i> </button> </span>
-                                </div>
+                                <span class="input-group-btn"><button type="button" class="btn btn-danger" ng-click="bMC.removeAddress(address)"><i class="fa fa-remove"></i> </button> </span>
                             </div>
-                            <h3 ng-model="addBtnTitle"><a type="button" class="btn btn-success icon-plus" ng-show="addBtnVisible && !addressInputVew" ng-click="addressInputVew = !addressInputVew;addBtnVisible = !addBtnVisible;"> {{addBtnTitle}}</a></h3>
                         </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div>
+                        <h3 ng-model="addBtnTitle"><a type="button" class="btn btn-success fa fa-user-plus" ng-show="addBtnVisible && !addressInputVew" ng-click="addressInputVew = !addressInputVew;addBtnVisible = !addBtnVisible;"> {{addBtnTitle}}</a></h3>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
 
-            <div class="modal fade operations-model" tabindex="-1" role="dialog" aria-labelledby="operationslabel" style="display: none;">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="icon-remove"></span></button>
-                            <h4 class="modal-title" id="operationslabel">操作</h4>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div>
+        <div class="modal fade operations-model" tabindex="-1" role="dialog" aria-labelledby="operationslabel" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="fa fa-remove"></span></button>
+                        <h4 class="modal-title" id="operationslabel">操作</h4>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div>
 
-            <div class="modal fade config-model" tabindex="-1" role="dialog" aria-labelledby="configlabel" style="display: none;">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="icon-remove"></span></button>
-                            <h4 class="modal-title" id="configlabel">配置</h4>
-                        </div>
-                        <div class="modal-body">
-                            ...
-                        </div>
-                    </div><!-- /.modal-content -->
-                </div><!-- /.modal-dialog -->
-            </div>
+        <div class="modal fade config-model" tabindex="-1" role="dialog" aria-labelledby="configlabel" style="display: none;">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="fa fa-remove"></span></button>
+                        <h4 class="modal-title" id="configlabel">配置</h4>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
         </div>
     </div>
+</div>
 
     <script src="js/walletshow.js"></script>
     <script src="js/ie10-viewport-bug-workaround.js"></script>
@@ -296,7 +295,10 @@
     <script src="js/arraylist.js"></script>
     <script src="js/stellar-base/stellardefined.js"></script>
     <script src="js/stellarAccountCheck.js"></script>
+    <script src="js/language.js"></script>
+    <script src="js/topMenuController.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/home.js"></script>
 
     <!-- baidu流量统计 -->
     <script>
