@@ -745,7 +745,7 @@ function middleContextController($scope, $rootScope, $cookieStore, $http, $q, LA
 
         $http.get(urlget)
             .success(function (data,header,config,status){
-                //console.log("success->data ============ \r\n",data);
+                console.log("success->data ============ \r\n",data);
                 $scope.innerContexts[ind].quaryInfo.quaryResults = [];
 
                 _links = data._links;
