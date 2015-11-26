@@ -21,6 +21,6 @@ function languageController($cookies,$scope,$rootScope, LANGUAGE) {
     function saveLanguageCookie(langValue){
         var expireDate = new Date();
         expireDate.setDate(expireDate.getDate() + 365);
-        $cookies.put("LANGUAGE",langValue,{'expires': expireDate});
+        $cookies.put("LANGUAGE",langValue,{'expires': expireDate, 'path':'/'});
     }
 }

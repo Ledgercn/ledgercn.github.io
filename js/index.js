@@ -17,7 +17,7 @@ function indexMainController($cookies, $cookieStore, $scope, $rootScope) {
     function saveLanguageCookie(langValue){
         var expireDate = new Date();
         expireDate.setDate(expireDate.getDate() + 365);
-        $cookies.put("LANGUAGE",langValue,{'expires': expireDate});
+        $cookies.put("LANGUAGE",langValue,{'expires': expireDate,'path':'/'});
     }
 
     function initText(){
