@@ -731,11 +731,11 @@ function middleContextController($scope, $rootScope, $cookieStore, $http, $q, LA
             $scope.innerContexts[ind].quaryInfo.quaryNext = "";
             $scope.innerContexts[ind].quaryInfo.quaryPrev = "";
         }
-        urlget = STELLAR_DEFAULT_NETWORK;
+        urlget = "";
         if (isNext) {
             if ($scope.innerContexts[ind].quaryInfo.quaryNext == null ||
                 $scope.innerContexts[ind].quaryInfo.quaryNext == "") {
-                $scope.innerContexts[ind].quaryInfo.quaryNext = STELLAR_NETWORK_ACCOUNTS + "/" + mainAddr +
+                $scope.innerContexts[ind].quaryInfo.quaryNext = STELLAR_DEFAULT_NETWORK + STELLAR_NETWORK_ACCOUNTS + "/" + mainAddr +
                     "/" + STELLAR_NETWORK_OPERATIONS + "?order=desc&limit="+quaryCount+"&cursor=";
             }
             urlget += $scope.innerContexts[ind].quaryInfo.quaryNext;
@@ -750,11 +750,15 @@ function middleContextController($scope, $rootScope, $cookieStore, $http, $q, LA
 
                 _links = data._links;
                 if(isNext){
-                    $scope.innerContexts[ind].quaryInfo.quaryNext = _links.next.href.substr(1);
-                    $scope.innerContexts[ind].quaryInfo.quaryPrev = _links.prev.href.substr(1);
+                    //$scope.innerContexts[ind].quaryInfo.quaryNext = _links.next.href.substr(1);
+                    //$scope.innerContexts[ind].quaryInfo.quaryPrev = _links.prev.href.substr(1);
+                    $scope.innerContexts[ind].quaryInfo.quaryNext = _links.next.href;
+                    $scope.innerContexts[ind].quaryInfo.quaryPrev = _links.prev.href;
                 } else {
-                    $scope.innerContexts[ind].quaryInfo.quaryPrev = _links.next.href.substr(1);
-                    $scope.innerContexts[ind].quaryInfo.quaryNext = _links.prev.href.substr(1);
+                    //$scope.innerContexts[ind].quaryInfo.quaryPrev = _links.next.href.substr(1);
+                    //$scope.innerContexts[ind].quaryInfo.quaryNext = _links.prev.href.substr(1);
+                    $scope.innerContexts[ind].quaryInfo.quaryPrev = _links.next.href;
+                    $scope.innerContexts[ind].quaryInfo.quaryNext = _links.prev.href;
                 }
 
                 //console.log("======== Next ==========\r\n",$scope.innerContexts[ind].quaryInfo.quaryNext);
