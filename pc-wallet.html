@@ -14,26 +14,31 @@
 		<link rel="stylesheet" href="css/main.css" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="css/ie/ie9.css" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="css/ie/ie8.css" /><![endif]-->
+		<script src="//cdn.bootcss.com/angular.js/1.4.7/angular.min.js"></script>
+		<script src="//cdn.bootcss.com/angular.js/1.4.7/angular-cookies.min.js"></script>
 		<meta name="description" content="账中网，关注虚拟币发展动态，紧跟恒星币，为丰富生态圈共享力量。">
 		<meta name="keywords" content="恒星币 Stellar XLM 流明币 Lumens 设计 总账 账户 账中 Ledger cn  PC Wallet 钱包 事务 分布式交易所 恒星货币（STR） 信用等价物 筹码类比 增发">
 	</head>
-	<body>
+	<body ng-app="pcwalletapp">
 
 		<!-- Page Wrapper -->
-			<div id="page-wrapper">
+			<div id="page-wrapper" ng-controller="pcwalletController">
 
 				<!-- Header -->
 					<header id="header">
 						<h1><a href="index.html">LedgerCN</a></h1>
+						<nav>
+							<a class="button" ng-click="changeLanguageClick()">{{LanguageBtnTitle}}</a>
+							<a class="button">{{SignInTitle}}</a>
+						</nav>
 					</header>
 
 				<!-- Wrapper -->
 					<section id="wrapper">
 						<header>
 							<div class="inner">
-								<h2>PC版本钱包</h2>
-								<p>账中网 依靠<a href="https://github.com/stellar">Stellar官方版本库</a>自主研发电脑端使用的恒星新网络钱包。
-									<a href="https://github.com/ledgercn">源码公开</a>,程序不保留任何个人信息，保证安全。中英文版本，命令行操作，带有提示功能。 </p>
+								<h2>{{mainTitle}}</h2>
+								<div maincontext></div>
 							</div>
 						</header>
 
@@ -42,27 +47,27 @@
 								<div class="inner">
 
 									<section>
-										<h2 class="major">Windows 版本下载</h2>
-										<p>下载后，解压缩到电脑，在电脑"运行"框运行cmd，进入解压缩目录，运行程序，按照提示即可进行操作。</p>
-										<h4>说明</h4>
-										<blockquote>对于国内有时不能正常访问恒星官网的情况，请先在计算机中安装网络访问代理，之后，在运行程序时，加入参数 [ --proxy "IP;PORT;UserName;Password" ] ，UserName和Password允许为空，使用分号分割。</blockquote>
-										<h4>下载链接</h4>
+										<h2 class="major">{{windowsDLTitle}}</h2>
+										<p>{{windowsDLContext}}</p>
+										<h4>{{windowsDLMemoTitle}}</h4>
+										<blockquote>{{windowsDLMemoContext}}</blockquote>
+										<h4>{{downloadLnkTitle}}</h4>
 										<ul>
-											<li>Windows 64bits 操作系统 <a href="DL/LedgerCN.StellarWallet.win64.zip">下载</a></li>
-											<li>Windows 32bits 操作系统 <a href="DL/LedgerCN.StellarWallet.win32.zip">下载</a></li>
+											<li>Windows 64bits <a href="DL/LedgerCN.StellarWallet.win64.zip">{{downloadTitle}}</a></li>
+											<li>Windows 32bits <a href="DL/LedgerCN.StellarWallet.win32.zip">{{downloadTitle}}</a></li>
 										</ul>
 									</section>
 
 									<br>
 
 									<section>
-										<h2 class="major">Linux 版本下载</h2>
-										<p>下载后，解压缩到电脑bin目录下，在提示符后运行程序，按照提示即可进行操作。未提供32bits可执行程序下载，如有需要，请到<a href="https://github.com/ledgercn/go-StellarWallet">Github</a>下载源码编译运行。</p>
-										<h4>说明</h4>
-										<blockquote>对于国内有时不能正常访问恒星官网的情况，请先在计算机中安装网络访问代理，之后，在运行程序时，加入参数 [ --proxy "IP;PORT;UserName;Password" ] ，UserName和Password允许为空，使用分号分割。</blockquote>
-										<h4>下载链接</h4>
+										<h2 class="major">{{linuxDLTitle}}</h2>
+										<div linuxdlcontext></div>
+										<h4>{{windowsDLMemoTitle}}</h4>
+										<blockquote>{{windowsDLMemoContext}}</blockquote>
+										<h4>{{downloadLnkTitle}}</h4>
 										<ul>
-											<li>Linux 64bits 操作系统 <a href="DL/Ledgercn.StellarWallet.zip">下载</a></li>
+											<li>Linux 64bits <a href="DL/Ledgercn.StellarWallet.zip">{{downloadTitle}}</a></li>
 										</ul>
 									</section>
 
@@ -76,7 +81,7 @@
 					<div class="inner">
 						<ul class="copyright">
 							<li>&copy; Ledgercn All rights reserved.</li>
-							<li>QQ群: 452779719</li>
+							<li>{{footerQQGroupTitle}} 452779719</li>
 							<li>Github: <a href="https://github.com/ledgercn">LedgerCN</a></li>
 						</ul>
 					</div>
@@ -91,6 +96,8 @@
 			<script src="js/util.min.js"></script>
 			<!--[if lte IE 8]><script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script><![endif]-->
 			<script src="js/main.min.js"></script>
+			<script src="wallet/js/main.js"></script>
+			<script src="js/pc-wallet.js"></script>
 
 		<!-- baidu流量统计 -->
 		<script>
