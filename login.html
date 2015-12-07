@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>login - Ledger CN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 恒星新网络 网页钱包">
+    <meta name="keywords" content="账中 钱包 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/docs.min.css" rel="stylesheet" type="text/css">
+    <link  href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link  href="css/customstyle.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <script src="//cdn.bootcss.com/angular.js/1.4.7/angular.min.js"></script>
+    <script src="//cdn.bootcss.com/angular.js/1.4.7/angular-cookies.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+</head>
+<body ng-app="loginapp" class="cbody">
+    <div ng-controller="languageController">
+        <i ng-model="currlanguage" ng-hide="true"></i>
+    </div>
+
+    <!-- 顶部菜单 -->
+    <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+        <div class="container-fluid" ng-controller="topMenuController as tMC">
+            <a id="returnBtn" class="navbar-brand fa fa-reply navbar-left" href="/" ng-model="toMenuTitle"> {{toMenuTitle}}</a>
+
+            <a type="button" class="btn navbar-brand navbar-right pull-right" ng-click="ChangeLanguageClick()">{{languageTitle}}</a>
+        </div>
+    </header>
+
+    <div class="container-fluid ccontainer ctext" ng-controller="mainContainController" ng-init="initView(true);">
+        <div class="ccenter-container" ng-show="isLoading">
+            <i class="{{loadingIcon}}">{{ErrMsg}}</i>
+        </div>
+        <div ng-show="!isLoading">
+            <div class="col-md-6 col-xs-12">
+                <div class="cinner" ng-controller="regMemoController">
+                    <h3 class="cmajor">{{TitleText}}</h3>
+                    <dl class="dl-horizontal">
+                        <dt class="cdl-horizontal-context">{{GoogleAuthenticatorTitle}}</dt>
+                        <dd class="cdl-horizontal-context">{{GoogleAuthenticatorContext}}</dd>
+                        <dt class="cdl-horizontal-context">{{GAUseTitle}}</dt>
+                        <dd class="cdl-horizontal-context">{{GAUseContext}}</dd>
+                        <dd class="cdl-horizontal-context">{{GAUseiOSContext}}</dd>
+                        <dt class="cdl-horizontal-context">{{EmailTitle}}</dt>
+                        <dd class="cdl-horizontal-context">{{EmailContext}}</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+                <div class="cinner" ng-controller="regMainViewController">
+                    <div ng-show="isLogin">
+                        <h3 class="cmajor">{{loginUser}}</h3>
+                        <div class="modal-body">
+                            <div class="panel-group" id="userMenuOperation" role="tablist" aria-multiselectable="false">
+                                <div ng-show="userLevel == 0">
+                                    <div class="panel btn-info">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title text-center">
+                                                <a role="button" href="activeaccount.html">
+                                                    {{userActiveTitle}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div ng-show="userLevel > 0">
+                                    <!-- 修改登录密码 -->
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" role="tab" id="userMenuChangePW">
+                                            <h4 class="panel-title text-center">
+                                                <a role="button" data-toggle="collapse" data-parent="#userMenuOperation"
+                                                   href="#userMenu_changpw_div" aria-expanded="false" aria-controls="#userMenu_changpw_div">
+                                                    {{changePWTitle}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="userMenu_changpw_div" class="panel-collapse collapse" role="tabpanel" aria-labelledby="#userMenuChangePW">
+                                            <div class="panel-body">
+                                                <div class="alert alert-danger" role="modal" ng-show="errorMessageCPW">
+                                                    <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="errorMessageCPW = '' "></a>
+                                                    <strong>Error!</strong> {{errorMessageCPW}}
+                                                </div>
+                                                <div class="alert alert-info" role="modal" ng-show="alertMessageCPW">
+                                                    <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="alertMessageCPW = '' "></a>
+                                                    <strong>Success!</strong> {{alertMessageCPW}}
+                                                </div>
+                                                <div class="input-group" ng-show="alertMessageCPW =='' ">
+                                                    <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
+                                                        <div class="input-group col-xs-12" style="padding: 5px">
+                                                            <input type="password" class="form-control" ng-model="userOrigPassword" style="border-radius:4px" placeholder="{{userOrigPasswordPlaceholder}}" ng-readonly="isChangePWReadOnly">
+                                                        </div>
+                                                        <div class="input-group col-xs-12" style="padding: 5px">
+                                                            <input type="password" class="form-control" ng-model="userNewPassword1" style="border-radius:4px" placeholder="{{userNewPassword1Placeholder}}" ng-readonly="isChangePWReadOnly">
+                                                        </div>
+                                                        <div class="input-group col-xs-12" style="padding: 5px">
+                                                            <input type="password" class="form-control" ng-model="userNewPassword2" style="border-radius:4px" placeholder="{{userNewPassword2Placeholder}}" ng-readonly="isChangePWReadOnly">
+                                                        </div>
+                                                        <div class="input-group col-xs-12" style="padding: 5px">
+                                                            <input type="text" class="form-control" ng-model="userfid" style="border-radius:4px" placeholder="{{userfidPlaceholder}}" ng-readonly="isChangePWReadOnly">
+                                                        </div>
+                                                    </div>
+                                                    <span class="input-group-addon">
+                                                        <a type="button" class="btn" data-dismiss="modal">
+                                                            <i class="{{changePWBtnIcon}} fa-2x" ng-click="changePWClick()"></i>
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- GA配置 -->
+                                    <div class="panel panel-primary">
+                                        <div class="panel-heading" role="tab" id="userMenuGAConfig">
+                                            <h4 class="panel-title text-center">
+                                                <a role="button" data-toggle="collapse" data-parent="#userMenuOperation"
+                                                   href="#userMenu_gaconfig_div" aria-expanded="false" aria-controls="#userMenu_gaconfig_div" ng-click="gaRQcodeVisible = false">
+                                                    {{gaConfigTitle}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="userMenu_gaconfig_div" class="panel-collapse collapse" role="tabpanel"
+                                             aria-labelledby="#userMenuGAConfig">
+                                            <div class="panel-body" style="color: #092f3d">
+                                                <div class="alert alert-danger" role="modal" ng-show="errorMessageGA">
+                                                    <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="errorMessageGA = '' "></a>
+                                                    <strong>Error!</strong> {{errorMessageGA}}
+                                                </div>
+                                                <div class="row text-center" style="margin: 10px auto;width: 400px;">
+                                                    <a style="margin-right: 10px">{{gaCurrentStateTitle}}</a>
+                                                    <div class="btn-group" role="group" aria-label="...">
+                                                        <button type="button" class="btn {{gaOpenBtnStatus}}" ng-click="gaSwitchBtnClick()">{{gaOpenBtnTitle}}</button>
+                                                        <button type="button" class="btn {{gaCloseBtnStatus}}" ng-click="gaSwitchBtnClick()">{{gaCloseBtnTitle}}</button>
+                                                    </div>
+                                                    <!--<a type="button" class="btn fa {{gaShowKeyBtnIcon}} fa-2x" style="margin-left: 10px"-->
+                                                            <!--ng-show="gaCloseBtnStatus == 'btn-default'" ng-click="gaShowKeyBtnClick()"></a>-->
+                                                </div>
+
+                                                <div class="alert alert-info" role="modal" ng-show="gaUserPwVisible">
+                                                    <form class="form-horizontal"  ng-show="gaUserPwVisible" style="margin: auto 10px;">
+                                                        <div class="form-group">
+                                                            <input type="password" class="form-control" ng-model="gaUserPassword" placeholder="{{gaUserPasswordPlaceholder}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <input type="text" class="form-control" ng-model="gaTotpCode" placeholder="{{gaTotpCodePlaceholder}}">
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <div class=" pull-right">
+                                                                <a type="button" class="btn btn-warning" ng-click="gaUserPwVisible = false"><span class="fa fa-ban fa-2x"></span></a>
+                                                                <a type="button" class="btn btn-success" ng-click="gaUserPwBtnClick()"><span class="fa fa-check fa-2x"></span></a>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <div class="row text-center" style="margin: 10px auto;width: 400px;" ng-show="gaWaitingVisible">
+                                                    <i class="fa fa-spinner fa-pulse fa-2x"></i>
+                                                </div>
+                                                <div class="row" style="margin: 10px auto;width: 400px;" ng-show="gaRQcodeVisible">
+                                                    <div >
+                                                        <div class="text-center" >
+                                                            <div id="ga_qr_code" data-holder-rendered="true" class="crqcode-image"
+                                                                 style="width: 220px;height: 220px;"></div>
+                                                            <div class="caption">
+                                                                <h4>{{gaMemoTitle}}</h4>
+                                                                <p><strong>{{gaKeyString}}</strong></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- 退出登录 -->
+                                    <div class="panel btn-danger">
+                                        <div class="panel-heading" role="tab">
+                                            <h4 class="panel-title text-center">
+                                                <a role="button" ng-click="logoutBtnClick()">
+                                                    {{logoutText}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="!isLogin">
+                        <h3 class="cmajor">{{Title}}</h3>
+                        <div class="modal-body">
+                            <div class="alert alert-danger" role="modal" ng-show="errorMessage">
+                                <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="errorMessage = '' "></a>
+                                <strong>Error!</strong> {{errorMessage}}
+                            </div>
+
+                            <div class="input-group input-group-lg" ng-show="stepIndex == 1">
+                                <input type="email" class="form-control" placeholder="{{emailPlaceholder}}"
+                                       ng-model="userNameEmail" ng-readonly="nextBtnIcon != 'fa fa-angle-double-right'">
+                                <span class="input-group-btn">
+                                    <a type="button" class="btn btn-warning" ng-click="removeUserEmailClick()"><i class="fa fa-remove"></i> </a>
+                                </span>
+                            </div>
+
+                            <div ng-show="stepIndex == 2">
+                                <div class="input-group input-group-lg" >
+                                    <input type="password" class="form-control" placeholder="{{loginPwPlaceholder}}" ng-model="loginPassword"
+                                           ng-readonly="nextBtnIcon != 'fa fa-angle-double-right'">
+                                    <span class="input-group-btn">
+                                        <a type="button" class="btn btn-default" ng-click="loginPassword = ''"><i class="fa fa-remove"></i> </a>
+                                    </span>
+                                </div>
+                                <div class="input-group input-group-lg" style="margin-top: 20px" ng-show="!isSignIn">
+                                    <input type="password" class="form-control" placeholder="{{confirmPwPlaceholder}}" ng-model="confirmLoginPassword"
+                                           ng-readonly="nextBtnIcon != 'fa fa-angle-double-right'">
+                                    <span class="input-group-btn">
+                                        <a type="button" class="btn btn-default" ng-click="confirmLoginPassword = ''"><i class="fa fa-remove"></i> </a>
+                                    </span>
+                                </div>
+                                <div class="input-group input-group-lg" style="margin-top: 20px" ng-show="hasGA">
+                                    <input type="text" class="form-control" placeholder="{{googleAuthCodePlaceholder}}" ng-model="googleAuthCode"
+                                           ng-readonly="nextBtnIcon != 'fa fa-angle-double-right'">
+                                    <span class="input-group-btn">
+                                        <a type="button" class="btn btn-default" ng-click="googleAuthCode = ''"><i class="fa fa-remove"></i> </a>
+                                    </span>
+                                </div>
+                                <div class="input-group input-group-lg" style="margin-top: 20px" ng-show="!hasGA">
+                                    <input type="text" class="form-control" placeholder="{{viCodePlaceholder}}" ng-model="reCaptcha.viCodeText"
+                                           ng-readonly="nextBtnIcon != 'fa fa-angle-double-right'">
+                                    <span class="input-group-btn">
+                                        <a type="button" class="btn btn-info" ng-click="EquationClick()">{{equationValue}}
+                                            <i class="fa fa-spinner fa-pulse" ng-show="equationValue == '' || equationValue == null"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!--<div ng-show="stepIndex == 3">-->
+                            <!--<div class="thumbnail text-center">-->
+                            <!--<div id="ga_qr_code" data-holder-rendered="true" class="crqcode-image"></div>-->
+                            <!--<div class="caption">-->
+                            <!--<p>{{rqcodeMemo}}</p>-->
+
+                            <!--<p><strong>DPI45HCEBCJK6HG7</strong></p>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <div style="margin-top: 25px;min-width: 350px;" class="btn-group pull-right">
+                                <a type="button" class="btn btn-default {{prevBtnAbled}}"
+                                   style="width: 50%" ng-click="prevBtnClickEvent()"><h4><i class="fa fa-angle-double-left"></i> {{prevBtnTitle}}</h4></a>
+                                <a type="button" class="btn btn-default {{nextBtnAbled}}"
+                                   style="width: 50%" ng-click="nextBtnClickEvent()"><h4>{{nextBtnTitle}} <i class="{{nextBtnIcon}}"></i></h4></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/qrcode.js"></script>
+    <script src="js/jquery.qrcode.js"></script>
+    <script type="text/ecmascript" src="js/md5.js"></script>
+    <script src="wallet/js/language.js"></script>
+    <script src="wallet/js/topMenuController.js"></script>
+    <script src="wallet/js/main.js"></script>
+    <script src="wallet/js/mainContainer.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

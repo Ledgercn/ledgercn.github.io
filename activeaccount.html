@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Active - Ledger CN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" name="viewport">
+    <meta name="description" content="账中 恒星新网络 网页钱包">
+    <meta name="keywords" content="账中 钱包 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="css/docs.min.css" rel="stylesheet" type="text/css">
+    <link  href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+    <link  href="css/customstyle.css" rel="stylesheet">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--<script src="tempjs/angular.min.js"></script>-->
+    <script src="//cdn.bootcss.com/angular.js/1.4.7/angular.min.js"></script>
+    <script src="//cdn.bootcss.com/angular.js/1.4.7/angular-cookies.min.js"></script>
+    <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+</head>
+<body class="cbody" ng-app="activeaccapp">
+    <div ng-controller="languageController">
+        <i ng-model="currlanguage" ng-hide="true"></i>
+    </div>
+
+    <!-- 顶部菜单 -->
+    <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+        <div class="container-fluid" ng-controller="topMenuController as tMC">
+            <a id="returnBtn" class="navbar-brand fa fa-reply navbar-left" href="/" ng-model="toMenuTitle"> {{toMenuTitle}}</a>
+
+            <a type="button" class="btn navbar-brand navbar-right pull-right" ng-click="ChangeLanguageClick()">{{languageTitle}}</a>
+        </div>
+    </header>
+
+    <div class="container-fluid ccontainer ctext" ng-controller="mainContainController" ng-init="initView(false);">
+        <div class="ccenter-container" ng-show="isLoading">
+            <i class="{{loadingIcon}}">{{ErrMsg}}</i>
+        </div>
+        <div ng-show="!isLoading">
+            <div class="container" ng-controller="aaMainController">
+                <div style="width: 70%; margin: 20px auto; color: #009da7">
+                    <p>{{memoText}}</p>
+                </div>
+                <div style="width: 70%; margin: 20px auto; color: #092f3d">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" style="color: blue"><i class="fa fa-user fa-2x">  &nbsp;{{mainTitle}}</i></div>
+                        <div class="panel-body">
+                            <div class="alert alert-danger" role="modal" ng-show="errorMessage">
+                                <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="errorMessage = '' "></a>
+                                <strong>Error!</strong> {{errorMessage}}
+                            </div>
+                            <div class="input-group">
+                                <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
+                                    <div class="input-group col-xs-12" style="padding: 5px">
+                                        &nbsp;<span class="fa fa-envelope"> &nbsp;{{userEmailTitle}}</span>
+                                        <input type="text" class="form-control" ng-model="userEmail" style="border-radius:4px" placeholder="{{userEmailPlaceholder}}" ng-readonly="isReadOnly">
+                                    </div>
+                                    <div class="input-group col-xs-12" style="padding: 5px">
+                                        &nbsp;<span class="fa fa-user-secret"> &nbsp;{{userPaswordTitle}}</span>
+                                        <input type="password" class="form-control" ng-model="userPassword" style="border-radius:4px" placeholder="{{userPaswordPlaceholder}}" ng-readonly="isReadOnly">
+                                    </div>
+                                    <div class="input-group col-xs-12" style="padding: 5px">
+                                        &nbsp;<span class="fa fa-arrow-right"> &nbsp;{{userfidTitle}}</span>
+                                        <input type="text" class="form-control" ng-model="userfid" style="border-radius:4px" placeholder="{{userfidPlaceholder}}" ng-readonly="isReadOnly">
+                                    </div>
+                                    <div class="input-group col-xs-12" style="padding: 5px">
+                                        &nbsp;<span class="fa fa-arrow-circle-right"> &nbsp;{{usertidTitle}}</span>
+                                        <input type="text" class="form-control" ng-model="usertid" style="border-radius:4px" placeholder="{{usertidPlaceholder}}" ng-readonly="isReadOnly">
+                                    </div>
+                                </div>
+                                <span class="input-group-addon">
+                                    <a type="button" class="btn" data-dismiss="modal" ng-click="activeClick()">
+                                        <i class="{{activeBtnIcon}} fa-2x"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/ecmascript" src="js/md5.js"></script>
+    <script src="wallet/js/language.js"></script>
+    <script src="wallet/js/topMenuController.js"></script>
+    <script src="wallet/js/main.js"></script>
+    <script src="wallet/js/mainContainer.js"></script>
+    <script src="js/activeaccount.js"></script>
+</body>
+</html>
