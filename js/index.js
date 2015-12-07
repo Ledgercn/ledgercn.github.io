@@ -3,7 +3,7 @@ var indexapp = angular.module("indexapp",['ngCookies']).config(function($anchorS
     $anchorScrollProvider.disableAutoScrolling();
 });
 
-function indexMainController($cookies, $cookieStore, $scope, $rootScope) {
+function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) {
     function initLanguage(){
         langSave = $cookies.get("LANGUAGE");
         if (langSave != null){
@@ -48,7 +48,7 @@ function indexMainController($cookies, $cookieStore, $scope, $rootScope) {
             $scope.footerQQGroupTitle = "QQ群:";
         } else {
             $scope.LanguageBtnTitle = "中文";
-            $scope.SignInTitle = "Sign in/up";
+            $scope.SignInTitle = "Sign-in/Login";
             $scope.NavigationTitle = "Nav";
 
             $scope.NavHomeTitle = "Home";
@@ -57,11 +57,11 @@ function indexMainController($cookies, $cookieStore, $scope, $rootScope) {
 
             $scope.PageMainTitle = "";
 
-            $scope.SectionOneTitle = "What is the Lumen or Stellar icon?";
+            $scope.SectionOneTitle = "What is the Lumen or Stellar coin?";
             $scope.SectionTwoTitle = "Open general ledger";
             $scope.SectionThreeTitle = "Our introduced";
             $scope.SectionFourTitle = "Our services";
-            $scope.SectionFourContext = "In our network, you can use the following services. We will also make efforts to deliver a variety of applications and services, your support and trust is the source of our progress.";
+            $scope.SectionFourContext = "In our network, we are dedicated to provide the services as shown in the followings. We will try out best to deliver a variety of application and services. Your support and confidence in our service are the source of progress.";
             $scope.WebWalletTitle = "Wallet for Web";
             $scope.WebWalletContext = "Open the your browser, your can easily and quickly get historical action queries, payment and other operations. PC, mobile phone, PAD can use!";
             $scope.WebWalletUseTitle = "Starting";
@@ -75,9 +75,69 @@ function indexMainController($cookies, $cookieStore, $scope, $rootScope) {
         }
     }
 
+    function transform(data){
+        return data;
+    }
+
+    function initUserStatus(){
+        logUser = $cookies.get("uname");
+        userAuth = $cookies.get("auth");
+
+        if (logUser != null && userAuth != null){
+            postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
+            tx = POST_TYPE_FLAG + "=" + PT_CHECK_USERAUTH + "&" +
+                POST_MARK_USER_NAME + "=" + encodeURIComponent(logUser) + "&" +
+                POST_MARK_AUTHCODE + "=" + encodeURIComponent(userAuth);
+
+            $http({
+                method: 'POST',
+                url: postUrl,
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
+                transformRequest: transform,
+                data: tx
+            }).
+                success(function (data, status, headers, config){
+                    console.log("success\r\n",data);
+                    if (data.Error == null){
+                        if (data.data.success == true){
+                            $scope.isLogin = true;
+                            $scope.SignInTitle = data.data.login_user;
+                            if ( data.data.update_auth ) {
+                                saveToCookie($cookies,"auth",data.data.user_auth)
+                            }
+                            $scope.isLoading = false;
+                            return
+                        }
+                    }
+                    $scope.isLogin = false;
+                    if($scope.currlanguage == ZH_CN_LANG)
+                        $scope.SignInTitle = "注册/登录";
+                    else
+                        $scope.SignInTitle = "Sign-in/Login";
+
+                    $scope.isLoading = false;
+                }).
+                error(function (data, status, headers, config){
+                    console.log("error\r\n",data);
+                    console.log("status\r\n",status);
+                    console.log("headers\r\n",headers);
+                    console.log("config\r\n",config);
+                    $scope.isLogin = false;
+                    $scope.isLoading = false;
+                });
+        }else{
+            $scope.isLogin = false;
+            $scope.isLoading = false;
+        }
+    }
+
     function initView(){
+        $scope.isLoading = true;
         initLanguage();
         initText();
+        initUserStatus();
     }
 
     $scope.changeLanguageClick = function(){
@@ -90,6 +150,19 @@ function indexMainController($cookies, $cookieStore, $scope, $rootScope) {
         initText();
     };
 
+    $scope.loginBtnClick = function(){
+        if ($scope.isLoading) {
+            return;
+        }
+
+        if ($scope.isLogin) {
+            // 提示是否注销登录
+        } else {
+            // 进入登录界面
+            window.location.href = "login.html";
+        }
+    };
+
     initView();
 }
 indexapp.controller('indexMainController',indexMainController);
@@ -98,7 +171,7 @@ indexapp.directive("maincontext",function(){
     return {
         replace : true,
         template :  "<div><p ng-show=\"currlanguage != 'EN'\">安全 可靠 致力于完善<a href=\"https://stellar.org\"><strong>Stellar</strong></a>社区 <a href=\"https://github.com/Ledgercn\" >源码公开</a>透明你的<strong>信任</strong>就是我们前进的源泉</p>" +
-        "<p ng-show=\"currlanguage == 'EN'\">Safe, reliable, and committed to improving <a href=\"https://stellar.org\"><strong>STELLAR</strong></a> community, <a href=\"https://github.com/Ledgercn\" >source code</a> open and transparent, and your <strong>trust</strong> is the source of our progress.</p></div>"
+        "<p ng-show=\"currlanguage == 'EN'\">Safe, reliable, and committed to improving <a href=\"https://stellar.org\"><strong>STELLAR</strong></a> community. The <a href=\"https://github.com/Ledgercn\" >source codes</a> are open and transparent. And your <strong>support</strong> is the source of our confidence and improvement.</p></div>"
     };
 });
 
@@ -106,7 +179,7 @@ indexapp.directive("section1context",function(){
     return {
         replace : true,
         template :  "<div><p ng-show=\"currlanguage != 'EN'\"><strong>流明币/恒星币</strong>(Lumens)是基于SCP全球共识算法的加密电子货币，是全球最安全的加密电子货币之一。恒星币是一个用于价值交换的开源协议，全球有若干恒星币网络节点，由于恒星网络<a href='https://github.com/stellar'>源码</a>完全开源，所以全球各地支持者源源不断的参与到恒星网络的开发和升级过程中，也充分保证了信息的安全可靠和账本信息的公开性。</p>" +
-        "<p ng-show=\"currlanguage == 'EN'\"><strong>Lumen / Stellar</strong> icon is an encrypted electronic money based SCP global consensus algorithm, is one of the world's most secure encrypted electronic currency. Lumen/Stellar is an open protocol for the exchange of value, there are a number of global currency network nodes, since the network completely <a href='https://github.com/stellar'><strong>open source</strong></a>, so the steady stream of supporters around world participation to Lumen/Stellar network development and upgrade process, also fully guarantee the security of information and ledger reliable information openness.</p></div>"
+        "<p ng-show=\"currlanguage == 'EN'\"><strong>Lumen / Stellar</strong> is encrypted electronic money thar is based on the SCP world-wide consensus algorithm, which is one of the world's most secure encrypted electronic currencies. Lumen/Stellar is an open protocol for the exchange of value, which includes a huge number of network nodes of global currencies. Because our network is completely based on an <a href='https://github.com/stellar'><strong>open source</strong></a>, the information security and ledger reliability are fully guaranteed. Our transparency or openness is further guaranteed by the consistent support and world-wide participation to the Luemns/Stellar network development and upgrade process.</p></div>"
     };
 });
 
@@ -114,7 +187,7 @@ indexapp.directive("section2context",function(){
     return {
         replace : true,
         template :  "<div><p ng-show=\"currlanguage != 'EN'\"><strong>总账</strong> 包含网络中每一个账户的记录，包括余额，信任线，以及挂单。它是恒星网络某一时刻状态的“快照”。每一个恒星节点服务器都存有当前的总账，每一轮共识结束后，确认一组事务会将总账从当前状态向前推进。</p>" +
-        "<p ng-show=\"currlanguage == 'EN'\"><strong>Ledger</strong> contains records of each network accounts, including balance, trust lines, and pending orders. It is the Lumen/Stellar status of the network at a time \"snapshot\". Each server node have stellar current ledger, after the end of each round of consensus, confirm a general ledger from the current state of affairs will move forward.</p></div>"
+        "<p ng-show=\"currlanguage == 'EN'\"><strong>Ledger</strong> keeps a nice records of each network accounts that includes balance, credit lines, and pending orders. The current Lumen/Stellar status of the network is a time \"snapshot\" of account. Each of server nodes has a current record of summary of the account. After each round of consensus, confirmation of a general ledger from the current status will make sure the future events(or trades) going on reliably and smoothly.</p></div>"
     };
 });
 
@@ -122,6 +195,6 @@ indexapp.directive("section3context",function(){
     return {
         replace : true,
         template :  "<div><p ng-show=\"currlanguage != 'EN'\">我们是国内第一家基于恒星新网络的总账平台，<strong>安全</strong>、<strong>方便</strong>、<strong>可靠</strong>，专业的开发人员，致力于将恒星币社区推广和完善。我们可以为各种在线服务提供便捷的支付手段，基于恒星币强大的网络和团队支持，能够发挥虚拟货币小额支付、流支付的优势。网站代码完全公开透明，绝对安全可靠。我们将不断推出和完善各种产品和服务，使恒星生态圈进一步得到完善。</p>" +
-        "<p ng-show=\"currlanguage == 'EN'\">We are the first of the new network-based general ledger platform in China, <strong>Safe</strong>, <strong>Convenient</strong> and <strong>Reliable</strong>, professional development, committed to community outreach and improve lumen/stellar network. We can provide a convenient means of payment for a variety of online services, this currency strong support network and team-based, can take advantage of virtual currency micro-payments, payment flow.</p></div>"
+        "<p ng-show=\"currlanguage == 'EN'\">We are fortunate to be the first of the novel network-based general ledger platform in China, which has been proved most <strong>Safe</strong>, <strong>Convenient</strong> and <strong>Reliable</strong>. This is a consequence of efforts by our professional network developers who are committed to serve community outreach add keep improving the Lumen/Stellar network. We will provide an extremely convenient option of online payments for a variety of services and trades. This currency service is strongly network-supported and team-based, and can take advantage of real micro-payment and payment flow of money.</p></div>"
     };
 });
