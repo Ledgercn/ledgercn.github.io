@@ -192,6 +192,8 @@ var StellarBase =
 
 	_defaults(exports, _interopExportWildcard(_strkey, _defaults));
 
+	exports["default"] = module.exports;
+
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
@@ -19302,7 +19304,7 @@ var StellarBase =
 	      }
 
 	      // valid surrogate pair
-	      codePoint = leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00 | 0x10000
+	      codePoint = (leadSurrogate - 0xD800 << 10 | codePoint - 0xDC00) + 0x10000
 	    } else if (leadSurrogate) {
 	      // valid bmp char, but last char was a lead
 	      if ((units -= 3) > -1) bytes.push(0xEF, 0xBF, 0xBD)
@@ -19606,38 +19608,8 @@ var StellarBase =
 /* 16 */
 /***/ function(module, exports) {
 
-	
-	/**
-	 * isArray
-	 */
-
-	var isArray = Array.isArray;
-
-	/**
-	 * toString
-	 */
-
-	var str = Object.prototype.toString;
-
-	/**
-	 * Whether or not the given `val`
-	 * is an array.
-	 *
-	 * example:
-	 *
-	 *        isArray([]);
-	 *        // > true
-	 *        isArray(arguments);
-	 *        // > false
-	 *        isArray('');
-	 *        // > false
-	 *
-	 * @param {mixed} val
-	 * @return {bool}
-	 */
-
-	module.exports = isArray || function (val) {
-	  return !! val && '[object Array]' == str.call(val);
+	module.exports = Array.isArray || function (arr) {
+	  return Object.prototype.toString.call(arr) == '[object Array]';
 	};
 
 
@@ -20814,6 +20786,9 @@ var StellarBase =
 	    },
 	    fromString: {
 	      value: function fromString(string) {
+	        if (!/^-?\d+$/.test(string)) {
+	          throw new Error("Invalid hyper string: " + string);
+	        }
 	        var result = _get(_core.Object.getPrototypeOf(Hyper), "fromString", this).call(this, string, false);
 	        return new this(result.low, result.high);
 	      }
@@ -20891,7 +20866,7 @@ var StellarBase =
 /* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {/*
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module) {/*
 	 Copyright 2013 Daniel Wirtz <dcode@dcode.io>
 	 Copyright 2009 The Closure Library Authors. All Rights Reserved.
 
@@ -20913,7 +20888,16 @@ var StellarBase =
 	 * Released under the Apache License, Version 2.0
 	 * see: https://github.com/dcodeIO/Long.js for details
 	 */
-	(function(global) {
+	(function(global, factory) {
+
+	    /* AMD */ if ("function" === 'function' && __webpack_require__(30)["amd"])
+	        !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	    /* CommonJS */ else if ("function" === 'function' && typeof module === "object" && module && module["exports"])
+	        module["exports"] = factory();
+	    /* Global */ else
+	        (global["dcodeIO"] = global["dcodeIO"] || {})["Long"] = factory();
+
+	})(this, function() {
 	    "use strict";
 
 	    /**
@@ -20926,7 +20910,7 @@ var StellarBase =
 	     * @param {boolean=} unsigned Whether unsigned or not, defaults to `false` for signed
 	     * @constructor
 	     */
-	    var Long = function(low, high, unsigned) {
+	    function Long(low, high, unsigned) {
 
 	        /**
 	         * The low 32 bits as a signed value.
@@ -20948,7 +20932,7 @@ var StellarBase =
 	         * @expose
 	         */
 	        this.unsigned = !!unsigned;
-	    };
+	    }
 
 	    // The internal representation of a long is the two given signed, 32-bit values.
 	    // We use 32-bit pieces because these are the size of integers on which
@@ -20968,13 +20952,28 @@ var StellarBase =
 	    // methods on which they depend.
 
 	    /**
+	     * An indicator used to reliably determine if an object is a Long or not.
+	     * @type {boolean}
+	     * @const
+	     * @expose
+	     * @private
+	     */
+	    Long.__isLong__;
+
+	    Object.defineProperty(Long.prototype, "__isLong__", {
+	        value: true,
+	        enumerable: false,
+	        configurable: false
+	    });
+
+	    /**
 	     * Tests if the specified object is a Long.
 	     * @param {*} obj Object
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.isLong = function(obj) {
-	        return (obj && obj instanceof Long) === true;
+	    Long.isLong = function isLong(obj) {
+	        return (obj && obj["__isLong__"]) === true;
 	    };
 
 	    /**
@@ -20998,7 +20997,7 @@ var StellarBase =
 	     * @returns {!Long} The corresponding Long value
 	     * @expose
 	     */
-	    Long.fromInt = function(value, unsigned) {
+	    Long.fromInt = function fromInt(value, unsigned) {
 	        var obj, cachedObj;
 	        if (!unsigned) {
 	            value = value | 0;
@@ -21032,7 +21031,7 @@ var StellarBase =
 	     * @returns {!Long} The corresponding Long value
 	     * @expose
 	     */
-	    Long.fromNumber = function(value, unsigned) {
+	    Long.fromNumber = function fromNumber(value, unsigned) {
 	        unsigned = !!unsigned;
 	        if (isNaN(value) || !isFinite(value))
 	            return Long.ZERO;
@@ -21056,7 +21055,7 @@ var StellarBase =
 	     * @returns {!Long} The corresponding Long value
 	     * @expose
 	     */
-	    Long.fromBits = function(lowBits, highBits, unsigned) {
+	    Long.fromBits = function fromBits(lowBits, highBits, unsigned) {
 	        return new Long(lowBits, highBits, unsigned);
 	    };
 
@@ -21068,7 +21067,7 @@ var StellarBase =
 	     * @returns {!Long} The corresponding Long value
 	     * @expose
 	     */
-	    Long.fromString = function(str, unsigned, radix) {
+	    Long.fromString = function fromString(str, unsigned, radix) {
 	        if (str.length === 0)
 	            throw Error('number format error: empty string');
 	        if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity")
@@ -21112,14 +21111,14 @@ var StellarBase =
 	     * @returns {!Long}
 	     * @expose
 	     */
-	    Long.fromValue = function(val) {
+	    Long.fromValue = function fromValue(val) {
+	        if (val /* is compatible */ instanceof Long)
+	            return val;
 	        if (typeof val === 'number')
 	            return Long.fromNumber(val);
 	        if (typeof val === 'string')
 	            return Long.fromString(val);
-	        if (Long.isLong(val))
-	            return val;
-	        // Throws for not an object (undefined, null):
+	        // Throws for non-objects, converts non-instanceof Long:
 	        return new Long(val.low, val.high, val.unsigned);
 	    };
 
@@ -21229,7 +21228,7 @@ var StellarBase =
 	     * @returns {number}
 	     * @expose
 	     */
-	    Long.prototype.toInt = function() {
+	    Long.prototype.toInt = function toInt() {
 	        return this.unsigned ? this.low >>> 0 : this.low;
 	    };
 
@@ -21238,7 +21237,7 @@ var StellarBase =
 	     * @returns {number}
 	     * @expose
 	     */
-	    Long.prototype.toNumber = function() {
+	    Long.prototype.toNumber = function toNumber() {
 	        if (this.unsigned) {
 	            return ((this.high >>> 0) * TWO_PWR_32_DBL) + (this.low >>> 0);
 	        }
@@ -21253,7 +21252,7 @@ var StellarBase =
 	     * @throws {RangeError} If `radix` is out of range
 	     * @expose
 	     */
-	    Long.prototype.toString = function(radix) {
+	    Long.prototype.toString = function toString(radix) {
 	        radix = radix || 10;
 	        if (radix < 2 || 36 < radix)
 	            throw RangeError('radix out of range: ' + radix);
@@ -21265,7 +21264,7 @@ var StellarBase =
 	                // We need to change the Long value before it can be negated, so we remove
 	                // the bottom-most digit in this base and then recurse to do the rest.
 	                var radixLong = Long.fromNumber(radix);
-	                var div = this.div(radixLong);
+	                var div = this.divide(radixLong);
 	                rem = div.multiply(radixLong).subtract(this);
 	                return div.toString(radix) + rem.toInt().toString(radix);
 	            } else
@@ -21278,7 +21277,7 @@ var StellarBase =
 	        rem = this;
 	        var result = '';
 	        while (true) {
-	            var remDiv = rem.div(radixToPower),
+	            var remDiv = rem.divide(radixToPower),
 	                intval = rem.subtract(remDiv.multiply(radixToPower)).toInt() >>> 0,
 	                digits = intval.toString(radix);
 	            rem = remDiv;
@@ -21297,7 +21296,7 @@ var StellarBase =
 	     * @returns {number} Signed high bits
 	     * @expose
 	     */
-	    Long.prototype.getHighBits = function() {
+	    Long.prototype.getHighBits = function getHighBits() {
 	        return this.high;
 	    };
 
@@ -21306,7 +21305,7 @@ var StellarBase =
 	     * @returns {number} Unsigned high bits
 	     * @expose
 	     */
-	    Long.prototype.getHighBitsUnsigned = function() {
+	    Long.prototype.getHighBitsUnsigned = function getHighBitsUnsigned() {
 	        return this.high >>> 0;
 	    };
 
@@ -21315,7 +21314,7 @@ var StellarBase =
 	     * @returns {number} Signed low bits
 	     * @expose
 	     */
-	    Long.prototype.getLowBits = function() {
+	    Long.prototype.getLowBits = function getLowBits() {
 	        return this.low;
 	    };
 
@@ -21324,7 +21323,7 @@ var StellarBase =
 	     * @returns {number} Unsigned low bits
 	     * @expose
 	     */
-	    Long.prototype.getLowBitsUnsigned = function() {
+	    Long.prototype.getLowBitsUnsigned = function getLowBitsUnsigned() {
 	        return this.low >>> 0;
 	    };
 
@@ -21333,7 +21332,7 @@ var StellarBase =
 	     * @returns {number}
 	     * @expose
 	     */
-	    Long.prototype.getNumBitsAbs = function() {
+	    Long.prototype.getNumBitsAbs = function getNumBitsAbs() {
 	        if (this.isNegative()) // Unsigned Longs are never negative
 	            return this.equals(Long.MIN_VALUE) ? 64 : this.negate().getNumBitsAbs();
 	        var val = this.high != 0 ? this.high : this.low;
@@ -21348,7 +21347,7 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.isZero = function() {
+	    Long.prototype.isZero = function isZero() {
 	        return this.high === 0 && this.low === 0;
 	    };
 
@@ -21357,7 +21356,7 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.isNegative = function() {
+	    Long.prototype.isNegative = function isNegative() {
 	        return !this.unsigned && this.high < 0;
 	    };
 
@@ -21366,7 +21365,7 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.isPositive = function() {
+	    Long.prototype.isPositive = function isPositive() {
 	        return this.unsigned || this.high >= 0;
 	    };
 
@@ -21375,7 +21374,7 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.isOdd = function() {
+	    Long.prototype.isOdd = function isOdd() {
 	        return (this.low & 1) === 1;
 	    };
 
@@ -21384,7 +21383,7 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.isEven = function() {
+	    Long.prototype.isEven = function isEven() {
 	        return (this.low & 1) === 0;
 	    };
 
@@ -21394,7 +21393,7 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.equals = function(other) {
+	    Long.prototype.equals = function equals(other) {
 	        if (!Long.isLong(other))
 	            other = Long.fromValue(other);
 	        if (this.unsigned !== other.unsigned && (this.high >>> 31) === 1 && (other.high >>> 31) === 1)
@@ -21403,16 +21402,32 @@ var StellarBase =
 	    };
 
 	    /**
+	     * Tests if this Long's value equals the specified's. This is an alias of {@link Long#equals}.
+	     * @function
+	     * @param {!Long|number|string} other Other value
+	     * @returns {boolean}
+	     * @expose
+	     */
+	    Long.eq = Long.prototype.equals;
+
+	    /**
 	     * Tests if this Long's value differs from the specified's.
 	     * @param {!Long|number|string} other Other value
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.notEquals = function(other) {
-	        if (!Long.isLong(other))
-	            other = Long.fromValue(other);
-	        return !this.equals(other);
+	    Long.prototype.notEquals = function notEquals(other) {
+	        return !this.equals(/* validates */ other);
 	    };
+
+	    /**
+	     * Tests if this Long's value differs from the specified's. This is an alias of {@link Long#notEquals}.
+	     * @function
+	     * @param {!Long|number|string} other Other value
+	     * @returns {boolean}
+	     * @expose
+	     */
+	    Long.neq = Long.prototype.notEquals;
 
 	    /**
 	     * Tests if this Long's value is less than the specified's.
@@ -21420,11 +21435,18 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.lessThan = function(other) {
-	        if (!Long.isLong(other))
-	            other = Long.fromValue(other);
-	        return this.compare(other) < 0;
+	    Long.prototype.lessThan = function lessThan(other) {
+	        return this.compare(/* validates */ other) < 0;
 	    };
+
+	    /**
+	     * Tests if this Long's value is less than the specified's. This is an alias of {@link Long#lessThan}.
+	     * @function
+	     * @param {!Long|number|string} other Other value
+	     * @returns {boolean}
+	     * @expose
+	     */
+	    Long.prototype.lt = Long.prototype.lessThan;
 
 	    /**
 	     * Tests if this Long's value is less than or equal the specified's.
@@ -21432,11 +21454,18 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.lessThanOrEqual = function(other) {
-	        if (!Long.isLong(other))
-	            other = Long.fromValue(other);
-	        return this.compare(other) <= 0;
+	    Long.prototype.lessThanOrEqual = function lessThanOrEqual(other) {
+	        return this.compare(/* validates */ other) <= 0;
 	    };
+
+	    /**
+	     * Tests if this Long's value is less than or equal the specified's. This is an alias of {@link Long#lessThanOrEqual}.
+	     * @function
+	     * @param {!Long|number|string} other Other value
+	     * @returns {boolean}
+	     * @expose
+	     */
+	    Long.prototype.lte = Long.prototype.lessThanOrEqual;
 
 	    /**
 	     * Tests if this Long's value is greater than the specified's.
@@ -21444,11 +21473,18 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.greaterThan = function(other) {
-	        if (!Long.isLong(other))
-	            other = Long.fromValue(other);
-	        return this.compare(other) > 0;
+	    Long.prototype.greaterThan = function greaterThan(other) {
+	        return this.compare(/* validates */ other) > 0;
 	    };
+
+	    /**
+	     * Tests if this Long's value is greater than the specified's. This is an alias of {@link Long#greaterThan}.
+	     * @function
+	     * @param {!Long|number|string} other Other value
+	     * @returns {boolean}
+	     * @expose
+	     */
+	    Long.prototype.gt = Long.prototype.greaterThan;
 
 	    /**
 	     * Tests if this Long's value is greater than or equal the specified's.
@@ -21456,11 +21492,18 @@ var StellarBase =
 	     * @returns {boolean}
 	     * @expose
 	     */
-	    Long.prototype.greaterThanOrEqual = function(other) {
-	        if (!Long.isLong(other))
-	            other = Long.fromValue(other);
-	        return this.compare(other) >= 0;
+	    Long.prototype.greaterThanOrEqual = function greaterThanOrEqual(other) {
+	        return this.compare(/* validates */ other) >= 0;
 	    };
+
+	    /**
+	     * Tests if this Long's value is greater than or equal the specified's. This is an alias of {@link Long#greaterThanOrEqual}.
+	     * @function
+	     * @param {!Long|number|string} other Other value
+	     * @returns {boolean}
+	     * @expose
+	     */
+	    Long.prototype.gte = Long.prototype.greaterThanOrEqual;
 
 	    /**
 	     * Compares this Long's value with the specified's.
@@ -21469,7 +21512,9 @@ var StellarBase =
 	     *  if the given one is greater
 	     * @expose
 	     */
-	    Long.prototype.compare = function(other) {
+	    Long.prototype.compare = function compare(other) {
+	        if (!Long.isLong(other))
+	            other = Long.fromValue(other);
 	        if (this.equals(other))
 	            return 0;
 	        var thisNeg = this.isNegative(),
@@ -21490,11 +21535,19 @@ var StellarBase =
 	     * @returns {!Long} Negated Long
 	     * @expose
 	     */
-	    Long.prototype.negate = function() {
+	    Long.prototype.negate = function negate() {
 	        if (!this.unsigned && this.equals(Long.MIN_VALUE))
 	            return Long.MIN_VALUE;
 	        return this.not().add(Long.ONE);
 	    };
+
+	    /**
+	     * Negates this Long's value. This is an alias of {@link Long#negate}.
+	     * @function
+	     * @returns {!Long} Negated Long
+	     * @expose
+	     */
+	    Long.prototype.neg = Long.prototype.negate;
 
 	    /**
 	     * Returns the sum of this and the specified Long.
@@ -21502,7 +21555,7 @@ var StellarBase =
 	     * @returns {!Long} Sum
 	     * @expose
 	     */
-	    Long.prototype.add = function(addend) {
+	    Long.prototype.add = function add(addend) {
 	        if (!Long.isLong(addend))
 	            addend = Long.fromValue(addend);
 
@@ -21539,11 +21592,20 @@ var StellarBase =
 	     * @returns {!Long} Difference
 	     * @expose
 	     */
-	    Long.prototype.subtract = function(subtrahend) {
+	    Long.prototype.subtract = function subtract(subtrahend) {
 	        if (!Long.isLong(subtrahend))
 	            subtrahend = Long.fromValue(subtrahend);
 	        return this.add(subtrahend.negate());
 	    };
+
+	    /**
+	     * Returns the difference of this and the specified Long. This is an alias of {@link Long#subtract}.
+	     * @function
+	     * @param {!Long|number|string} subtrahend Subtrahend
+	     * @returns {!Long} Difference
+	     * @expose
+	     */
+	    Long.prototype.sub = Long.prototype.subtract;
 
 	    /**
 	     * Returns the product of this and the specified Long.
@@ -21551,7 +21613,7 @@ var StellarBase =
 	     * @returns {!Long} Product
 	     * @expose
 	     */
-	    Long.prototype.multiply = function(multiplier) {
+	    Long.prototype.multiply = function multiply(multiplier) {
 	        if (this.isZero())
 	            return Long.ZERO;
 	        if (!Long.isLong(multiplier))
@@ -21613,12 +21675,21 @@ var StellarBase =
 	    };
 
 	    /**
+	     * Returns the product of this and the specified Long. This is an alias of {@link Long#multiply}.
+	     * @function
+	     * @param {!Long|number|string} multiplier Multiplier
+	     * @returns {!Long} Product
+	     * @expose
+	     */
+	    Long.prototype.mul = Long.prototype.multiply;
+
+	    /**
 	     * Returns this Long divided by the specified.
 	     * @param {!Long|number|string} divisor Divisor
 	     * @returns {!Long} Quotient
 	     * @expose
 	     */
-	    Long.prototype.div = function(divisor) {
+	    Long.prototype.divide = function divide(divisor) {
 	        if (!Long.isLong(divisor))
 	            divisor = Long.fromValue(divisor);
 	        if (divisor.isZero())
@@ -21634,12 +21705,12 @@ var StellarBase =
 	            else {
 	                // At this point, we have |other| >= 2, so |this/other| < |MIN_VALUE|.
 	                var halfThis = this.shiftRight(1);
-	                approx = halfThis.div(divisor).shiftLeft(1);
+	                approx = halfThis.divide(divisor).shiftLeft(1);
 	                if (approx.equals(Long.ZERO)) {
 	                    return divisor.isNegative() ? Long.ONE : Long.NEG_ONE;
 	                } else {
 	                    rem = this.subtract(divisor.multiply(approx));
-	                    res = approx.add(rem.div(divisor));
+	                    res = approx.add(rem.divide(divisor));
 	                    return res;
 	                }
 	            }
@@ -21647,10 +21718,10 @@ var StellarBase =
 	            return this.unsigned ? Long.UZERO : Long.ZERO;
 	        if (this.isNegative()) {
 	            if (divisor.isNegative())
-	                return this.negate().div(divisor.negate());
-	            return this.negate().div(divisor).negate();
+	                return this.negate().divide(divisor.negate());
+	            return this.negate().divide(divisor).negate();
 	        } else if (divisor.isNegative())
-	            return this.div(divisor.negate()).negate();
+	            return this.divide(divisor.negate()).negate();
 
 	        // Repeat the following until the remainder is less than other:  find a
 	        // floating-point that approximates remainder / other *from below*, add this
@@ -21691,23 +21762,41 @@ var StellarBase =
 	    };
 
 	    /**
+	     * Returns this Long divided by the specified. This is an alias of {@link Long#divide}.
+	     * @function
+	     * @param {!Long|number|string} divisor Divisor
+	     * @returns {!Long} Quotient
+	     * @expose
+	     */
+	    Long.prototype.div = Long.prototype.divide;
+
+	    /**
 	     * Returns this Long modulo the specified.
 	     * @param {!Long|number|string} divisor Divisor
 	     * @returns {!Long} Remainder
 	     * @expose
 	     */
-	    Long.prototype.modulo = function(divisor) {
+	    Long.prototype.modulo = function modulo(divisor) {
 	        if (!Long.isLong(divisor))
 	            divisor = Long.fromValue(divisor);
-	        return this.subtract(this.div(divisor).multiply(divisor));
+	        return this.subtract(this.divide(divisor).multiply(divisor));
 	    };
+
+	    /**
+	     * Returns this Long modulo the specified. This is an alias of {@link Long#modulo}.
+	     * @function
+	     * @param {!Long|number|string} divisor Divisor
+	     * @returns {!Long} Remainder
+	     * @expose
+	     */
+	    Long.prototype.mod = Long.prototype.modulo;
 
 	    /**
 	     * Returns the bitwise NOT of this Long.
 	     * @returns {!Long}
 	     * @expose
 	     */
-	    Long.prototype.not = function() {
+	    Long.prototype.not = function not() {
 	        return Long.fromBits(~this.low, ~this.high, this.unsigned);
 	    };
 
@@ -21717,7 +21806,7 @@ var StellarBase =
 	     * @returns {!Long}
 	     * @expose
 	     */
-	    Long.prototype.and = function(other) {
+	    Long.prototype.and = function and(other) {
 	        if (!Long.isLong(other))
 	            other = Long.fromValue(other);
 	        return Long.fromBits(this.low & other.low, this.high & other.high, this.unsigned);
@@ -21729,7 +21818,7 @@ var StellarBase =
 	     * @returns {!Long}
 	     * @expose
 	     */
-	    Long.prototype.or = function(other) {
+	    Long.prototype.or = function or(other) {
 	        if (!Long.isLong(other))
 	            other = Long.fromValue(other);
 	        return Long.fromBits(this.low | other.low, this.high | other.high, this.unsigned);
@@ -21741,7 +21830,7 @@ var StellarBase =
 	     * @returns {!Long}
 	     * @expose
 	     */
-	    Long.prototype.xor = function(other) {
+	    Long.prototype.xor = function xor(other) {
 	        if (!Long.isLong(other))
 	            other = Long.fromValue(other);
 	        return Long.fromBits(this.low ^ other.low, this.high ^ other.high, this.unsigned);
@@ -21753,7 +21842,7 @@ var StellarBase =
 	     * @returns {!Long} Shifted Long
 	     * @expose
 	     */
-	    Long.prototype.shiftLeft = function(numBits) {
+	    Long.prototype.shiftLeft = function shiftLeft(numBits) {
 	        if (Long.isLong(numBits))
 	            numBits = numBits.toInt();
 	        if ((numBits &= 63) === 0)
@@ -21765,12 +21854,21 @@ var StellarBase =
 	    };
 
 	    /**
+	     * Returns this Long with bits shifted to the left by the given amount. This is an alias of {@link Long#shiftLeft}.
+	     * @function
+	     * @param {number|!Long} numBits Number of bits
+	     * @returns {!Long} Shifted Long
+	     * @expose
+	     */
+	    Long.prototype.shl = Long.prototype.shiftLeft;
+
+	    /**
 	     * Returns this Long with bits arithmetically shifted to the right by the given amount.
 	     * @param {number|!Long} numBits Number of bits
 	     * @returns {!Long} Shifted Long
 	     * @expose
 	     */
-	    Long.prototype.shiftRight = function(numBits) {
+	    Long.prototype.shiftRight = function shiftRight(numBits) {
 	        if (Long.isLong(numBits))
 	            numBits = numBits.toInt();
 	        if ((numBits &= 63) === 0)
@@ -21782,12 +21880,21 @@ var StellarBase =
 	    };
 
 	    /**
+	     * Returns this Long with bits arithmetically shifted to the right by the given amount. This is an alias of {@link Long#shiftRight}.
+	     * @function
+	     * @param {number|!Long} numBits Number of bits
+	     * @returns {!Long} Shifted Long
+	     * @expose
+	     */
+	    Long.prototype.shr = Long.prototype.shiftRight;
+
+	    /**
 	     * Returns this Long with bits logically shifted to the right by the given amount.
 	     * @param {number|!Long} numBits Number of bits
 	     * @returns {!Long} Shifted Long
 	     * @expose
 	     */
-	    Long.prototype.shiftRightUnsigned = function(numBits) {
+	    Long.prototype.shiftRightUnsigned = function shiftRightUnsigned(numBits) {
 	        if (Long.isLong(numBits))
 	            numBits = numBits.toInt();
 	        numBits &= 63;
@@ -21806,11 +21913,20 @@ var StellarBase =
 	    };
 
 	    /**
+	     * Returns this Long with bits logically shifted to the right by the given amount. This is an alias of {@link Long#shiftRightUnsigned}.
+	     * @function
+	     * @param {number|!Long} numBits Number of bits
+	     * @returns {!Long} Shifted Long
+	     * @expose
+	     */
+	    Long.prototype.shru = Long.prototype.shiftRightUnsigned;
+
+	    /**
 	     * Converts this Long to signed.
 	     * @returns {!Long} Signed long
 	     * @expose
 	     */
-	    Long.prototype.toSigned = function() {
+	    Long.prototype.toSigned = function toSigned() {
 	        if (!this.unsigned)
 	            return this;
 	        return new Long(this.low, this.high, false);
@@ -21821,20 +21937,14 @@ var StellarBase =
 	     * @returns {!Long} Unsigned long
 	     * @expose
 	     */
-	    Long.prototype.toUnsigned = function() {
+	    Long.prototype.toUnsigned = function toUnsigned() {
 	        if (this.unsigned)
 	            return this;
 	        return new Long(this.low, this.high, true);
 	    };
 
-	    /* CommonJS */ if ("function" === 'function' && typeof module === 'object' && module && typeof exports === 'object' && exports)
-	        module["exports"] = Long;
-	    /* AMD */ else if ("function" === 'function' && __webpack_require__(30)["amd"])
-	        !(__WEBPACK_AMD_DEFINE_RESULT__ = function() { return Long; }.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	    /* Global */ else
-	        (global["dcodeIO"] = global["dcodeIO"] || {})["Long"] = Long;
-
-	})(this);
+	    return Long;
+	});
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(11)(module)))
 
@@ -21955,6 +22065,9 @@ var StellarBase =
 	    },
 	    fromString: {
 	      value: function fromString(string) {
+	        if (!/^\d+$/.test(string)) {
+	          throw new Error("Invalid hyper string: " + string);
+	        }
 	        var result = _get(_core.Object.getPrototypeOf(UnsignedHyper), "fromString", this).call(this, string, true);
 	        return new this(result.low, result.high);
 	      }
@@ -27011,73 +27124,36 @@ var StellarBase =
 	var nacl = __webpack_require__(61);
 
 	var Keypair = (function () {
-	  _createClass(Keypair, null, [{
-	    key: "fromSeed",
-	    value: function fromSeed(seed) {
-	      var rawSeed = strkey.decodeCheck("seed", seed);
-	      return this.fromRawSeed(rawSeed);
-	    }
+	  /**
+	   * `Keypair` represents public (and secret) keys of the account.
+	   *
+	   * Use more convenient methods to create `Keypair` object:
+	   * * `{@link Keypair.fromAddress}`
+	   * * `{@link Keypair.fromSeed}`
+	   * * `{@link Keypair.random}`
+	   *
+	   * @constructor
+	   * @param {object} keys
+	   * @param {string} keys.publicKey Raw public key
+	   * @param {string} [keys.secretSeed] Raw secret key seed.
+	   */
 
-	    /**
-	     * Base58 address encoding is **DEPRECATED**! Use this method only for transition to base32.
-	     * @param seed Base58 secret seed
-	     * @returns StrKey KeyPair object
-	     */
-	  }, {
-	    key: "fromBase58Seed",
-	    value: function fromBase58Seed(seed) {
-	      var rawSeed = base58.decodeBase58Check("seed", seed);
-	      return this.fromRawSeed(rawSeed);
-	    }
-
-	    /**
-	     * Create Keypair object from secret seed raw bytes
-	     *
-	     * @param rawSeed Array of bytes of secret seed
-	     * @returns {Keypair}
-	     */
-	  }, {
-	    key: "fromRawSeed",
-	    value: function fromRawSeed(rawSeed) {
-	      rawSeed = new Buffer(rawSeed);
-	      var rawSeedU8 = new Uint8Array(rawSeed);
-	      var keys = nacl.sign.keyPair.fromSeed(rawSeedU8);
-	      keys.secretSeed = rawSeed;
-
-	      return new this(keys);
-	    }
-	  }, {
-	    key: "master",
-	    value: function master() {
-	      return this.fromRawSeed(_network.Network.current().networkId());
-	    }
-	  }, {
-	    key: "fromAddress",
-	    value: function fromAddress(address) {
-	      var publicKey = strkey.decodeCheck("accountId", address);
-	      if (publicKey.length !== 32) {
-	        throw new Error('Invalid Stellar address');
-	      }
-	      return new this({ publicKey: publicKey });
-	    }
-	  }, {
-	    key: "random",
-	    value: function random() {
-	      var seed = nacl.randomBytes(32);
-	      return this.fromRawSeed(seed);
-	    }
-	  }]);
-
-	  function Keypair(keysAndSeed) {
+	  function Keypair(keys) {
 	    _classCallCheck(this, Keypair);
 
-	    this._publicKey = new Buffer(keysAndSeed.publicKey);
+	    this._publicKey = new Buffer(keys.publicKey);
 
-	    if (keysAndSeed.secretSeed) {
-	      this._secretSeed = new Buffer(keysAndSeed.secretSeed);
-	      this._secretKey = new Buffer(keysAndSeed.secretKey);
+	    if (keys.secretSeed) {
+	      this._secretSeed = new Buffer(keys.secretSeed);
+	      this._secretKey = new Buffer(keys.secretKey);
 	    }
 	  }
+
+	  /**
+	   * Creates a new `Keypair` instance from secret key seed.
+	   * @param {string} seed Secret key seed
+	   * @returns {Keypair}
+	   */
 
 	  _createClass(Keypair, [{
 	    key: "accountId",
@@ -27089,6 +27165,11 @@ var StellarBase =
 	    value: function publicKey() {
 	      return new _generatedStellarXdr_generated2["default"].PublicKey.keyTypeEd25519(this._publicKey);
 	    }
+
+	    /**
+	     * Returns raw public key
+	     * @returns {Buffer}
+	     */
 	  }, {
 	    key: "rawPublicKey",
 	    value: function rawPublicKey() {
@@ -27101,31 +27182,62 @@ var StellarBase =
 
 	      return a.slice(a.length - 4);
 	    }
+
+	    /**
+	     * Returns account ID associated with this `Keypair` object.
+	     * @returns {string}
+	     */
 	  }, {
 	    key: "address",
 	    value: function address() {
 	      return strkey.encodeCheck("accountId", this._publicKey);
 	    }
+
+	    /**
+	     * Returns seed associated with this `Keypair` object
+	     * @returns {string}
+	     */
 	  }, {
 	    key: "seed",
 	    value: function seed() {
 	      return strkey.encodeCheck("seed", this._secretSeed);
 	    }
+
+	    /**
+	     * Returns raw secret key seed.
+	     * @returns {Buffer}
+	     */
 	  }, {
 	    key: "rawSeed",
 	    value: function rawSeed() {
 	      return this._secretSeed;
 	    }
+
+	    /**
+	     * Returns raw secret key.
+	     * @returns {Buffer}
+	     */
 	  }, {
 	    key: "rawSecretKey",
 	    value: function rawSecretKey() {
 	      return this._secretKey;
 	    }
+
+	    /**
+	     * Returns `true` if this `Keypair` object contains secret key and can sign.
+	     * @returns {boolean}
+	     */
 	  }, {
 	    key: "canSign",
 	    value: function canSign() {
 	      return !!this._secretKey;
 	    }
+
+	    /**
+	     * Signs data.
+	     * @param {Buffer} data Data to sign
+	     * @returns {Buffer}
+	     */
 	  }, {
 	    key: "sign",
 	    value: function sign(data) {
@@ -27135,6 +27247,13 @@ var StellarBase =
 
 	      return (0, _signing.sign)(data, this._secretKey);
 	    }
+
+	    /**
+	     * Verifies if `signature` for `data` is valid.
+	     * @param {Buffer} data Signed data
+	     * @param {Buffer} signature Signature
+	     * @returns {boolean}
+	     */
 	  }, {
 	    key: "verify",
 	    value: function verify(data, signature) {
@@ -27147,6 +27266,78 @@ var StellarBase =
 	      var hint = this.signatureHint();
 
 	      return new _generatedStellarXdr_generated2["default"].DecoratedSignature({ hint: hint, signature: signature });
+	    }
+	  }], [{
+	    key: "fromSeed",
+	    value: function fromSeed(seed) {
+	      var rawSeed = strkey.decodeCheck("seed", seed);
+	      return this.fromRawSeed(rawSeed);
+	    }
+
+	    /**
+	     * Base58 address encoding is **DEPRECATED**! Use this method only for transition to strkey encoding.
+	     * @param {string} seed Base58 secret seed
+	     * @deprecated Use {@link Keypair.fromSeed}
+	     * @returns {Keypair}
+	     */
+	  }, {
+	    key: "fromBase58Seed",
+	    value: function fromBase58Seed(seed) {
+	      var rawSeed = base58.decodeBase58Check("seed", seed);
+	      return this.fromRawSeed(rawSeed);
+	    }
+
+	    /**
+	     * Creates a new `Keypair` object from secret seed raw bytes.
+	     *
+	     * @param {Buffer} rawSeed Buffer containing secret seed
+	     * @returns {Keypair}
+	     */
+	  }, {
+	    key: "fromRawSeed",
+	    value: function fromRawSeed(rawSeed) {
+	      rawSeed = new Buffer(rawSeed);
+	      var rawSeedU8 = new Uint8Array(rawSeed);
+	      var keys = nacl.sign.keyPair.fromSeed(rawSeedU8);
+	      keys.secretSeed = rawSeed;
+
+	      return new this(keys);
+	    }
+
+	    /**
+	     * Returns `Keypair` object representing network master key.
+	     * @returns {Keypair}
+	     */
+	  }, {
+	    key: "master",
+	    value: function master() {
+	      return this.fromRawSeed(_network.Network.current().networkId());
+	    }
+
+	    /**
+	     * Creates a new `Keypair` object from account ID.
+	     * @param {string} address account ID
+	     * @returns {Keypair}
+	     */
+	  }, {
+	    key: "fromAddress",
+	    value: function fromAddress(address) {
+	      var publicKey = strkey.decodeCheck("accountId", address);
+	      if (publicKey.length !== 32) {
+	        throw new Error('Invalid Stellar address');
+	      }
+	      return new this({ publicKey: publicKey });
+	    }
+
+	    /**
+	     * Create a random `Keypair` object.
+	     * @returns {Keypair}
+	     */
+	  }, {
+	    key: "random",
+	    value: function random() {
+	      var seed = nacl.randomBytes(32);
+	      return this.fromRawSeed(seed);
 	    }
 	  }]);
 
@@ -27172,6 +27363,12 @@ var StellarBase =
 
 	var _hashing = __webpack_require__(50);
 
+	/**
+	 * Contains passphrases for common networks:
+	 * * `Networks.PUBLIC`: `Public Global Stellar Network ; September 2015`
+	 * * `Networks.TESTNET`: `Test SDF Network ; September 2015`
+	 * @type {{PUBLIC: string, TESTNET: string}}
+	 */
 	var Networks = {
 		PUBLIC: "Public Global Stellar Network ; September 2015",
 		TESTNET: "Test SDF Network ; September 2015"
@@ -27180,63 +27377,19 @@ var StellarBase =
 	exports.Networks = Networks;
 	var _current;
 
-	/**
-	 * The Network class provides helper methods to get the passphrase or id for different
-	 * stellar networks.  It also provides the current() class method that returns the network
-	 * that will be used by this process for the purposes of generating signatures
-	 *
-	 * The public network is the default, but you can also override the default by using the `use`,
-	 * `usePublicNetwork` and `useTestNetwork` helper methods
-	 *
-	 */
-
 	var Network = (function () {
-		_createClass(Network, null, [{
-			key: "useDefault",
-			value: function useDefault() {
-				this.useTestNetwork();
-			}
-		}, {
-			key: "usePublicNetwork",
-			value: function usePublicNetwork() {
-				this.use(new Network(Networks.PUBLIC));
-			}
-
-			/**
-	   * Alias for `usePublicNetwork`.
-	   * @deprecated Use `usePublicNetwork` method
-	   */
-		}, {
-			key: "usePublicNet",
-			value: function usePublicNet() {
-				this.usePublicNetwork();
-			}
-		}, {
-			key: "useTestNetwork",
-			value: function useTestNetwork() {
-				this.use(new Network(Networks.TESTNET));
-			}
-
-			/**
-	   * Alias for `useTestNetwork`.
-	   * @deprecated Use `useTestNetwork` method
-	   */
-		}, {
-			key: "useTestNet",
-			value: function useTestNet() {
-				this.useTestNetwork();
-			}
-		}, {
-			key: "use",
-			value: function use(network) {
-				_current = network;
-			}
-		}, {
-			key: "current",
-			value: function current() {
-				return _current;
-			}
-		}]);
+		/**
+	   * The Network class provides helper methods to get the passphrase or id for different
+	   * stellar networks.  It also provides the {@link Network.current} class method that returns the network
+	   * that will be used by this process for the purposes of generating signatures.
+	   *
+	   * The test network is the default, but you can also override the default by using the `use`,
+	   * `usePublicNetwork` and `useTestNetwork` helper methods.
+	   *
+	  * Creates a new `Network` object.
+	  * @constructor
+	  * @param {string} networkPassphrase Network passphrase
+	  */
 
 		function Network(networkPassphrase) {
 			_classCallCheck(this, Network);
@@ -27244,15 +27397,92 @@ var StellarBase =
 			this._networkPassphrase = networkPassphrase;
 		}
 
+		/**
+	  * Use default network (right now default network is `testnet`).
+	  */
+
 		_createClass(Network, [{
 			key: "networkPassphrase",
+
+			/**
+	   * Returns network passphrase.
+	   * @returns {string}
+	   */
 			value: function networkPassphrase() {
 				return this._networkPassphrase;
 			}
+
+			/**
+	   * Returns Network ID. Network ID is SHA-256 hash of network passphrase.
+	   * @returns {string}
+	   */
 		}, {
 			key: "networkId",
 			value: function networkId() {
 				return (0, _hashing.hash)(this.networkPassphrase());
+			}
+		}], [{
+			key: "useDefault",
+			value: function useDefault() {
+				this.useTestNetwork();
+			}
+
+			/**
+	   * Use Stellar Public Network
+	   */
+		}, {
+			key: "usePublicNetwork",
+			value: function usePublicNetwork() {
+				this.use(new Network(Networks.PUBLIC));
+			}
+
+			/**
+	   * Alias for {@link Network.usePublicNetwork}.
+	   * @deprecated Use {@link Network.usePublicNetwork} method
+	   */
+		}, {
+			key: "usePublicNet",
+			value: function usePublicNet() {
+				this.usePublicNetwork();
+			}
+
+			/**
+	   * Use test network.
+	   */
+		}, {
+			key: "useTestNetwork",
+			value: function useTestNetwork() {
+				this.use(new Network(Networks.TESTNET));
+			}
+
+			/**
+	   * Alias for {@link Network.useTestNetwork}.
+	   * @deprecated Use {@link Network.useTestNetwork} method
+	   */
+		}, {
+			key: "useTestNet",
+			value: function useTestNet() {
+				this.useTestNetwork();
+			}
+
+			/**
+	   * Use network defined by Network object.
+	   * @param {Network} network Network to use
+	   */
+		}, {
+			key: "use",
+			value: function use(network) {
+				_current = network;
+			}
+
+			/**
+	   * Returns currently selected network.
+	   * @returns {Network}
+	   */
+		}, {
+			key: "current",
+			value: function current() {
+				return _current;
 			}
 		}]);
 
@@ -28252,15 +28482,13 @@ var StellarBase =
 	var MAX_LEDGER = 0xFFFFFFFF; // max uint32
 
 	var Transaction = (function () {
-
 	    /**
-	    * A new Transaction object is created from a transaction envelope (or via TransactionBuilder).
+	    * A new Transaction object is created from a transaction envelope or via {@link TransactionBuilder}.
 	    * Once a Transaction has been created from an envelope, its attributes and operations
-	    * should not be changed. You should only add signers to a Transaction object before
+	    * should not be changed. You should only add signers (using {@link Transaction#sign}) to a Transaction object before
 	    * submitting to the network or forwarding on to additional signers.
 	    * @constructor
-	    * @param {string|xdr.TransactionEnvelope} envelope - The transaction envelope object or
-	    *                                                    base64 encoded string.
+	    * @param {string|xdr.TransactionEnvelope} envelope - The transaction envelope object or base64 encoded string.
 	    */
 
 	    function Transaction(envelope) {
@@ -28289,9 +28517,10 @@ var StellarBase =
 	    }
 
 	    /**
-	    * Signs the transaction with the given Keypair.
-	    * @param {...Keypair} keypairs
-	    */
+	     * Signs the transaction with the given {@link Keypair}.
+	     * @param {...Keypair} keypairs Keypairs of signers
+	     * @returns {void}
+	     */
 
 	    _createClass(Transaction, [{
 	        key: "sign",
@@ -28311,8 +28540,9 @@ var StellarBase =
 	        }
 
 	        /**
-	        * Returns a hash for this transaction, suitable for signing.
-	        */
+	         * Returns a hash for this transaction, suitable for signing.
+	         * @returns {Buffer}
+	         */
 	    }, {
 	        key: "hash",
 	        value: function hash() {
@@ -28320,13 +28550,14 @@ var StellarBase =
 	        }
 
 	        /**
-	        * Returns the "signature base" of this transaction, which is the value
-	        * that, when hashed, should be signed to create a signature that
-	        * validators on the Stellar Network will accept.
-	        *
-	        * It is composed of a 4 prefix bytes followed by the xdr-encoded form
-	        * of this transaction.
-	        */
+	         * Returns the "signature base" of this transaction, which is the value
+	         * that, when hashed, should be signed to create a signature that
+	         * validators on the Stellar Network will accept.
+	         *
+	         * It is composed of a 4 prefix bytes followed by the xdr-encoded form
+	         * of this transaction.
+	         * @returns {Buffer}
+	         */
 	    }, {
 	        key: "signatureBase",
 	        value: function signatureBase() {
@@ -28334,8 +28565,9 @@ var StellarBase =
 	        }
 
 	        /**
-	        * To envelope returns a xdr.TransactionEnvelope which can be submitted to the network.
-	        */
+	         * To envelope returns a xdr.TransactionEnvelope which can be submitted to the network.
+	         * @returns {xdr.TransactionEnvelope}
+	         */
 	    }, {
 	        key: "toEnvelope",
 	        value: function toEnvelope() {
@@ -28397,9 +28629,21 @@ var StellarBase =
 	var MAX_INT64 = '9223372036854775807';
 
 	/**
-	* @class Operation
-	* See https://stellar.org/developers/learn/concepts/operations.html  for more information about how operations work in Stellar.
-	*/
+	 * `Operation` class represents [operations](https://www.stellar.org/developers/learn/concepts/operations.html) in Stellar network.
+	 * Use one of static methods to create operations:
+	 * * `{@link Operation.createAccount}`
+	 * * `{@link Operation.payment}`
+	 * * `{@link Operation.pathPayment}`
+	 * * `{@link Operation.manageOffer}`
+	 * * `{@link Operation.createPassiveOffer}`
+	 * * `{@link Operation.setOptions}`
+	 * * `{@link Operation.changeTrust}`
+	 * * `{@link Operation.allowTrust}`
+	 * * `{@link Operation.accountMerge}`
+	 * * `{@link Operation.inflation}`
+	 *
+	 * @class Operation
+	 */
 
 	var Operation = (function () {
 	    function Operation() {
@@ -28414,7 +28658,7 @@ var StellarBase =
 	        * @param {object} opts
 	        * @param {string} opts.destination - Destination address to create an account for.
 	        * @param {string} opts.startingBalance - Amount in XLM the account should be funded for. Must be greater
-	        *                                   than the reserve balance amount.
+	        *                                   than the [reserve balance amount](https://www.stellar.org/developers/learn/concepts/fees.html).
 	        * @param {string} [opts.source] - The source account for the payment. Defaults to the transaction's source account.
 	        * @returns {xdr.CreateAccountOp}
 	        */
@@ -28442,7 +28686,7 @@ var StellarBase =
 	        * @param {object} opts
 	        * @param {string} opts.destination - The destination address.
 	        * @param {Asset} opts.asset - The asset to send.
-	        * @param {string} opts.amount - The amount in XLM to send.
+	        * @param {string} opts.amount - The amount to send.
 	        * @param {string} [opts.source] - The source account for the payment. Defaults to the transaction's source account.
 	        * @returns {xdr.PaymentOp}
 	        */
@@ -28482,7 +28726,7 @@ var StellarBase =
 	        * @param {string} opts.destination - The destination account to send to.
 	        * @param {Asset} opts.destAsset - The asset the destination will receive.
 	        * @param {string} opts.destAmount - The amount the destination receives.
-	        * @param {array} [opts.path] - An array of Asset objects to use as the path.
+	        * @param {Asset[]} opts.path - An array of Asset objects to use as the path.
 	        * @param {string} [opts.source] - The source account for the payment. Defaults to the transaction's source account.
 	        * @returns {xdr.PathPaymentOp}
 	        */
@@ -28693,11 +28937,11 @@ var StellarBase =
 	        * Returns a XDR ManageOfferOp. A "manage offer" operation creates, updates, or
 	        * deletes an offer.
 	        * @param {object} opts
-	        * @param {Asset} selling - What you're selling.
-	        * @param {Asset} buying - What you're buying.
-	        * @param {string} amount - The total amount you're selling. If 0, deletes the offer.
-	        * @param {number|string|BigNumber} price - The exchange rate ratio (takerpay / takerget)
-	        * @param {string} offerId - If 0, will create a new offer (default). Otherwise, edits an exisiting offer.
+	        * @param {Asset} opts.selling - What you're selling.
+	        * @param {Asset} opts.buying - What you're buying.
+	        * @param {string} opts.amount - The total amount you're selling. If 0, deletes the offer.
+	        * @param {number|string|BigNumber} opts.price - The exchange rate ratio (selling / buying).
+	        * @param {number|string} [opts.offerId ]- If `0`, will create a new offer (default). Otherwise, edits an exisiting offer.
 	        * @param {string} [opts.source] - The source account (defaults to transaction source).
 	        * @returns {xdr.ManageOfferOp}
 	        */
@@ -28707,8 +28951,8 @@ var StellarBase =
 	            var attributes = {};
 	            attributes.selling = opts.selling.toXdrObject();
 	            attributes.buying = opts.buying.toXdrObject();
-	            if (!this.isValidAmount(opts.amount)) {
-	                throw new TypeError('amount argument must be of type String and represent a positive number');
+	            if (!this.isValidAmount(opts.amount, true)) {
+	                throw new TypeError('amount argument must be of type String and represent a positive number or zero');
 	            }
 	            attributes.amount = this._toXDRAmount(opts.amount);
 	            if ((0, _lodash.isUndefined)(opts.price)) {
@@ -28717,9 +28961,7 @@ var StellarBase =
 	            attributes.price = this._toXDRPrice(opts.price);
 
 	            if (!(0, _lodash.isUndefined)(opts.offerId)) {
-	                if (!(0, _lodash.isString)(opts.offerId)) {
-	                    throw new TypeError('offerId argument must be of type String');
-	                }
+	                opts.offerId = opts.offerId.toString();
 	            } else {
 	                opts.offerId = '0';
 	            }
@@ -28739,10 +28981,10 @@ var StellarBase =
 	        * useful for offers just used as 1:1 exchanges for path payments. Use manage offer
 	        * to manage this offer after using this operation to create it.
 	        * @param {object} opts
-	        * @param {Asset} selling - What you're selling.
-	        * @param {Asset} buying - What you're buying.
-	        * @param {string} amount - The total amount you're selling. If 0, deletes the offer.
-	        * @param {number|string|BigNumber} price - The exchange rate ratio (selling / buying)
+	        * @param {Asset} opts.selling - What you're selling.
+	        * @param {Asset} opts.buying - What you're buying.
+	        * @param {string} opts.amount - The total amount you're selling. If 0, deletes the offer.
+	        * @param {number|string|BigNumber} opts.price - The exchange rate ratio (selling / buying)
 	        * @param {string} [opts.source] - The source account (defaults to transaction source).
 	        * @returns {xdr.CreatePassiveOfferOp}
 	        */
@@ -28793,7 +29035,7 @@ var StellarBase =
 	        * This operation generates the inflation.
 	        * @param {object} [opts]
 	        * @param {string} [opts.source] - The optional source account.
-	        * @returns {xdr.AccountMergeOp}
+	        * @returns {xdr.InflationOp}
 	        */
 	    }, {
 	        key: "inflation",
@@ -28820,7 +29062,7 @@ var StellarBase =
 	        * Converts the XDR Operation object to the opts object used to create the XDR
 	        * operation.
 	        * @param {xdr.Operation} operation - An XDR Operation.
-	        * @return {object}
+	        * @return {Operation}
 	        */
 	    }, {
 	        key: "operationToObject",
@@ -28946,6 +29188,11 @@ var StellarBase =
 	                return false;
 	            }
 
+	            // Decimal places (max 7)
+	            if (amount.decimalPlaces() > 7) {
+	                return false;
+	            }
+
 	            // Infinity
 	            if (!amount.isFinite()) {
 	                return false;
@@ -28958,23 +29205,39 @@ var StellarBase =
 
 	            return true;
 	        }
+
+	        /**
+	         * @private
+	         */
 	    }, {
 	        key: "_toXDRAmount",
 	        value: function _toXDRAmount(value) {
 	            var amount = new _bignumberJs2["default"](value).mul(ONE);
 	            return _jsXdr.Hyper.fromString(amount.toString());
 	        }
+
+	        /**
+	         * @private
+	         */
 	    }, {
 	        key: "_fromXDRAmount",
 	        value: function _fromXDRAmount(value) {
 	            return new _bignumberJs2["default"](value).div(ONE).toString();
 	        }
+
+	        /**
+	         * @private
+	         */
 	    }, {
 	        key: "_fromXDRPrice",
 	        value: function _fromXDRPrice(price) {
 	            var n = new _bignumberJs2["default"](price.n());
 	            return n.div(new _bignumberJs2["default"](price.d())).toString();
 	        }
+
+	        /**
+	         * @private
+	         */
 	    }, {
 	        key: "_toXDRPrice",
 	        value: function _toXDRPrice(price) {
@@ -29011,20 +29274,55 @@ var StellarBase =
 
 	var _strkey = __webpack_require__(67);
 
-	/**
-	* @class Account
-	* Represents a single account in Stellar network and its sequence number.
-	* Account tracts the sequence number as it is used by TransactionBuilder.
-	* See https://stellar.org/developers/learn/concepts/accounts.html  for more information about how accounts work in Stellar.
-	*/
-
 	var Account = (function () {
-	    _createClass(Account, null, [{
-	        key: "isValidAddress",
+	    /**
+	     * Create a new Account object.
+	     *
+	     * `Account` represents a single account in Stellar network and it's sequence number.
+	     * Account tracts the sequence number as it is used by {@link TransactionBuilder}.
+	     * See [Accounts](https://stellar.org/developers/learn/concepts/accounts.html) for more information about how
+	     * accounts work in Stellar.
+	     * @constructor
+	     * @param {string} address ID of the account
+	     * @param {number} sequence current sequence number of the account
+	     */
+
+	    function Account(address, sequence) {
+	        _classCallCheck(this, Account);
+
+	        if (!Account.isValidAddress(address)) {
+	            throw new Error('address is invalid');
+	        }
+	        this.address = address;
+	        this.sequence = sequence;
+	    }
+
+	    /**
+	     * Returns true if the given address is a valid Stellar address.
+	     * @param {string} address account ID to check
+	     * @returns {boolean}
+	     */
+
+	    _createClass(Account, [{
+	        key: "getAddress",
 
 	        /**
-	        * Returns true if the given address is a valid Stellar address.
-	        */
+	         * @returns {string}
+	         */
+	        value: function getAddress() {
+	            return this.address;
+	        }
+
+	        /**
+	         * @returns {number}
+	         */
+	    }, {
+	        key: "getSequenceNumber",
+	        value: function getSequenceNumber() {
+	            return this.sequence;
+	        }
+	    }], [{
+	        key: "isValidAddress",
 	        value: function isValidAddress(address) {
 	            try {
 	                var decoded = (0, _strkey.decodeCheck)("accountId", address);
@@ -29036,23 +29334,7 @@ var StellarBase =
 	            }
 	            return true;
 	        }
-
-	        /**
-	        * Create a new Account object.
-	        * @param {string} address
-	        * @param {number} sequence
-	        */
 	    }]);
-
-	    function Account(address, sequence) {
-	        _classCallCheck(this, Account);
-
-	        if (!Account.isValidAddress(address)) {
-	            throw new Error('address is invalid');
-	        }
-	        this.address = address;
-	        this.sequence = sequence;
-	    }
 
 	    return Account;
 	})();
@@ -29066,7 +29348,7 @@ var StellarBase =
 	"use strict";
 
 	Object.defineProperty(exports, "__esModule", {
-	    value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -29087,148 +29369,176 @@ var StellarBase =
 
 	var _lodash = __webpack_require__(10);
 
-	/**
-	* Asset class represents an asset, either the native asset ("XLM")
-	* or a asset code / issuer address pair.
-	* @class Asset
-	*/
-
 	var Asset = (function () {
-	    _createClass(Asset, null, [{
-	        key: "native",
+	  /**
+	   * Asset class represents an asset, either the native asset (`XLM`)
+	   * or a asset code / issuer address pair.
+	   *
+	   * An asset code describes an asset code and issuer pair. In the case of the native
+	   * asset XLM, the issuer will be null.
+	   *
+	   * @constructor
+	   * @param {string} code - The asset code.
+	   * @param {string} issuer - The account ID of the issuer.
+	   */
 
-	        /**
-	        * Returns an asset object for the native asset.
-	        */
-	        value: function native() {
-	            return new Asset("XLM");
+	  function Asset(code, issuer) {
+	    _classCallCheck(this, Asset);
+
+	    if (code.length > 12) {
+	      throw new Error("Asset code must be 12 characters at max");
+	    }
+	    if (String(code).toLowerCase() !== "xlm" && !issuer) {
+	      throw new Error("Issuer cannot be null");
+	    }
+	    if (issuer && !_account.Account.isValidAddress(issuer)) {
+	      throw new Error("Issuer is invalid");
+	    }
+
+	    this.code = code;
+	    this.issuer = issuer;
+	  }
+
+	  /**
+	  * Returns an asset object for the native asset.
+	  * @Return {Asset}
+	  */
+
+	  _createClass(Asset, [{
+	    key: "toXdrObject",
+
+	    /**
+	     * Returns the xdr object for this asset.
+	     * @returns {xdr.Asset}
+	     */
+	    value: function toXdrObject() {
+	      if (this.isNative()) {
+	        return _generatedStellarXdr_generated2["default"].Asset.assetTypeNative();
+	      } else {
+	        var xdrType = undefined,
+	            xdrTypeString = undefined;
+	        if (this.code.length <= 4) {
+	          xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum4;
+	          xdrTypeString = 'assetTypeCreditAlphanum4';
+	        } else {
+	          xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum12;
+	          xdrTypeString = 'assetTypeCreditAlphanum12';
 	        }
 
-	        /**
-	        * Returns an asset object from its XDR object representation.
-	        * @param {xdr.Asset} cx - The asset xdr object.
-	        */
-	    }, {
-	        key: "fromOperation",
-	        value: function fromOperation(cx) {
-	            var anum = undefined,
-	                code = undefined,
-	                issuer = undefined;
-	            switch (cx["switch"]()) {
-	                case _generatedStellarXdr_generated2["default"].AssetType.assetTypeNative():
-	                    return this.native();
-	                case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum4():
-	                    anum = cx.alphaNum4();
-	                    issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
-	                    code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
-	                    return new this(code, issuer);
-	                case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum12():
-	                    anum = cx.alphaNum12();
-	                    issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
-	                    code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
-	                    return new this(code, issuer);
-	                default:
-	                    throw new Error("Invalid asset type: " + cx["switch"]().name);
-	            }
-	        }
+	        // pad code with null bytes if necessary
+	        var padLength = this.code.length <= 4 ? 4 : 12;
+	        var paddedCode = (0, _lodash.padRight)(this.code, padLength, '\0');
 
-	        /**
-	        * An asset code describes an asset code and issuer pair. In the case of the native
-	        * asset XLM, the issuer will be null.
-	        * @constructor
-	        * @param {string} code - The asset code.
-	        * @param {string} issuer - The address of the issuer.
-	        */
-	    }]);
+	        var assetType = new xdrType({
+	          assetCode: paddedCode,
+	          issuer: _keypair.Keypair.fromAddress(this.issuer).accountId()
+	        });
 
-	    function Asset(code, issuer) {
-	        _classCallCheck(this, Asset);
-
-	        if (code.length > 12) {
-	            throw new Error("Asset code must be 12 characters at max");
-	        }
-	        if (String(code).toLowerCase() !== "xlm" && !issuer) {
-	            throw new Error("Issuer cannot be null");
-	        }
-	        if (issuer && !_account.Account.isValidAddress(issuer)) {
-	            throw new Error("Issuer is invalid");
-	        }
-
-	        this.code = code;
-	        this.issuer = issuer;
+	        return new _generatedStellarXdr_generated2["default"].Asset(xdrTypeString, assetType);
+	      }
 	    }
 
 	    /**
-	    * Returns the xdr object for this asset.
-	    */
+	     * Return the asset code
+	     * @returns {string}
+	     */
+	  }, {
+	    key: "getCode",
+	    value: function getCode() {
+	      return (0, _lodash.clone)(this.code);
+	    }
 
-	    _createClass(Asset, [{
-	        key: "toXdrObject",
-	        value: function toXdrObject() {
-	            if (this.isNative()) {
-	                return _generatedStellarXdr_generated2["default"].Asset.assetTypeNative();
-	            } else {
-	                var xdrType = undefined,
-	                    xdrTypeString = undefined;
-	                if (this.code.length <= 4) {
-	                    xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum4;
-	                    xdrTypeString = 'assetTypeCreditAlphanum4';
-	                } else {
-	                    xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum12;
-	                    xdrTypeString = 'assetTypeCreditAlphanum12';
-	                }
+	    /**
+	     * Return the asset issuer
+	     * @returns {string}
+	     */
+	  }, {
+	    key: "getIssuer",
+	    value: function getIssuer() {
+	      return (0, _lodash.clone)(this.issuer);
+	    }
 
-	                // pad code with null bytes if necessary
-	                var padLength = this.code.length <= 4 ? 4 : 12;
-	                var paddedCode = (0, _lodash.padRight)(this.code, padLength, '\0');
-
-	                var assetType = new xdrType({
-	                    assetCode: paddedCode,
-	                    issuer: _keypair.Keypair.fromAddress(this.issuer).accountId()
-	                });
-
-	                return new _generatedStellarXdr_generated2["default"].Asset(xdrTypeString, assetType);
-	            }
+	    /**
+	     * Return the asset type. Can be one of following types:
+	     *
+	     * * `native`
+	     * * `credit_alphanum4`
+	     * * `credit_alphanum12`
+	     *
+	     * @see [Assets concept](https://www.stellar.org/developers/learn/concepts/assets.html)
+	     * @returns {string}
+	     */
+	  }, {
+	    key: "getAssetType",
+	    value: function getAssetType() {
+	      if (this.isNative()) {
+	        return 'native';
+	      } else {
+	        if (this.code.length >= 1 && this.code.length <= 4) {
+	          return "credit_alphanum4";
+	        } else if (this.code.length >= 5 && this.code.length <= 12) {
+	          return "credit_alphanum12";
 	        }
+	      }
+	    }
 
-	        /**
-	         * Return the asset code
-	         */
-	    }, {
-	        key: "getCode",
-	        value: function getCode() {
-	            return (0, _lodash.clone)(this.code);
-	        }
+	    /**
+	     * Returns true if this asset object is the native asset.
+	     * @returns {boolean}
+	     */
+	  }, {
+	    key: "isNative",
+	    value: function isNative() {
+	      return !this.issuer;
+	    }
 
-	        /**
-	         * Return the asset issuer
-	         **/
-	    }, {
-	        key: "getIssuer",
-	        value: function getIssuer() {
-	            return (0, _lodash.clone)(this.issuer);
-	        }
+	    /**
+	     * Returns true if this asset equals the given asset.
+	     * @param {Asset} asset Asset to compare
+	     * @returns {boolean}
+	     */
+	  }, {
+	    key: "equals",
+	    value: function equals(asset) {
+	      return this.code == asset.getCode() && this.issuer == asset.getIssuer();
+	    }
+	  }], [{
+	    key: "native",
+	    value: function native() {
+	      return new Asset("XLM");
+	    }
 
-	        /**
-	        * Returns true if this asset object is the native asset.
-	        */
-	    }, {
-	        key: "isNative",
-	        value: function isNative() {
-	            return !this.issuer;
-	        }
+	    /**
+	     * Returns an asset object from its XDR object representation.
+	     * @param {xdr.Asset} assetXdr - The asset xdr object.
+	     * @returns {Asset}
+	     */
+	  }, {
+	    key: "fromOperation",
+	    value: function fromOperation(assetXdr) {
+	      var anum = undefined,
+	          code = undefined,
+	          issuer = undefined;
+	      switch (assetXdr["switch"]()) {
+	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeNative():
+	          return this.native();
+	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum4():
+	          anum = assetXdr.alphaNum4();
+	          issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
+	          code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
+	          return new this(code, issuer);
+	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum12():
+	          anum = assetXdr.alphaNum12();
+	          issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
+	          code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
+	          return new this(code, issuer);
+	        default:
+	          throw new Error("Invalid asset type: " + assetXdr["switch"]().name);
+	      }
+	    }
+	  }]);
 
-	        /**
-	        * Returns true if this asset equals the given asset.
-	        */
-	    }, {
-	        key: "equals",
-	        value: function equals(asset) {
-	            return this.code == asset.getCode() && this.issuer == asset.getIssuer();
-	        }
-	    }]);
-
-	    return Asset;
+	  return Asset;
 	})();
 
 	exports.Asset = Asset;
@@ -31946,6 +32256,7 @@ var StellarBase =
 
 	/**
 	 * Calculates and returns the best rational approximation of the given real number.
+	 * @private
 	 * @param {string|number|BigNumber} number
 	 * @returns {array} first element is n (numerator), second element is d (denominator)
 	 */
@@ -32023,59 +32334,60 @@ var StellarBase =
 	var MIN_LEDGER = 0;
 	var MAX_LEDGER = 0xFFFFFFFF; // max uint32
 
-	/**
-	* @class TransactionBuilder
-	*/
-
 	var TransactionBuilder = (function () {
 
 	    /**
-	    * <p>Transaction builder helps constructs a new Transaction using the given account
-	    * as the transaction's "source account". The transaction will use the current sequence
-	    * number of the given account as its sequence number and increment the given account's
-	    * sequence number by one. The given source account must include a private key for signing
-	    * the transaction or an error will be thrown.</p>
-	    *
-	    * <p>Operations can be added to the transaction via their corresponding builder methods, and
-	    * each returns the TransactionBuilder object so they can be chained together. After adding
-	    * the desired operations, call the build() method on the TransactionBuilder to return a fully
-	    * constructed Transaction that can be signed. The returned transaction will contain the
-	    * sequence number of the source account and include the signature from the source account.</p>
-	    *
-	    * <p>The following code example creates a new transaction with two payment operations
-	    * and a changeTrust operation. The Transaction's source account first funds destinationA,
-	    * then extends a trust line to destination A for an asset, then destinationA sends the
-	    * source account an amount of that asset. The built transaction would need to be signed by
-	    * both the source account and the destinationA account for it to be valid.</p>
-	    *
-	    * <pre>var transaction = new TransactionBuilder(source)
-	    *   .addOperation(Operation.payment({
+	     * <p>Transaction builder helps constructs a new `{@link Transaction}` using the given {@link Account}
+	     * as the transaction's "source account". The transaction will use the current sequence
+	     * number of the given account as its sequence number and increment the given account's
+	     * sequence number by one. The given source account must include a private key for signing
+	     * the transaction or an error will be thrown.</p>
+	     *
+	     * <p>Operations can be added to the transaction via their corresponding builder methods, and
+	     * each returns the TransactionBuilder object so they can be chained together. After adding
+	     * the desired operations, call the `build()` method on the `TransactionBuilder` to return a fully
+	     * constructed `{@link Transaction}` that can be signed. The returned transaction will contain the
+	     * sequence number of the source account and include the signature from the source account.</p>
+	     *
+	     * <p>The following code example creates a new transaction with {@link Operation.createAccount} and
+	     * {@link Operation.payment} operations.
+	     * The Transaction's source account first funds `destinationA`, then sends
+	     * a payment to `destinationB`. The built transaction is then signed by `sourceKeypair`.</p>
+	     *
+	     * ```
+	     * var transaction = new TransactionBuilder(source)
+	     *   .addOperation(Operation.createAccount({
 	            destination: destinationA,
-	            amount: "20000000",
-	            asset: Asset.native()
+	            startingBalance: "20"
 	        }) // <- funds and creates destinationA
-	    *   .build();
-	    * </pre>
-	    * @constructor
-	    * @param {Account} sourceAccount - The source account for this transaction.
-	    * @param {object} [opts]
-	    * @param {number} [opts.fee] - The max fee willing to pay per operation in this transaction (in stroops).
-	    * @param {object} [opts.timebounds] - The timebounds for the validity of this transaction.
-	    * @param {string} [opts.timebounds.minTime] - 64 bit unix timestamp
-	    * @param {string} [opts.timebounds.maxTime] - 64 bit unix timestamp
-	    * @param {Memo} [opts.memo] - The memo for the transaction
-	    * @param {}
-	    */
+	        .addOperation(Operation.payment({
+	            destination: destinationB,
+	            amount: "100"
+	            asset: Asset.native()
+	        }) // <- sends 100 XLM to destinationB
+	     *   .build();
+	     *
+	     * transaction.sign(sourceKeypair);
+	     * ```
+	     * @constructor
+	     * @param {Account} sourceAccount - The source account for this transaction.
+	     * @param {object} [opts]
+	     * @param {number} [opts.fee] - The max fee willing to pay per operation in this transaction (**in stroops**).
+	     * @param {object} [opts.timebounds] - The timebounds for the validity of this transaction.
+	     * @param {string} [opts.timebounds.minTime] - 64 bit unix timestamp
+	     * @param {string} [opts.timebounds.maxTime] - 64 bit unix timestamp
+	     * @param {Memo} [opts.memo] - The memo for the transaction
+	     */
 
-	    function TransactionBuilder(source) {
+	    function TransactionBuilder(sourceAccount) {
 	        var opts = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 	        _classCallCheck(this, TransactionBuilder);
 
-	        if (!source) {
+	        if (!sourceAccount) {
 	            throw new Error("must specify source account for the transaction");
 	        }
-	        this.source = source;
+	        this.source = sourceAccount;
 	        this.operations = [];
 	        this.signers = [];
 
@@ -32089,9 +32401,10 @@ var StellarBase =
 	    }
 
 	    /**
-	    * Adds an operation to the transaction.
-	    * @param {xdr.Operation} The xdr operation object, use {@link Operation} static methods.
-	    */
+	     * Adds an operation to the transaction.
+	     * @param {xdr.Operation} operation The xdr operation object, use {@link Operation} static methods.
+	     * @returns {TransactionBuilder}
+	     */
 
 	    _createClass(TransactionBuilder, [{
 	        key: "addOperation",
@@ -32101,8 +32414,9 @@ var StellarBase =
 	        }
 
 	        /**
-	         * Adds a memo to the transaction
-	         * @param {xdr.Memo} The xdr memo object, use {@link Memo} static methods.
+	         * Adds a memo to the transaction.
+	         * @param {xdr.Memo} memo The xdr memo object, use {@link Memo} static methods.
+	         * @returns {TransactionBuilder}
 	         */
 	    }, {
 	        key: "addMemo",
@@ -32112,8 +32426,10 @@ var StellarBase =
 	        }
 
 	        /**
-	        * Adds the given signer's signature to the transaction.
-	        */
+	         * Adds the given signer's signature to the transaction.
+	         * @deprecated Use {@link Transaction#sign}
+	         * @returns {TransactionBuilder}
+	         */
 	    }, {
 	        key: "addSigner",
 	        value: function addSigner(keypair) {
@@ -32122,10 +32438,10 @@ var StellarBase =
 	        }
 
 	        /**
-	        * This will build the transaction and sign it with the source account. It will
-	        * also increment the source account's sequence number by 1.
-	        * @returns {Transaction} will return the built Transaction.
-	        */
+	         * This will build the transaction and sign it with the {@link Keypair} passed to {@link TransactionBuilder#addSigner}.
+	         * It will also increment the source account's sequence number by 1.
+	         * @returns {Transaction} This method will return the built {@link Transaction}.
+	         */
 	    }, {
 	        key: "build",
 	        value: function build() {
@@ -32160,17 +32476,17 @@ var StellarBase =
 /* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(Buffer) {'use strict';
+	/* WEBPACK VAR INJECTION */(function(Buffer) {"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	var _generatedStellarXdr_generated = __webpack_require__(2);
 
@@ -32178,13 +32494,18 @@ var StellarBase =
 
 	var _lodash = __webpack_require__(10);
 
+	var _jsXdr = __webpack_require__(3);
+
 	var _bignumberJs = __webpack_require__(84);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
 	/**
-	* @class Memo
-	*/
+	 * `Memo` represents memos attached to transactions. Use static methods to create memos.
+	 *
+	 * @see [Transactions concept](https://www.stellar.org/developers/learn/concepts/transactions.html)
+	 * @class Memo
+	 */
 
 	var Memo = (function () {
 	    function Memo() {
@@ -32192,39 +32513,40 @@ var StellarBase =
 	    }
 
 	    _createClass(Memo, null, [{
-	        key: 'none',
+	        key: "none",
 
 	        /**
-	        * Returns an empty memo.
-	        */
+	         * Returns an empty memo (`MEMO_NONE`).
+	         * @returns {xdr.Memo}
+	         */
 	        value: function none() {
-	            return _generatedStellarXdr_generated2['default'].Memo.memoNone();
+	            return _generatedStellarXdr_generated2["default"].Memo.memoNone();
 	        }
 
 	        /**
-	        * Creates and returns a "text" memo.
-	        * @param {string} text - memo text
-	        * @returns {xdr.Memo}
-	        */
+	         * Creates and returns a `MEMO_TEXT` memo.
+	         * @param {string} text - memo text
+	         * @returns {xdr.Memo}
+	         */
 	    }, {
-	        key: 'text',
+	        key: "text",
 	        value: function text(_text) {
 	            if (!(0, _lodash.isString)(_text)) {
 	                throw new Error("Expects string type got a " + typeof _text);
 	            }
 	            if (Buffer.byteLength(_text, "ascii") > 28) {
-	                throw new Error("Text should be < 28 bytes (ascii encoded). Got " + Buffer.byteLength(_text, "ascii"));
+	                throw new Error("Text should be <= 28 bytes (ascii encoded). Got " + Buffer.byteLength(_text, "ascii"));
 	            }
-	            return _generatedStellarXdr_generated2['default'].Memo.memoText(_text);
+	            return _generatedStellarXdr_generated2["default"].Memo.memoText(_text);
 	        }
 
 	        /**
-	        * Creates and returns an "id" memo.
-	        * @param {string} id - 64 bit id
-	        * @returns {xdr.Memo}
-	        */
+	         * Creates and returns a `MEMO_ID` memo.
+	         * @param {string} id - 64-bit number represented as a string
+	         * @returns {xdr.Memo}
+	         */
 	    }, {
-	        key: 'id',
+	        key: "id",
 	        value: function id(_id) {
 	            var error = new Error("Expects a int64 as a string. Got " + _id);
 
@@ -32234,7 +32556,7 @@ var StellarBase =
 
 	            var number = undefined;
 	            try {
-	                number = new _bignumberJs2['default'](_id);
+	                number = new _bignumberJs2["default"](_id);
 	            } catch (e) {
 	                throw error;
 	            }
@@ -32249,55 +32571,63 @@ var StellarBase =
 	                throw error;
 	            }
 
-	            return _generatedStellarXdr_generated2['default'].Memo.memoId(_id);
+	            return _generatedStellarXdr_generated2["default"].Memo.memoId(_jsXdr.UnsignedHyper.fromString(_id));
 	        }
 
 	        /**
-	        * Creates and returns a "hash" memo.
-	        * @param {array|string} hash - 32 byte hash
-	        */
+	         * Creates and returns a `MEMO_HASH` memo.
+	         * @param {array|string} hash - 32 byte hash or hex encoded string
+	         * @returns {xdr.Memo}
+	         */
 	    }, {
-	        key: 'hash',
+	        key: "hash",
 	        value: function hash(_hash) {
-	            var error = new Error("Expects a 32 byte hash value. Got " + _hash);
+	            var error = new Error("Expects a 32 byte hash value or hex encoded string. Got " + _hash);
 
 	            if ((0, _lodash.isUndefined)(_hash)) {
 	                throw error;
 	            }
 
-	            if ((0, _lodash.isString)(_hash) && Buffer.byteLength(_hash) != 32) {
-	                throw error;
+	            if ((0, _lodash.isString)(_hash)) {
+	                if (!/^[0-9A-Fa-f]{64}$/g.test(_hash)) {
+	                    throw error;
+	                }
+	                _hash = new Buffer(_hash, 'hex');
 	            }
 
 	            if (!_hash.length || _hash.length != 32) {
 	                throw error;
 	            }
 
-	            return _generatedStellarXdr_generated2['default'].Memo.memoHash(_hash);
+	            return _generatedStellarXdr_generated2["default"].Memo.memoHash(_hash);
 	        }
 
 	        /**
-	        * Creates and returns a "return hash" memo.
-	        * @param {array|string} hash - 32 byte hash
-	        */
+	         * Creates and returns a `MEMO_RETURN` memo.
+	         * @param {array|string} hash - 32 byte hash or hex encoded string
+	         * @returns {xdr.Memo}
+	         */
 	    }, {
-	        key: 'returnHash',
+	        key: "returnHash",
 	        value: function returnHash(hash) {
-	            var error = new Error("Expects a 32 byte hash value. Got " + hash);
+	            var error = new Error("Expects a 32 byte hash value or hex encoded string. Got " + hash);
 
 	            if ((0, _lodash.isUndefined)(hash)) {
 	                throw error;
 	            }
 
-	            if ((0, _lodash.isString)(hash) && Buffer.byteLength(hash) != 32) {
-	                throw error;
+	            if ((0, _lodash.isString)(hash)) {
+	                if (!/^[0-9A-Fa-f]{64}$/g.test(hash)) {
+	                    throw error;
+	                }
+	                hash = new Buffer(hash, 'hex');
 	            }
 
 	            if (!hash.length || hash.length != 32) {
 	                throw error;
 	            }
 
-	            return _generatedStellarXdr_generated2['default'].Memo.memoReturn(hash);
+	            return _generatedStellarXdr_generated2["default"].Memo.memoReturn(hash);
 	        }
 	    }]);
 
@@ -32305,7 +32635,7 @@ var StellarBase =
 	})();
 
 	exports.Memo = Memo;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13).Buffer));
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13).Buffer))
 
 /***/ }
 /******/ ]);

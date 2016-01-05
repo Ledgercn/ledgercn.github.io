@@ -19,67 +19,67 @@ var PAYMENT_IN = "PAY-IN";
 var PAYMENT_OUT = "PAY-OUT";
 var PAYMENT_TYPE = "payment";
 /*
-{
-     "_links": {
-         "effects": {
-             "href": "/operations/2873376070701057/effects{?cursor,limit,order}",
-             "templated": true
-         },
-         "precedes": {
-            "href": "/operations?cursor=2873376070701057&order=asc"
-         },
-         "self": {
-            "href": "/operations/2873376070701057"
-         },
-         "succeeds": {
-            "href": "/operations?cursor=2873376070701057&order=desc"
-         },
-         "transaction": {
-            "href": "/transactions/a0b0a3fbe01ad383bb37b64e8f5ea986de9aa8a44b9944b3a3c9c283943a4003"
-         }
-     },
-     "amount": "2.0",
-     "asset_code": "USD",
-     "asset_issuer": "GAYVSC2JEOXOM2UHWGU6MT5CO5EMM3CQJX7KOD5T6HTTM6RGHMRJZK73",
-     "asset_type": "credit_alphanum4",
-     "from": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
-     "id": 2873376070701057,
-     "paging_token": "2873376070701057",
-     "source_account": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
-     "to": "GDXYIE7NRJHW3O7OHBCUHYJLOOJWMETLTH4EXIMASI2KUSRLBBA3RB6I",
-     "type": "payment",
-     "type_i": 1
+ {
+ "_links": {
+ "effects": {
+ "href": "/operations/2873376070701057/effects{?cursor,limit,order}",
+ "templated": true
+ },
+ "precedes": {
+ "href": "/operations?cursor=2873376070701057&order=asc"
+ },
+ "self": {
+ "href": "/operations/2873376070701057"
+ },
+ "succeeds": {
+ "href": "/operations?cursor=2873376070701057&order=desc"
+ },
+ "transaction": {
+ "href": "/transactions/a0b0a3fbe01ad383bb37b64e8f5ea986de9aa8a44b9944b3a3c9c283943a4003"
+ }
+ },
+ "amount": "2.0",
+ "asset_code": "USD",
+ "asset_issuer": "GAYVSC2JEOXOM2UHWGU6MT5CO5EMM3CQJX7KOD5T6HTTM6RGHMRJZK73",
+ "asset_type": "credit_alphanum4",
+ "from": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
+ "id": 2873376070701057,
+ "paging_token": "2873376070701057",
+ "source_account": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
+ "to": "GDXYIE7NRJHW3O7OHBCUHYJLOOJWMETLTH4EXIMASI2KUSRLBBA3RB6I",
+ "type": "payment",
+ "type_i": 1
  },
  {
-     "_links": {
-         "effects": {
-             "href": "/operations/2873341710962689/effects{?cursor,limit,order}",
-             "templated": true
-         },
-         "precedes": {
-            "href": "/operations?cursor=2873341710962689&order=asc"
-         },
-         "self": {
-            "href": "/operations/2873341710962689"
-         },
-         "succeeds": {
-            "href": "/operations?cursor=2873341710962689&order=desc"
-         },
-         "transaction": {
-            "href": "/transactions/dff1cc963667676d847ada9f2ef08838e70d255dee40f47fcf9f029eb9cdd1c0"
-         }
-     },
-     "amount": "10.0",
-     "asset_type": "native",
-     "from": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
-     "id": 2873341710962689,
-     "paging_token": "2873341710962689",
-     "source_account": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
-     "to": "GDXYIE7NRJHW3O7OHBCUHYJLOOJWMETLTH4EXIMASI2KUSRLBBA3RB6I",
-     "type": "payment",
-     "type_i": 1
+ "_links": {
+ "effects": {
+ "href": "/operations/2873341710962689/effects{?cursor,limit,order}",
+ "templated": true
  },
-*/
+ "precedes": {
+ "href": "/operations?cursor=2873341710962689&order=asc"
+ },
+ "self": {
+ "href": "/operations/2873341710962689"
+ },
+ "succeeds": {
+ "href": "/operations?cursor=2873341710962689&order=desc"
+ },
+ "transaction": {
+ "href": "/transactions/dff1cc963667676d847ada9f2ef08838e70d255dee40f47fcf9f029eb9cdd1c0"
+ }
+ },
+ "amount": "10.0",
+ "asset_type": "native",
+ "from": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
+ "id": 2873341710962689,
+ "paging_token": "2873341710962689",
+ "source_account": "GCTRWLB5YDTNJKECY3I2MS5A2PRROI2MSDQFH5JCOGRPIEWBTXHQO576",
+ "to": "GDXYIE7NRJHW3O7OHBCUHYJLOOJWMETLTH4EXIMASI2KUSRLBBA3RB6I",
+ "type": "payment",
+ "type_i": 1
+ },
+ */
 var PaymentOperation = function(mainAddr){
     BaseOperation.apply(this,arguments);
     this.From = "";
@@ -110,6 +110,7 @@ var PaymentOperation = function(mainAddr){
 
 var CREATE_IN = "CREATE-IN";
 var CREATE_OUT = "CREATE-OUT";
+var CREATE_OTHER = "CREATE-OTHER";
 var CREATE_TYPE = "create_account";
 
 var CreateOperation = function(mainAddr){
@@ -184,85 +185,87 @@ var ChangeTrustOperation = function(mainAddr){
 };
 
 var MANAGE_OFFER_TYPE = "manage_offer";
+var MANAGE_OFFER_TRADING_BLOCK = "OFFER-TRADING-BLOCK"; //等待交易
+var MANAGE_OFFER_DEAL_CLOSE = "OFFER-DEAL-CLOSE"; //交易完成
 
 /*
  {
-     "_links": {
-         "effects": {
-             "href": "/operations/2865228517740545/effects{?cursor,limit,order}",
-             "templated": true
-         },
-         "precedes": {
-            "href": "/operations?cursor=2865228517740545&order=asc"
-         },
-         "self": {
-            "href": "/operations/2865228517740545"
-         },
-         "succeeds": {
-            "href": "/operations?cursor=2865228517740545&order=desc"
-         },
-         "transaction": {
-            "href": "/transactions/d4b3f0897d69e5d1c8387cb34e421c9bb98f25e3ede7e05df98fbf7262d649ec"
-         }
-     },
-     "amount": "2.0",
-     "buying_asset_code": "GBP",
-     "buying_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
-     "buying_asset_type": "credit_alphanum4",
-     "id": 2865228517740545,
-     "offer_id": 0,
-     "paging_token": "2865228517740545",
-     "price": "1000.0",
-     "price_r": {
-         "d": 1,
-         "n": 1000
-     },
-     "selling_asset_code": "US1234567890",
-     "selling_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
-     "selling_asset_type": "credit_alphanum12",
-     "source_account": "GBR4W5KAC2S7RVEWK2LPHJ4YUVYV4G4A5BGCC23VZDQ4BWTI26VQ5MA5",
-     "type": "manage_offer",
-     "type_i": 3
+ "_links": {
+ "effects": {
+ "href": "/operations/2865228517740545/effects{?cursor,limit,order}",
+ "templated": true
  },
-{
-     "_links": {
-         "effects": {
-             "href": "/operations/2864764661272577/effects{?cursor,limit,order}",
-             "templated": true
-         },
-         "precedes": {
-            "href": "/operations?cursor=2864764661272577&order=asc"
-         },
-         "self": {
-            "href": "/operations/2864764661272577"
-         },
-         "succeeds": {
-            "href": "/operations?cursor=2864764661272577&order=desc"
-         },
-         "transaction": {
-            "href": "/transactions/90cdc28dc8ea4710e67663975f2d319ddb02131901844820e193a8f0a02aee3b"
-         }
-     },
-     "amount": "0.0",
-     "buying_asset_code": "GBP",
-     "buying_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
-     "buying_asset_type": "credit_alphanum4",
-     "id": 2864764661272577,
-     "offer_id": 22,
-     "paging_token": "2864764661272577",
-     "price": "3.0",
-     "price_r": {
-         "d": 1,
-         "n": 3
-     },
-     "selling_asset_code": "US1234567890",
-     "selling_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
-     "selling_asset_type": "credit_alphanum12",
-     "source_account": "GBR4W5KAC2S7RVEWK2LPHJ4YUVYV4G4A5BGCC23VZDQ4BWTI26VQ5MA5",
-     "type": "manage_offer",
-     "type_i": 3
+ "precedes": {
+ "href": "/operations?cursor=2865228517740545&order=asc"
  },
-* */
+ "self": {
+ "href": "/operations/2865228517740545"
+ },
+ "succeeds": {
+ "href": "/operations?cursor=2865228517740545&order=desc"
+ },
+ "transaction": {
+ "href": "/transactions/d4b3f0897d69e5d1c8387cb34e421c9bb98f25e3ede7e05df98fbf7262d649ec"
+ }
+ },
+ "amount": "2.0",
+ "buying_asset_code": "GBP",
+ "buying_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
+ "buying_asset_type": "credit_alphanum4",
+ "id": 2865228517740545,
+ "offer_id": 0,
+ "paging_token": "2865228517740545",
+ "price": "1000.0",
+ "price_r": {
+ "d": 1,
+ "n": 1000
+ },
+ "selling_asset_code": "US1234567890",
+ "selling_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
+ "selling_asset_type": "credit_alphanum12",
+ "source_account": "GBR4W5KAC2S7RVEWK2LPHJ4YUVYV4G4A5BGCC23VZDQ4BWTI26VQ5MA5",
+ "type": "manage_offer",
+ "type_i": 3
+ },
+ {
+ "_links": {
+ "effects": {
+ "href": "/operations/2864764661272577/effects{?cursor,limit,order}",
+ "templated": true
+ },
+ "precedes": {
+ "href": "/operations?cursor=2864764661272577&order=asc"
+ },
+ "self": {
+ "href": "/operations/2864764661272577"
+ },
+ "succeeds": {
+ "href": "/operations?cursor=2864764661272577&order=desc"
+ },
+ "transaction": {
+ "href": "/transactions/90cdc28dc8ea4710e67663975f2d319ddb02131901844820e193a8f0a02aee3b"
+ }
+ },
+ "amount": "0.0",
+ "buying_asset_code": "GBP",
+ "buying_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
+ "buying_asset_type": "credit_alphanum4",
+ "id": 2864764661272577,
+ "offer_id": 22,
+ "paging_token": "2864764661272577",
+ "price": "3.0",
+ "price_r": {
+ "d": 1,
+ "n": 3
+ },
+ "selling_asset_code": "US1234567890",
+ "selling_asset_issuer": "GDCKND5HOQH6GHKOOK47ENZOZ2ZEXSDUIVS257K57OPJHQVTOS4NDRSU",
+ "selling_asset_type": "credit_alphanum12",
+ "source_account": "GBR4W5KAC2S7RVEWK2LPHJ4YUVYV4G4A5BGCC23VZDQ4BWTI26VQ5MA5",
+ "type": "manage_offer",
+ "type_i": 3
+ },
+ * */
 
 var ManageOfferOperation = function(mainAddr){
     BaseOperation.apply(this,arguments);
@@ -309,98 +312,98 @@ var ManageOfferOperation = function(mainAddr){
 
 var SET_OPTIONS_TYPE = "set_options";
 /*
-{
-    "_links":{
-        "effects":{
-            "href":"/operations/3316384767414273/effects{?cursor,limit,order}",
-            "templated":true
-        },
-        "precedes":{
-            "href":"/operations?cursor=3316384767414273&order=asc"
-        },
-        "self":{
-            "href":"/operations/3316384767414273"
-        },
-        "succeeds":{
-            "href":"/operations?cursor=3316384767414273&order=desc"
-        },
-        "transaction":{
-            "href":"/transactions/ee14b475c6a91f191b6eee35f1a0b3d464acbb2f7e4fdd7bad1392ce971b3209"
-        }
-    },
-    "id":3316384767414273,
-    "paging_token":"3316384767414273",
-    "set_flags":[1,2],
-    "set_flags_s":["auth_required_flag","auth_revocable_flag"],
-    "signer_key":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
-    "signer_weight":255,
-    "source_account":"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X",
-    "type":"set_options",
-    "type_i":5
-}
+ {
+ "_links":{
+ "effects":{
+ "href":"/operations/3316384767414273/effects{?cursor,limit,order}",
+ "templated":true
+ },
+ "precedes":{
+ "href":"/operations?cursor=3316384767414273&order=asc"
+ },
+ "self":{
+ "href":"/operations/3316384767414273"
+ },
+ "succeeds":{
+ "href":"/operations?cursor=3316384767414273&order=desc"
+ },
+ "transaction":{
+ "href":"/transactions/ee14b475c6a91f191b6eee35f1a0b3d464acbb2f7e4fdd7bad1392ce971b3209"
+ }
+ },
+ "id":3316384767414273,
+ "paging_token":"3316384767414273",
+ "set_flags":[1,2],
+ "set_flags_s":["auth_required_flag","auth_revocable_flag"],
+ "signer_key":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
+ "signer_weight":255,
+ "source_account":"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X",
+ "type":"set_options",
+ "type_i":5
+ }
 
-{
-    "_links":{
-        "effects":{
-            "href":"/operations/3317175041396737/effects{?cursor,limit,order}",
-            "templated":true
-        },
-        "precedes":{
-            "href":"/operations?cursor=3317175041396737&order=asc"
-        },
-        "self":{
-            "href":"/operations/3317175041396737"
-        },
-        "succeeds":{
-            "href":"/operations?cursor=3317175041396737&order=desc"
-        },
-        "transaction":{
-            "href":"/transactions/8268e5cdfa587002299220e37514285b0b44ff6b1444ac8c185ac9715e9f4227"
-        }
-    },
-    "clear_flags":[1,2],
-    "clear_flags_s":["auth_required_flag","auth_revocable_flag"],
-    "id":3317175041396737,
-    "paging_token":"3317175041396737",
-    "signer_key":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
-    "signer_weight":255,
-    "source_account":"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X",
-    "type":"set_options",
-    "type_i":5
-}
+ {
+ "_links":{
+ "effects":{
+ "href":"/operations/3317175041396737/effects{?cursor,limit,order}",
+ "templated":true
+ },
+ "precedes":{
+ "href":"/operations?cursor=3317175041396737&order=asc"
+ },
+ "self":{
+ "href":"/operations/3317175041396737"
+ },
+ "succeeds":{
+ "href":"/operations?cursor=3317175041396737&order=desc"
+ },
+ "transaction":{
+ "href":"/transactions/8268e5cdfa587002299220e37514285b0b44ff6b1444ac8c185ac9715e9f4227"
+ }
+ },
+ "clear_flags":[1,2],
+ "clear_flags_s":["auth_required_flag","auth_revocable_flag"],
+ "id":3317175041396737,
+ "paging_token":"3317175041396737",
+ "signer_key":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
+ "signer_weight":255,
+ "source_account":"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X",
+ "type":"set_options",
+ "type_i":5
+ }
 
-{
-    "_links":{
-        "effects":{
-            "href":"/operations/3317677552570369/effects{?cursor,limit,order}",
-            "templated":true
-        },
-        "precedes":{
-            "href":"/operations?cursor=3317677552570369&order=asc"
-        },
-        "self":{
-            "href":"/operations/3317677552570369"
-        },
-        "succeeds":{
-            "href":"/operations?cursor=3317677552570369&order=desc"
-        },
-        "transaction":{
-            "href":"/transactions/be63c2d5c010711b9946b0363b85a43d514edca9a691eec229fa2108359d2115"
-        }
-    },
-    "home_domain":"www.ledgercn.com",
-    "id":3317677552570369,
-    "inflation_dest":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
-    "paging_token":"3317677552570369",
-    "set_flags":[1,2],
-    "set_flags_s":["auth_required_flag","auth_revocable_flag"],
-    "signer_key":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
-    "signer_weight":255,
-    "source_account":"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X",
-    "type":"set_options",
-    "type_i":5
-},
-* */
+ {
+ "_links":{
+ "effects":{
+ "href":"/operations/3317677552570369/effects{?cursor,limit,order}",
+ "templated":true
+ },
+ "precedes":{
+ "href":"/operations?cursor=3317677552570369&order=asc"
+ },
+ "self":{
+ "href":"/operations/3317677552570369"
+ },
+ "succeeds":{
+ "href":"/operations?cursor=3317677552570369&order=desc"
+ },
+ "transaction":{
+ "href":"/transactions/be63c2d5c010711b9946b0363b85a43d514edca9a691eec229fa2108359d2115"
+ }
+ },
+ "home_domain":"www.ledgercn.com",
+ "id":3317677552570369,
+ "inflation_dest":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
+ "paging_token":"3317677552570369",
+ "set_flags":[1,2],
+ "set_flags_s":["auth_required_flag","auth_revocable_flag"],
+ "signer_key":"GAZWSWPDQTBHFIPBY4FEDFW2J6E2LE7SZHJWGDZO6Q63W7DBSRICO2KN",
+ "signer_weight":255,
+ "source_account":"GCR6QXX7IRIJVIM5WA5ASQ6MWDOEJNBW3V6RTC5NJXEMOLVTUVKZ725X",
+ "type":"set_options",
+ "type_i":5
+ },
+ * */
 
 var SetOptionsOperation = function(mainAddr){
     BaseOperation.apply(this,arguments);

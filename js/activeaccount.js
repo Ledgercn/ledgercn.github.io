@@ -113,7 +113,9 @@ function aaMainController($scope, $rootScope, $cookies, $http, LANGUAGE){
 
     function activeUserEmailExecute(){
         postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
-        md5Pw = hex_md5($scope.userPassword);
+        md5Pw = CryptoJS.SHA256($scope.userPassword+$scope.userEmail).toString(CryptoJS.enc.Hex);
+        shastr = CryptoJS.SHA256($scope.userEmail+";"+$scope.userPassword).toString(CryptoJS.enc.Hex);
+
         $scope.userPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         tx = POST_TYPE_FLAG + "=" + PT_USER_ACTIVE + "&" + POST_MARK_USER_NAME + "=" + encodeURIComponent($scope.userEmail) + "&" +
             POST_MARK_PASS_WORD + "=" + encodeURIComponent(md5Pw) + "&" +
@@ -132,9 +134,10 @@ function aaMainController($scope, $rootScope, $cookies, $http, LANGUAGE){
                 console.log("success\r\n",data);
                 if(data.Error == null){
                     if(data.data.success){
-                        saveToCookie($cookies,"auth",data.data.user_auth,-1);
-                        saveToCookie($cookies,"ulvl",data.data.user_level,-1);
-                        saveToCookie($cookies,"uname",data.data.login_user,-1);
+                        saveToCookie($cookies,COOKIE_KEY_USERAUTH,data.data.user_auth,-1);
+                        saveToCookie($cookies,COOKIE_KEY_USERLEVEL,data.data.user_level,-1);
+                        saveToCookie($cookies,COOKIE_KEY_USERNAME,data.data.login_user,-1);
+                        saveToCookie($cookies,COOKIE_KEY_SECRETSTR,shastr,-1);
                         window.location.href = "index.html";
                     }
                 }else{

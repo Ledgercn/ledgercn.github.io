@@ -72,7 +72,7 @@ function formatPaymentOperation(opera,lang){
         if(opera.AssetCode != null && opera.AssetCode != ""){
             opera.Title += "Credit:" + opera.AssetCode + "-";
             opera.Details += "\r\nCode:\r\n> " + opera.AssetCode;
-            opera.Details += "\r\nIssuer:\r\n> " + opera.asset_issuer;
+            opera.Details += "\r\nIssuer:\r\n> " + opera.AssetIssuer;
             opera.Details += "\r\nAmount:\r\n> " + opera.Amount;
             opera.DetailRows += 6;
         }else{
@@ -248,22 +248,22 @@ function formatSetOptionsOperation(opera,lang){
         opera.Details += "\r\nHash:\r\n> " + opera.Hash;
 
         opera.Title = "设置-更改:";
-        if(opera.SignerKey != null){
+        if(opera.SignerKey != null && opera.SignerKey != ""){
             opera.Details += "\r\n签名账户:\r\n> " + opera.SignerKey;
             opera.DetailRows += 2;
             opera.Title += "签名账户;";
         }
-        if(opera.SignerWeight != null){
+        if(opera.SignerWeight != null && opera.SignerWeight != ""){
             opera.Details += "\r\n签名权重:\r\n> " + opera.SignerWeight;
             opera.DetailRows += 2;
             opera.Title += "签名权重;";
         }
-        if(opera.InflationDest != null){
+        if(opera.InflationDest != null && opera.InflationDest != ""){
             opera.Details += "\r\n通胀地址:\r\n> " + opera.InflationDest;
             opera.DetailRows += 2;
             opera.Title += "通胀地址;";
         }
-        if(opera.HomeDomain != null){
+        if(opera.HomeDomain != null && opera.HomeDomain != ""){
             opera.Details += "\r\n主域:\r\n> " + opera.HomeDomain;
             opera.DetailRows += 2;
             opera.Title += "主域;";
@@ -285,22 +285,22 @@ function formatSetOptionsOperation(opera,lang){
         opera.Details += "\r\nHash:\r\n> " + opera.Hash;
 
         opera.Title = "Set Options-Operations";
-        if(opera.SignerKey != null){
+        if(opera.SignerKey != null && opera.SignerKey != ""){
             opera.Details += "\r\nSigner Key:\r\n> " + opera.SignerKey;
             opera.DetailRows += 2;
             opera.Title += "SignerKey;";
         }
-        if(opera.SignerWeight != null){
+        if(opera.SignerWeight != null && opera.SignerWeight != ""){
             opera.Details += "\r\nSigner Weight:\r\n> " + opera.SignerWeight;
             opera.DetailRows += 2;
             opera.Title += "SignerWeight;";
         }
-        if(opera.InflationDest != null){
+        if(opera.InflationDest != null && opera.InflationDest != ""){
             opera.Details += "\r\nInflation Destination:\r\n> " + opera.InflationDest;
             opera.DetailRows += 2;
             opera.Title += "Inflation;";
         }
-        if(opera.HomeDomain != null){
+        if(opera.HomeDomain != null && opera.HomeDomain != ""){
             opera.Details += "\r\nHome Domain:\r\n> " + opera.HomeDomain;
             opera.DetailRows += 2;
             opera.Title += "HomeDomain;";

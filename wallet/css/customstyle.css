@@ -13,3 +13,28 @@
     background: rgba(128,128,128,0.5);
     border: none;
 }
+
+.abutton {
+    cursor: pointer;
+}
+.cmenu {
+    display: none;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.cmenu > li {
+    margin-left: 10px;
+}
+.cmenu > li > a {
+    padding: 5px 5px 5px 15px;
+    display: block;
+    font-size: 14px;
+    margin: 0px 0px;
+    text-decoration: none;
+    color: #777;
+}
+.cmenu > li > a.hover {
+    text-decoration: none;
+    color: #111;
+}

@@ -46,7 +46,7 @@
                 <div style="width: 70%; margin: 20px auto; color: #009da7">
                     <p>{{memoText}}</p>
                 </div>
-                <div style="width: 70%; margin: 20px auto; color: #092f3d">
+                <div class="container-fluid" >
                     <div class="panel panel-default">
                         <div class="panel-heading" style="color: blue"><i class="fa fa-user fa-2x">  &nbsp;{{mainTitle}}</i></div>
                         <div class="panel-body">
@@ -54,26 +54,26 @@
                                 <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="errorMessage = '' "></a>
                                 <strong>Error!</strong> {{errorMessage}}
                             </div>
-                            <div class="input-group">
+                            <div class="input-group" style="margin: auto -10px">
                                 <div style="background-color: rgba(200,200,200,0.2);border: 1px solid #ccc;border-radius: 4px 0 0 4px;">
                                     <div class="input-group col-xs-12" style="padding: 5px">
-                                        &nbsp;<span class="fa fa-envelope"> &nbsp;{{userEmailTitle}}</span>
+                                        &nbsp;<span class="fa fa-envelope" style="color: #45558d"> &nbsp;{{userEmailTitle}}</span>
                                         <input type="text" class="form-control" ng-model="userEmail" style="border-radius:4px" placeholder="{{userEmailPlaceholder}}" ng-readonly="isReadOnly">
                                     </div>
                                     <div class="input-group col-xs-12" style="padding: 5px">
-                                        &nbsp;<span class="fa fa-user-secret"> &nbsp;{{userPaswordTitle}}</span>
+                                        &nbsp;<span class="fa fa-user-secret" style="color: #45558d"> &nbsp;{{userPaswordTitle}}</span>
                                         <input type="password" class="form-control" ng-model="userPassword" style="border-radius:4px" placeholder="{{userPaswordPlaceholder}}" ng-readonly="isReadOnly">
                                     </div>
                                     <div class="input-group col-xs-12" style="padding: 5px">
-                                        &nbsp;<span class="fa fa-arrow-right"> &nbsp;{{userfidTitle}}</span>
+                                        &nbsp;<span class="fa fa-arrow-right" style="color: #45558d"> &nbsp;{{userfidTitle}}</span>
                                         <input type="text" class="form-control" ng-model="userfid" style="border-radius:4px" placeholder="{{userfidPlaceholder}}" ng-readonly="isReadOnly">
                                     </div>
                                     <div class="input-group col-xs-12" style="padding: 5px">
-                                        &nbsp;<span class="fa fa-arrow-circle-right"> &nbsp;{{usertidTitle}}</span>
+                                        &nbsp;<span class="fa fa-arrow-circle-right" style="color: #45558d"> &nbsp;{{usertidTitle}}</span>
                                         <input type="text" class="form-control" ng-model="usertid" style="border-radius:4px" placeholder="{{usertidPlaceholder}}" ng-readonly="isReadOnly">
                                     </div>
                                 </div>
-                                <span class="input-group-addon">
+                                <span class="input-group-addon" style="padding-left: 0px;padding-right: 0px">
                                     <a type="button" class="btn" data-dismiss="modal" ng-click="activeClick()">
                                         <i class="{{activeBtnIcon}} fa-2x"></i>
                                     </a>
@@ -90,6 +90,7 @@
     <script type="text/ecmascript" src="js/md5.js"></script>
     <script src="wallet/js/language.js"></script>
     <script src="wallet/js/topMenuController.js"></script>
+    <script src="js/sha256.js"></script>
     <script src="wallet/js/main.js"></script>
     <script src="wallet/js/mainContainer.js"></script>
     <script src="js/activeaccount.js"></script>

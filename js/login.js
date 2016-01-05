@@ -50,18 +50,6 @@ loginapp.controller('regMemoController',regMemoController);
 
 //otpauth://totp/ledgercn@qqq.com?secret=DPI45HCEBCJK6HG7 二维码格式
 
-//function createqrCode(){
-//    //qrcode.makeCode("otpauth://totp/ledgercn@qqq.com?secret=DPI45HCEBCJK6HG7");
-//    $("#ga_qr_code").html("");
-//    $("#ga_qr_code").qrcode({
-//        "render": "div",
-//        "size": 100,
-//        width : 200,
-//        height : 200,
-//        "color": "#3a3",
-//        "text": "otpauth://totp/ledgercn@qqq.com?secret=DPI45HCEBCJK6HG7"
-//    });
-//}
 function regMainViewController($scope, $rootScope, $cookies, $location, $http, LANGUAGE){
 
     $rootScope.$on(LANGUAGE_CHANGED,function(event,data){
@@ -267,10 +255,6 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
         }
     }
 
-    function transform(data){
-        return data;
-    }
-
     function NextStep1Execute(){
         // http post 当前用户名到服务器，等待返回结果设置界面 todo
         function checkEmail(email){
@@ -345,7 +329,8 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
     function UserLoginExecute(){
         postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
 
-        md5Pw = hex_md5($scope.loginPassword);
+        md5Pw = CryptoJS.SHA256($scope.loginPassword+$scope.userNameEmail).toString(CryptoJS.enc.Hex);
+        shastr = CryptoJS.SHA256($scope.userNameEmail+";"+$scope.loginPassword).toString(CryptoJS.enc.Hex);
         $scope.loginPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
         tx = POST_TYPE_FLAG + "=" + PT_USER_LOGIN + "&" +
@@ -365,9 +350,10 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
             success(function (data, status, headers, config){
                 console.log("success\r\n",data);
                 if (data.Error == null){
-                    saveToCookie($cookies,"auth",data.data.user_auth,-1);
-                    saveToCookie($cookies,"ulvl",data.data.user_level,-1);
-                    saveToCookie($cookies,"uname",data.data.login_user,-1);
+                    saveToCookie($cookies,COOKIE_KEY_USERAUTH,data.data.user_auth,-1);
+                    saveToCookie($cookies,COOKIE_KEY_USERLEVEL,data.data.user_level,-1);
+                    saveToCookie($cookies,COOKIE_KEY_USERNAME,data.data.login_user,-1);
+                    saveToCookie($cookies,COOKIE_KEY_SECRETSTR,shastr,-1);
                     $scope.hasGA = data.data.user_ga_used;
                     setStepIndex(1);
                 }else{
@@ -423,8 +409,8 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
 
         $scope.errorMessage = "";
 
-        md5Pw = hex_md5($scope.loginPassword);
-        console.log("password ================ \r\n\t",md5Pw);
+        md5Pw = CryptoJS.SHA256($scope.loginPassword+$scope.userNameEmail).toString(CryptoJS.enc.Hex);
+        //console.log("password ================ \r\n\t",md5Pw);
 
         $scope.loginPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         $scope.confirmLoginPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -590,12 +576,14 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
         $scope.changePWBtnIcon = WAIT_ICON_STATE;
         $scope.isChangePWReadOnly = true;
 
-        md5OrgPw = hex_md5($scope.userOrigPassword);
+        md5OrgPw = CryptoJS.SHA256($scope.userOrigPassword+$scope.loginUser).toString(CryptoJS.enc.Hex);
         $scope.userOrigPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
-        md5NewPw = hex_md5($scope.userNewPassword1);
+        md5NewPw = CryptoJS.SHA256($scope.userNewPassword1+$scope.loginUser).toString(CryptoJS.enc.Hex);
+        shastr = CryptoJS.SHA256($scope.loginUser+";"+$scope.userNewPassword1).toString(CryptoJS.enc.Hex);
         $scope.userNewPassword1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         $scope.userNewPassword2 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
 
         postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
         tx = POST_TYPE_FLAG + "=" + PT_USER_MODIFY_PW + "&" +
@@ -618,10 +606,11 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                 if (data.Error == null){
                     $scope.alertMessageCPW = $scope.AlertMsgTable.ChangePWSuccess;
                     if (data.data.update_auth == true){
-                        saveToCookie($cookies,"auth",data.data.user_auth);
+                        saveToCookie($cookies,COOKIE_KEY_USERAUTH,data.data.user_auth);
                     }
-                    saveToCookie($cookies,"uname",data.data.login_user);
-                    saveToCookie($cookies,"ulvl",data.data.user_level);
+                    saveToCookie($cookies,COOKIE_KEY_USERNAME,data.data.login_user,-1);
+                    saveToCookie($cookies,COOKIE_KEY_USERLEVEL,data.data.user_level,-1);
+                    saveToCookie($cookies,COOKIE_KEY_SECRETSTR,shastr,-1);
                 } else {
                     $scope.errorMessageCPW = data.Error;
                 }
@@ -644,9 +633,10 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
     }
 
     $scope.logoutBtnClick = function(){
-        $cookies.remove("uname",{'path':'/'});
-        $cookies.remove("auth",{'path':'/'});
-        $cookies.remove("ulvl",{'path':'/'});
+        $cookies.remove(COOKIE_KEY_USERNAME,{'path':'/'});
+        $cookies.remove(COOKIE_KEY_USERAUTH,{'path':'/'});
+        $cookies.remove(COOKIE_KEY_USERLEVEL,{'path':'/'});
+        $cookies.remove(COOKIE_KEY_SECRETSTR,{'path':'/'});
         $scope.isLogin = false;
         $scope.hasGA = false;
         $scope.loginUser = "";
@@ -722,7 +712,7 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
             $scope.gaTotpCode = "";
             return;
         }
-        md5Pw = hex_md5($scope.gaUserPassword);
+        md5Pw = CryptoJS.SHA256($scope.gaUserPassword+$scope.loginUser).toString(CryptoJS.enc.Hex);
         $scope.gaUserPassword = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 
         $scope.gaUserPwVisible = false;
@@ -749,7 +739,7 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                 console.log("success\r\n",data);
                 if (data.Error == null){
                     $scope.hasGA = data.data.user_ga_used;
-                    saveToCookie($cookies,"ulvl",data.data.user_level);
+                    saveToCookie($cookies,COOKIE_KEY_USERLEVEL,data.data.user_level,-1);
                     $scope.gaWaitingVisible = false;
                     $scope.gaUserPwVisible = false;
                     $scope.gaUserPassword = "";

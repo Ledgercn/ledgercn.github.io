@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Web Wallet Pro - LedgerCN</title>
+        <link rel="icon" type="image/GIF" href="../images/logo.png"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <meta name="description" content="账中 恒星新网络 网页钱包">
+        <meta name="keywords" content="账中 钱包 wallet Ledger cn stellar XLM Lumens 恒星币 流明币 设计 总账 账户 恒星货币 STR 在线">
+        <!-- bootstrap 3.3.5 -->
+        <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <!--<link href="temp/css/bootstrap.css" rel="stylesheet" type="text/css" />-->
+        <link href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css" rel="stylesheet">
+        <!--<link href="temp/css/bootstrap-theme.css" rel="stylesheet" type="text/css" />-->
+        <!-- font Awesome -->
+        <link href="//cdn.bootcss.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet">
+        <!--<link href="temp/css/font-awesome.css" rel="stylesheet" type="text/css" />-->
+        <!-- Ionicons -->
+        <!--<link href="temp/css/ionicons.css" rel="stylesheet" type="text/css" />-->
+        <link href="//cdn.bootcss.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+        <!-- Theme style -->
+        <!--<link href="css/AdminLTE.css" rel="stylesheet" type="text/css" />-->
+        <link href="css/AdminLTE.css" rel="stylesheet" type="text/css" />
+        <link href="css/customstyle.css" rel="stylesheet" type="text/css" />
+
+        <script src="//cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+        <!--<script src="temp/js/jquery.js"></script>-->
+        <script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <!--<script src="temp/js/bootstrap.js"></script>-->
+        <script src="//cdn.bootcss.com/angular.js/1.4.7/angular.min.js"></script>
+        <script src="//cdn.bootcss.com/angular.js/1.4.7/angular-cookies.min.js"></script>
+        <!--<script src="temp/js/angular.js"></script>-->
+        <!--<script src="temp/js/angular-cookies.js"></script>-->
+        <script src="js/stellar-base/stellar-base.js"></script>
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+
+        <!--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>-->
+        <!--<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>-->
+        <!--<script src="temp/js/html5.js"></script>-->
+        <script src="//cdn.bootcss.com/html5shiv/r29/html5.min.js"></script>
+        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    </head>
+    <body class="skin-blue" ng-app="proapp">
+        <div ng-controller="languageController">
+            <i ng-model="currlanguage" ng-hide="true">{{currlanguage}}</i>
+        </div>
+        <div ng-controller="mainviewController">
+            <div ng-show="!isLogin" class="container-fluid text-center" style="margin-top: 1px">
+                <div style="min-height: 200px">
+                    <div ng-show="!ErrMsg">
+                        <i class="fa fa-spinner fa-pulse fa-3x"></i>
+                        <p>{{loadingTitle}}</p>
+                    </div>
+                    <div ng-show="ErrMsg">
+                        <p style="color: red; font-size: 25px">{{ErrMsg}}</p>
+                    </div>
+
+                </div>
+            </div>
+            <div ng-show="isLogin">
+                <!-- header  -->
+                <header class="header" ng-controller="headerController">
+                    <a href="/" class="logo navbar-fixed-top">
+                        LedgerCN
+                    </a>
+                    <!-- Header Navbar: style can be found in header.less -->
+                    <nav class="navbar navbar-static-top navbar-fixed-top" role="navigation">
+                        <!-- 顶部菜单按键 -->
+                        <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <div class="navbar-right">
+                            <ul class="nav navbar-nav">
+                                <!-- 顶部消息快捷方式 -->
+                                <li class="dropdown messages-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-envelope"></i>
+                                        <span class="label label-success">0</span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <!--<li class="header">You have 4 messages</li>-->
+                                        <!--<li>-->
+                                            <!--&lt;!&ndash; inner menu: contains the actual data &ndash;&gt;-->
+                                            <!--<ul class="menu">-->
+                                                <!--<li>&lt;!&ndash; start message &ndash;&gt;-->
+                                                    <!--<a href="#">-->
+                                                        <!--<div class="pull-left">-->
+                                                            <!--<img src="img/avatar3.png" class="img-circle" alt="User Image"/>-->
+                                                        <!--</div>-->
+                                                        <!--<h4>-->
+                                                            <!--Support Team-->
+                                                            <!--<small><i class="fa fa-clock-o"></i> 5 mins</small>-->
+                                                        <!--</h4>-->
+                                                        <!--<p>Why not buy a new awesome theme?</p>-->
+                                                    <!--</a>-->
+                                                <!--</li>&lt;!&ndash; end message &ndash;&gt;-->
+                                                <!--<li>-->
+                                                    <!--<a href="#">-->
+                                                        <!--<div class="pull-left">-->
+                                                            <!--<img src="img/avatar2.png" class="img-circle" alt="user image"/>-->
+                                                        <!--</div>-->
+                                                        <!--<h4>-->
+                                                            <!--AdminLTE Design Team-->
+                                                            <!--<small><i class="fa fa-clock-o"></i> 2 hours</small>-->
+                                                        <!--</h4>-->
+                                                        <!--<p>Why not buy a new awesome theme?</p>-->
+                                                    <!--</a>-->
+                                                <!--</li>-->
+                                                <!--<li>-->
+                                                    <!--<a href="#">-->
+                                                        <!--<div class="pull-left">-->
+                                                            <!--<img src="img/avatar.png" class="img-circle" alt="user image"/>-->
+                                                        <!--</div>-->
+                                                        <!--<h4>-->
+                                                            <!--Developers-->
+                                                            <!--<small><i class="fa fa-clock-o"></i> Today</small>-->
+                                                        <!--</h4>-->
+                                                        <!--<p>Why not buy a new awesome theme?</p>-->
+                                                    <!--</a>-->
+                                                <!--</li>-->
+                                                <!--<li>-->
+                                                    <!--<a href="#">-->
+                                                        <!--<div class="pull-left">-->
+                                                            <!--<img src="img/avatar2.png" class="img-circle" alt="user image"/>-->
+                                                        <!--</div>-->
+                                                        <!--<h4>-->
+                                                            <!--Sales Department-->
+                                                            <!--<small><i class="fa fa-clock-o"></i> Yesterday</small>-->
+                                                        <!--</h4>-->
+                                                        <!--<p>Why not buy a new awesome theme?</p>-->
+                                                    <!--</a>-->
+                                                <!--</li>-->
+                                                <!--<li>-->
+                                                    <!--<a href="#">-->
+                                                        <!--<div class="pull-left">-->
+                                                            <!--<img src="img/avatar.png" class="img-circle" alt="user image"/>-->
+                                                        <!--</div>-->
+                                                        <!--<h4>-->
+                                                            <!--Reviewers-->
+                                                            <!--<small><i class="fa fa-clock-o"></i> 2 days</small>-->
+                                                        <!--</h4>-->
+                                                        <!--<p>Why not buy a new awesome theme?</p>-->
+                                                    <!--</a>-->
+                                                <!--</li>-->
+                                            <!--</ul>-->
+                                        <!--</li>-->
+                                        <!--<li class="footer"><a href="#">See All Messages</a></li>-->
+                                    </ul>
+                                </li>
+
+                                <!-- 顶部登录用户名与操作 -->
+                                <li class="dropdown user user-menu">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-user"></i>
+                                        <span>{{loginUser}} <i class="caret"></i></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <!-- User image -->
+                                        <li class="user-header bg-light-blue">
+                                            <!--<img src="img/avatar.png" class="img-circle" alt="User Image" />-->
+                                            <i class="fa fa-xing fa-4x"></i>
+                                            <p>
+                                                {{loginUser}}
+                                                <small>{{activeTitle}}</small>
+                                                <small>Level: {{userLevel}}</small>
+                                            </p>
+                                        </li>
+                                        <!-- Menu Footer-->
+                                        <li class="user-footer">
+                                            <div class="pull-left">
+                                                <a href="../login.html" class="btn btn-default btn-flat">{{configUserTitle}}</a>
+                                            </div>
+                                            <div class="pull-right">
+                                                <a href="../index.html" class="btn btn-danger btn-flat" ng-click="logoutBtnClick()">{{LogoutUserTitle}}</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="messages-menu">
+                                    <a class="btn" ng-click="ChangeLanguageClick()">{{languageTitle}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </header>
+
+                <!-- ./content -->
+                <div class="wrapper row-offcanvas row-offcanvas-left" ng-controller="contentController">
+                    <!-- 左边菜单树 -->
+                    <aside class="left-side sidebar-offcanvas">
+                        <section class="sidebar">
+                            <!-- 树的头部 显示图标和所有账户余额 -->
+                            <div class="user-panel">
+                                <div class="pull-left image">
+                                    <i class="fa fa-xing fa-3x" style="color: red"></i>
+                                </div>
+                                <div class="pull-left info">
+                                    <p>{{leftside_accTitle}}</p>
+                                    <a class="abutton" ng-click="refreshAllBalance()"> <i class="fa {{refreshAllBalanceBtnIcon}}"></i> {{leftside_balance}} XLM</a>
+                                </div>
+                            </div>
+                            <ul class="sidebar-menu">
+                                <li>
+                                    <a class="abutton" ng-click="leftside_menu_AccBtnClick()">
+                                        <i class="fa fa-users"></i> <span>{{leftside_menu_accTitle}}</span>
+                                    </a>
+                                </li>
+                                <li ng-repeat="accinfo in AccountsManager.getAccounts()">
+                                    <a class="abutton" role="button" data-toggle="collapse" ng-click="leftside_menu_acc_InfoBtnClick($index)"
+                                       href="#{{accinfo.NickName}}_collapse" aria-expanded="false" aria-controls="{{accinfo.NickName}}_collapse">
+                                        <i class="fa fa-user"></i>
+                                        <span>{{accinfo.NickName}}</span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>
+                                    <ul class="cmenu collapse" id="{{accinfo.NickName}}_collapse">
+                                        <li><a class="abutton" ng-click="leftside_menu_acc_InfoBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_InfoTitle}}</a></li>
+                                        <!--<li><a class="abutton" ng-click="leftside_menu_acc_PayBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_PayTitle}}</a></li>-->
+                                        <!--<li><a class="abutton" ng-click="leftside_menu_acc_MergeBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_MergeTitle}}</a></li>-->
+                                        <li><a class="abutton" ng-click="leftside_menu_acc_HistoryBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_HistoryTitle}}</a></li>
+                                        <!--<li><a class="abutton" ng-click="leftside_menu_acc_OrderBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_OrderTitle}}</a></li>-->
+                                        <li><a class="abutton" ng-click="leftside_menu_acc_SettingBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_SettingTitle}}</a></li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a class="abutton" role="button" data-toggle="collapse"
+                                       href="#leftside_menu_contacts_collapse" aria-expanded="false" aria-controls="leftside_menu_contacts_collapse">
+                                        <i class="fa fa-book"></i>
+                                        <span>{{leftside_menu_contactTitle}}</span>
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </a>
+                                    <ul class="cmenu collapse" id="leftside_menu_contacts_collapse">
+                                        <li><a class="abutton" ng-click="leftside_menu_groupBtnClick()" ng-show="false"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_groupTitle}}</a></li>
+                                        <li><a class="abutton" ng-click="leftside_menu_friendsBtnClick()"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_friendsTitle}}</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </section>
+                        <!-- /.sidebar -->
+                    </aside>
+
+                    <!-- 中间内容部分 -->
+                    <aside class="right-side" ng-model="current_account_index">
+                        <!-- 标题 -->
+                        <section id="Title_section_id" class="content-header" style="margin-top: 50px">
+                            <h1 ng-show="currentSelectIndex == 0">
+                                {{context_title_all_account}}
+                                <small ng-show="AccountsManager.Count() == 0 ">{{context_title_s_no_account}}</small>
+                            </h1>
+                            <h1 ng-show="currentSelectIndex >= 1 && currentSelectIndex <= 6">
+                                {{currentNickName}}
+                                <small ng-show="currentSelectIndex == 1">{{leftside_menu_acc_InfoTitle}}</small>
+                                <!--<small ng-show="currentSelectIndex == 2">{{leftside_menu_acc_PayTitle}}</small>-->
+                                <!--<small ng-show="currentSelectIndex == 3">{{leftside_menu_acc_MergeTitle}}</small>-->
+                                <!--<small ng-show="currentSelectIndex == 4">{{leftside_menu_acc_HistoryTitle}}</small>-->
+                                <!--<small ng-show="currentSelectIndex == 5">{{leftside_menu_acc_OrderTitle}}</small>-->
+                                <small ng-show="currentSelectIndex == 6">{{leftside_menu_acc_SettingTitle}}</small>
+                            </h1>
+                            <h1 ng-show="currentSelectIndex >= 30 && currentSelectIndex <= 31">
+                                {{leftside_menu_contactTitle}}
+                                <small ng-show="currentSelectIndex == 30">{{leftside_menu_groupTitle}}</small>
+                                <small ng-show="currentSelectIndex == 31">{{leftside_menu_friendsTitle}}</small>
+                            </h1>
+                            <ol class="breadcrumb" ng-show="currentSelectIndex >= 1 && currentSelectIndex <= 6">
+                                <li><a href="#content_accInfo_id" class="abutton" ng-click="leftside_menu_acc_InfoBtnClick(current_account_index)"><i class="fa fa-user"></i> {{leftside_menu_acc_InfoTitle}}</a></li>
+                                <li><a href="#content_accPayemnt_id" class="abutton" ng-click="leftside_menu_acc_InfoBtnClick(current_account_index)"><i class="fa fa-credit-card-alt"></i> {{leftside_menu_acc_PayTitle}}</a></li>
+                                <li><a class="abutton" ng-click="leftside_menu_acc_HistoryBtnClick(current_account_index)"><i class="fa fa-database"></i> {{leftside_menu_acc_HistoryTitle}}</a></li>
+                                <!--<li><a href="#content_accOrder_id" class="abutton" ng-click="leftside_menu_acc_InfoBtnClick(current_account_index)"><i class="fa fa-server"></i> {{leftside_menu_acc_OrderTitle}}</a></li>-->
+                                <li><a href="#content_accMerge_id" class="abutton" ng-click="leftside_menu_acc_InfoBtnClick(current_account_index)"><i class="fa fa-magnet"></i> {{leftside_menu_acc_MergeTitle}}</a></li>
+                                <li><a class="abutton" ng-click="leftside_menu_acc_SettingBtnClick(current_account_index)"><i class="fa fa-gear"></i> {{leftside_menu_acc_SettingTitle}}</a></li>
+                                <li><a class="abutton" ng-click="leftside_menu_AccBtnClick()"><i class="fa fa-home"></i> {{leftside_menu_acc_BackTitle}}</a></li>
+                            </ol>
+                            <ol class="breadcrumb" ng-show="currentSelectIndex >= 30 && currentSelectIndex <= 31">
+                                <li><a class="abutton" ng-click="leftside_menu_groupBtnClick()" ng-show="false"><i class="fa fa-users"></i> {{leftside_menu_groupTitle}}</a></li>
+                                <li><a class="abutton" ng-click="leftside_menu_friendsBtnClick()"><i class="fa fa-user-plus"></i> {{leftside_menu_friendsTitle}}</a></li>
+                            </ol>
+                        </section>
+
+                        <!-- 警告 -->
+                        <div class="alert alert-danger" role="modal" style="margin: 10px 10px 0px 16px; word-break: break-all; word-wrap: break-word;" ng-show="AlertMessage">
+                            <i class="fa fa-remove"></i>
+                            <a class="close fa fa-remove" data-dismiss="modal" ng-click="AlertMessage=''"></a>
+                            <b>Alert!</b> {{AlertMessage}}
+                        </div> <!-- 警告 -->
+
+                        <!-- 主要内容 -->
+                        <section class="content">
+                            <!-- 概要小盒子提示 -->
+                            <div class="row" ng-show="currentSelectIndex == 0">
+                                <!-- 账户的小盒子 -->
+                                <div class="col-lg-3 col-xs-6" ng-repeat="accInfo in AccountsManager.getAccounts()">
+                                    <!-- small box -->
+                                    <div class="small-box bg-green">
+                                        <div class="inner">
+                                            <h3 style="font-size: 22px" ng-show="!accInfo.loading">
+                                                {{accInfo.getBalanceShort()}}<sup style="font-size: 15px">XLM</sup>
+                                            </h3>
+                                            <h3 style="font-size: 22px" ng-show="accInfo.loading">
+                                                <i class="fa fa-spinner fa-pulse"></i>
+                                            </h3>
+                                            <p>
+                                                {{accInfo.NickName}}
+                                            </p>
+                                            <p>
+                                                <small>{{accInfo.getPublicAddrShort()}}</small>
+                                            </p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="ion ion-stats-bars"></i>
+                                        </div>
+                                        <a class="abutton small-box-footer" ng-click="leftside_menu_acc_InfoBtnClick($index)">
+                                            {{litbox_accDetailTitle}} <i class="fa fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div><!-- ./col -->
+                                <!-- 添加账户的小盒子 -->
+                                <div class="col-lg-3 col-xs-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-yellow">
+                                        <div class="inner">
+                                            <h3  style="font-size: 22px">
+                                                {{litbox_createAccTitle}}
+                                            </h3>
+                                            <p>{{litbox_createAccMemo1}}</p>
+                                            <p><small>{{litbox_createAccMemo2}}</small></p>
+                                        </div>
+                                        <div class="icon">
+                                            <i class="fa fa-user-plus"></i>
+                                            <!--<a class="fa fa-user-plus"></a>-->
+                                        </div>
+                                        <a href="#" class="small-box-footer" ng-click="createAccountBtnClick()">
+                                            {{litbox_createAccBtnTitle}} <i class="fa fa-arrow-circle-right"></i>
+                                        </a>
+                                    </div>
+                                </div><!-- ./col -->
+                            </div><!-- /.row 概要小盒子提示 -->
+
+                            <!-- 中间主体部分 -->
+                            <div class="row">
+                                <section class="col-xs-12 connectedSortable">
+
+                                    <!-- 添加账户 -->
+                                    <div class="box box-warning" ng-show="AddAccViewVisible">
+                                        <div class="box-header">
+                                            <i class="fa fa-user-plus"></i>
+
+                                            <h3 class="box-title">{{toolbar_addAccTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body">
+                                            <!-- 警告 -->
+                                            <div class="alert alert-danger" role="modal" style="margin: 10px 0px 10px 10px" ng-show="toolbar_AddAcc_AlertMessage">
+                                                <i class="fa fa-remove"></i>
+                                                <a class="close fa fa-remove" data-dismiss="modal" ng-click="toolbar_AddAcc_AlertMessage=''"></a>
+                                                <b>Alert!</b> {{toolbar_AddAcc_AlertMessage}}
+                                            </div> <!-- 警告 -->
+                                            <form>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-warning btn-lg" ng-click="toolbar_addAcc_SecretKeyEyeBtnClick()"><i class="fa {{toolbar_addAcc_SecretKeyEyeBtnIcon}}"></i></button>
+                                                        </div>
+                                                        <input type="{{toolbar_addAcc_SecretKeyType}}" class="form-control input-lg" placeholder="{{toolbar_addAcc_SecretKeyPlaceholder}}(S...)"
+                                                               ng-model="toolbar_addAcc_SecretKey" ng-blur="toolbar_addAcc_SecretKeyBlur()"/>
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-danger btn-lg" ng-click="toolbar_addAcc_SecretKey = '';toolbar_addAcc_PublicAddr=''"><i class="fa fa-remove"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" ng-show="toolbar_addAcc_PublicAddr">
+                                                    <pre style="font-size: 20px;">{{toolbar_addAcc_PublicAddr}}</pre>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input class="form-control input-lg" placeholder="{{toolbar_addAcc_NickNamePlaceholder}}"
+                                                                ng-model="toolbar_addAcc_NickName"/>
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-danger btn-lg" ng-click="toolbar_addAcc_NickName = ''"><i class="fa fa-remove"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <div class="row">
+                                                <div class="checkbox pull-left" ng-show="hasGA">
+                                                    <label>
+                                                        <input type="checkbox" ng-checked="toolbar_addAcc_GAChecked"> {{toolbar_addAcc_GATitle}}
+                                                    </label>
+                                                </div>
+
+                                                <div class="panel pull-right" style="margin-right: 13px">
+                                                    <button class="btn btn-info btn-lg" ng-click="toolbar_addAcc_RandomBtnClick()"><i class="fa fa-ticket"></i> {{toolbar_addAcc_RandomBtnTitle}}</button>
+                                                    <button class="btn btn-primary btn-lg" ng-click="toolbar_addAcc_ConfirmBtnClick()"><i class="fa fa-check"></i> {{toolbar_addAcc_ConfirmBtnTitle}}</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Loading (remove the following to stop the loading)-->
+                                        <div class="overlay" ng-show="executing == 'fa fa-spinner fa-pulse'"></div>
+                                        <div class="loading-img text-center" ng-show="executing == 'fa fa-spinner fa-pulse'">
+                                            <i class="{{executing}} fa-5x" style="margin: 60px auto;"></i>
+                                        </div>
+                                        <!-- end loading -->
+                                    </div><!-- /.box 添加账户 -->
+
+                                    <!-- 账户详细信息 -->
+                                    <div id="content_accInfo_id" class="box box-success" ng-show="AccInfosViewVisible">
+                                        <!-- 头部 -->
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <a class="btn btn-default btn-sm" data-toggle="tooltip" title="{{context_detailRefreshTitle}}" ng-click="getAccountBalanceClick(current_account_index)"><i class="fa fa-refresh {{context_pay_balanceBtnIcon}}"></i></a>
+                                                <a href="#Title_section_id" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{context_detailBackTopTitle}}"><i class="fa fa-arrow-circle-up"></i></a>
+                                                <a class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="{{context_detailMiniTitle}}"><i class="fa fa-minus"></i></a>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-user"></i>
+                                            <h3 class="box-title">{{leftside_menu_acc_InfoTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                        <!-- /.box-body -->
+                                        <div class="box-body chat">
+                                            <div class="panel panel-group">
+                                                <!--<i class=" fa fa-rocket fa-2x"></i>-->
+                                                <p class="message">
+                                                    <a class="name" style="font-size: 20px">{{currentNickName}}</a>
+                                                </p>
+
+                                                <div>
+                                                <!--<div class="callout callout-info">-->
+                                                    <h4 ng-model="context_detail_accBalanceShow" ng-init="context_detail_accBalanceShow = true">{{context_detailAccBalanceTitle}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <small style="font-size: 15px;">
+                                                            <a ng-show="context_detail_accBalanceShow" class="abutton" ng-click="context_detail_accBalanceShow = false" style="color: #001f3f">{{context_detailHideTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-down"></i></a>
+                                                            <a ng-show="!context_detail_accBalanceShow" class="abutton" ng-click="context_detail_accBalanceShow = true" style="color: #008d4c">{{context_detailShowTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i></a>
+                                                        </small>
+                                                    </h4>
+                                                    <table class="table table-striped" style="font-size: 15px" ng-show="context_detail_accBalanceShow && curAccInfo && curAccInfo.Info">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Code</th>
+                                                            <th>balance</th>
+                                                            <th>issuer</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr ng-repeat="credit in curAccInfo.Info.Credits">
+                                                            <th scope="row">{{$index+1}}</th>
+                                                            <td>{{credit.asset_code}}</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all">{{credit.balance}}</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all">
+                                                                <a class="abutton" ng-click="credit.short = !credit.short">
+                                                                    {{getShortAddress(credit)}}
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+
+                                                    <h4 ng-model="context_detail_accAddrShow" ng-init="context_detail_accAddrShow = false">{{context_detailAddressrTitle}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <small style="font-size: 15px;">
+                                                            <a ng-show="context_detail_accAddrShow" class="abutton" ng-click="context_detail_accAddrShow = false" style="color: #001f3f">{{context_detailHideTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-down"></i></a>
+                                                            <a ng-show="!context_detail_accAddrShow" class="abutton" ng-click="context_detail_accAddrShow = true" style="color: #008d4c">{{context_detailShowTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i></a>
+                                                        </small>
+                                                    </h4>
+                                                    <div ng-show="context_detail_accAddrShow">
+                                                        <h5>{{context_detailPublicAddrTitle}}</h5>
+                                                        <pre style="font-size: 20px">{{context_detailPublicAddr}}</pre>
+                                                        <h5>{{context_detailSecretKeyTitle}} <a class="abutton {{context_detailSecretKeyBtnIcon}} fa-2x" ng-click="context_detailSecretKeyBtnClick()"></a> </h5>
+                                                        <pre style="font-size: 20px" ng-model="context_detailSecretKetSave">{{context_detailSecretKey}}</pre>
+                                                    </div>
+
+                                                    <h4 ng-model="context_detail_accOtherShow" ng-init="context_detail_accOtherShow = false">{{context_detailOthersTitle}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <small style="font-size: 15px;">
+                                                            <a ng-show="context_detail_accOtherShow" class="abutton" ng-click="context_detail_accOtherShow = false" style="color: #001f3f">{{context_detailHideTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-down"></i></a>
+                                                            <a ng-show="!context_detail_accOtherShow" class="abutton" ng-click="context_detail_accOtherShow = true" style="color: #008d4c">{{context_detailShowTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i></a>
+                                                        </small>
+                                                    </h4>
+                                                    <table class="table table-striped" style="font-size: 15px" ng-show="context_detail_accOtherShow && curAccInfo && curAccInfo.Info">
+                                                        <tbody>
+                                                        <tr>
+                                                            <th scope="row">{{context_detailHomeDomain}}</th>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="curAccInfo.Info.HomeDomain">{{curAccInfo.Info.HomeDomain}}</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="!curAccInfo.Info.HomeDomain">{{context_detailNotSet}}</td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <th scope="row">{{context_detailInfDest}}</th>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="curAccInfo.Info.InflationDest">{{curAccInfo.Info.InflationDest}}</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="!curAccInfo.Info.InflationDest">{{context_detailNotSet}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">{{context_detailSequence}}</th>
+                                                            <td style="word-wrap: break-word; word-break: break-all">{{curAccInfo.Info.Sequence}}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">{{context_detailFlags}}</th>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="curAccInfo.Info.Flags.Auth_required && curAccInfo.Info.Flags.Auth_revocable">Auth_required(true)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Auth_revocable(true)</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="!curAccInfo.Info.Flags.Auth_required && curAccInfo.Info.Flags.Auth_revocable">Auth_required(false)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Auth_revocable(true)</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="curAccInfo.Info.Flags.Auth_required && !curAccInfo.Info.Flags.Auth_revocable">Auth_required(true)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Auth_revocable(false)</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all" ng-if="!curAccInfo.Info.Flags.Auth_required && !curAccInfo.Info.Flags.Auth_revocable">Auth_required(false)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Auth_revocable(false)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">{{context_detailThresholds}}</th>
+                                                            <td style="word-wrap: break-word; word-break: break-all">High:{{curAccInfo.Info.Thresholds.high}} med:{{curAccInfo.Info.Thresholds.med}} low:{{curAccInfo.Info.Thresholds.low}} </td>
+                                                        </tr>
+                                                        <tr ng-repeat="signer in curAccInfo.Info.Signers">
+                                                            <th scope="row" ng-if="$index==0" style="min-width: 90px">{{context_detailSigners}}</th>
+                                                            <th scope="row" ng-if="$index!=0"></th>
+                                                            <td style="word-wrap: break-word; word-break: break-all">{{signer.public_key}}(weight:{{signer.weight}})</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div><!-- /.panel-group -->
+                                        </div><!-- /.box-body -->
+                                    </div><!-- /.box 账户详细信息 -->
+
+                                    <!-- 付款 -->
+                                    <div id="content_accPayemnt_id" class="box box-info" ng-show="PaymentViewVisible">
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <a href="#Title_section_id" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{context_detailBackTopTitle}}"><i class="fa fa-arrow-circle-up"></i></a>
+                                                <a class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="{{context_detailMiniTitle}}"><i class="fa fa-minus"></i></a>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-credit-card-alt"></i>
+                                            <h3 class="box-title">{{leftside_menu_acc_PayTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body">
+                                            <div class="panel panel-group" style="margin: auto 10px;">
+                                                <dl class="dl-horizontal">
+                                                    <dt><a class="abutton" style="font-size: 20px;"  data-toggle="modal" data-target=".add_friend_model" ng-click="SelectFriendBtnClick(current_account_index)"><i class="fa fa-users"></i> {{context_paySelecFriends}}</a></dt>
+                                                    <dd>
+                                                        <div class="input-group">
+                                                            <input ng-model="context_pay_friends" type="text" class="form-control input-md" placeholder="{{context_pay_friendsPlaceholder}}" ng-readonly="context_pay_SendBtnIcon == 'fa-pulse'"/>
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-danger btn-md" ng-click="context_pay_friends=''"><i class="fa fa-remove"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    <dd style="margin-top: 2px;margin-bottom: 5px;"><a style="color: #73716e">{{context_pay_friendsExplanation}}</a></dd>
+                                                    <dt><a class="fa fa-rocket" style="font-size: 20px;"> Lumens</a></dt>
+                                                    <dd>
+                                                        <div class="input-group">
+                                                            <input ng-model="context_pay_amount" type="text" class="form-control input-md" placeholder="{{context_pay_amountPlaceholder}}"  ng-readonly="context_pay_SendBtnIcon == 'fa-pulse'"
+                                                                   onkeyup="value=value.replace(/[^\d|.]/g,'')"/>
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-danger btn-md" ng-click="context_pay_amount=''"><i class="fa fa-remove"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    <dd style="margin-top: 2px;margin-bottom: 5px;">
+                                                        <a class="abutton" style="color: #73716e" ng-click="getAccountBalanceClick(current_account_index)">
+                                                            <i class="fa fa-spinner {{context_pay_balanceBtnIcon}}"></i> {{context_pay_amountExplanation}} {{context_pay_balance}}
+                                                        </a>
+                                                    </dd>
+                                                    <dt>
+                                                        <a class="dropdown">
+                                                            <a style="font-size: 20px;" class="dropdown-toggle abutton" data-toggle="dropdown">
+                                                                <i class="fa fa-pencil"></i>
+                                                                <span> {{context_pay_memoTitle}}<i class="caret"></i></span>
+                                                            </a>
+                                                            <ul class="dropdown-menu" style="margin-top: -150px">
+                                                                <li><a class="abutton" style="font-size: 20px;" ng-click="context_pay_memoTitle = 'Memo Text'">Memo Text</a></li>
+                                                                <li><a class="abutton" style="font-size: 20px;" ng-click="context_pay_memoTitle = 'Memo ID'">Memo ID</a></li>
+                                                                <li><a class="abutton" style="font-size: 20px;" ng-click="context_pay_memoTitle = 'Memo Hash'">Memo Hash</a></li>
+                                                                <li><a class="abutton" style="font-size: 20px;" ng-click="context_pay_memoTitle = 'Memo RETURN'">Memo RETURN</a></li>
+                                                            </ul>
+                                                        </a>
+                                                    </dt>
+                                                    <dd>
+                                                        <div class="input-group">
+                                                            <input ng-model="context_pay_memo" type="text" class="form-control input-md" placeholder="{{context_pay_memoPlaceholder}}" ng-readonly="context_pay_SendBtnIcon == 'fa-pulse'"/>
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-danger btn-md" ng-click="context_pay_memo=''"><i class="fa fa-remove"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    <dd style="margin-top: 2px;margin-bottom: 5px;color: #73716e;">{{context_pay_memoExplanation}}</dd>
+                                                </dl>
+
+                                                <!-- 警告 -->
+                                                <div class="alert alert-info" role="modal" style="margin: 10px 0px 10px 10px" ng-show="context_payment_AlertMessage">
+                                                    <i class="fa fa-remove"></i>
+                                                    <a class="close fa fa-remove" data-dismiss="modal" ng-click="context_payment_AlertMessage=''"></a>
+                                                    <pre style="background-color: transparent; border: transparent; font-size: 15px">{{context_payment_AlertMessage}}</pre>
+                                                </div> <!-- 警告 -->
+                                            </div>
+                                        </div><!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <div class="row">
+                                                <div class="checkbox pull-left" style="margin-right: 10px" ng-show="false">
+                                                    <label>
+                                                        <input type="checkbox" ng-checked="context_pay_UserAgent"> {{context_pay_UserAgentTitle}}<a style="color: red">{{context_pay_UserAgentExplanation}}</a>
+                                                    </label>
+                                                </div>
+
+                                                <div class="panel pull-right" style="margin-right: 13px">
+                                                    <button class="btn btn-primary btn-md" ng-click="context_pay_SendBtnClick(current_account_index)"><i class="fa fa-rocket {{context_pay_SendBtnIcon}}"></i> {{context_pay_SendBtnTitle}}</button>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.box-footer -->
+                                    </div><!-- /.box 付款 -->
+
+                                    <!-- 历史 -->
+                                    <div id="content_accHistory_id" class="box box-info" ng-show="HistoryViewVisible">
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <!--<a href="#Title_section_id" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{context_detailBackTopTitle}}"><i class="fa fa-arrow-circle-up"></i></a>-->
+                                                <a class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="{{context_detailMiniTitle}}"><i class="fa fa-minus"></i></a>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-database"></i>
+                                            <h3 class="box-title">{{leftside_menu_acc_HistoryTitle}} <small ng-show="history_loadingVisible">{{history_loadingTitle}}</small></h3>
+                                        </div><!-- /.box-header -->
+
+                                        <div class="box-body">
+                                            <ol class="breadcrumb">
+                                                <li>
+                                                    <div class="btn-group" role="group">
+                                                        <a type="button" class="btn {{history_AllBtnIcon}}" ng-click="history_Filter_BtnClick(current_account_index,0)">{{history_AllTitle}}</a>
+                                                        <a type="button" class="btn {{history_IncomingBtnIcon}}" ng-click="history_Filter_BtnClick(current_account_index,1)">{{history_IncomingTitle}}</a>
+                                                        <a type="button" class="btn {{history_OutgoingBtnIcon}}" ng-click="history_Filter_BtnClick(current_account_index,2)">{{history_OutgoingTitle}}</a>
+                                                        <a type="button" class="btn {{history_OtherBtnIcon}}" ng-click="history_Filter_BtnClick(current_account_index,3)">{{history_OtherTitle}}</a>
+                                                    </div>
+                                                </li>
+                                                <li><i class="fa fa-calendar"></i> {{history_DatetimeTitle}}
+                                                    <select ng-change="history_DateSelectionChanged(current_account_index,history_DateSelection)" ng-model="history_DateSelection">
+                                                        <option value="1">{{history_DatetimeOption_1D}}</option>
+                                                        <option value="7">{{history_DatetimeOption_7D}}</option>
+                                                        <option value="10">{{history_DatetimeOption_10D}}</option>
+                                                        <option value="30">{{history_DatetimeOption_30D}}</option>
+                                                        <option value="65535">{{history_DatetimeOption_All}}</option>
+                                                    </select>
+                                                </li>
+                                                <li><a class="abutton" ng-click="history_RefreshBtnClick(current_account_index)"><i class="fa fa-spinner {{history_RefreshBtnIcon}}"></i> {{history_RefreshTitle}}</a></li>
+                                            </ol>
+
+                                            <!-- 警告 -->
+                                            <div class="alert alert-danger" role="modal" style="margin: 10px 0px 10px 10px" ng-show="history_AlertMessage">
+                                                <i class="fa fa-remove"></i>
+                                                <a class="close fa fa-remove" data-dismiss="modal" ng-click="history_AlertMessage=''"></a>
+                                                <pre style="background-color: transparent; border: transparent; font-size: 15px">{{history_AlertMessage}}</pre>
+                                            </div> <!-- 警告 -->
+
+                                            <table class="table table-hover table-condensed">
+                                                <tr ng-repeat-start="hisList in HistoryList track by $index" class="abutton">
+                                                    <td class="text-center" style="min-width: 90px;vertical-align: middle;background-color: #EFFFFF;" ng-click="hisList.showDetails = !hisList.showDetails">{{hisList.Title}}</td>
+                                                    <td style="word-wrap: break-word; word-break: break-all;background-color: #EFFFFF;" rowspan="2" ng-click="hisList.showDetails = !hisList.showDetails">
+                                                        <label class="abutton">{{hisList.addrTitle}}</label><br>
+                                                        <label class="abutton">{{hisList.memodef.memo_type}}: {{hisList.memodef.memo}}</label>
+                                                    </td>
+                                                    <td class="text-right" style="min-width: 90px;vertical-align: middle;word-wrap: break-word;background-color: #EFFFFF; color:#bbb;" rowspan="2" ng-click="hisList.showDetails = !hisList.showDetails">{{getLocalTimeString(hisList.created_datetime)}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center" style="min-width: 90px;vertical-align: middle; word-wrap: break-word; word-break: break-all;background-color: #FFFFFF;" ng-click="hisList.showDetails = !hisList.showDetails">{{hisList.subTitle}}</td>
+                                                </tr>
+                                                <tr ng-show="hisList.showDetails" ng-repeat-end>
+                                                    <td colspan="3">
+                                                        <textarea readonly style="width:100%;background-color: transparent; padding: 0; border: none;word-wrap: break-word; word-break: break-all;"
+                                                                  rows="{{hisList.DetailRows}}">{{hisList.Details}}
+                                                        </textarea>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div><!-- /.box-body -->
+
+                                    </div> <!-- 历史 -->
+
+                                    <!-- 挂单 -->
+                                    <div id="content_accOrder_id" class="box box-info" ng-show="false"> <!--OrderViewVisible -->
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <a href="#Title_section_id" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{context_detailBackTopTitle}}"><i class="fa fa-arrow-circle-up"></i></a>
+                                                <a class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="{{context_detailMiniTitle}}"><i class="fa fa-minus"></i></a>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-server"></i>
+                                            <h3 class="box-title">挂单</h3>
+                                        </div><!-- /.box-header -->
+                                    </div>
+
+                                    <!-- 合并 -->
+                                    <div id="content_accMerge_id" class="box box-danger" ng-show="MergeViewVisible">
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <a href="#Title_section_id" class="btn btn-default btn-sm" data-toggle="tooltip" title="{{context_detailBackTopTitle}}"><i class="fa fa-arrow-circle-up"></i></a>
+                                                <a class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="{{context_detailMiniTitle}}"><i class="fa fa-minus"></i></a>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-magnet"></i>
+                                            <h3 class="box-title">{{leftside_menu_acc_MergeTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body">
+                                            <div class="panel panel-group" style="margin: auto 10px;">
+                                                <dl class="dl-horizontal">
+                                                    <dt><a style="font-size: 20px;"><i class="fa fa-key"></i> {{context_detailSecretKeyTitle}}</a></dt>
+                                                    <dd>
+                                                        <div class="input-group">
+                                                            <input ng-model="context_detailMergeSecretKey" type="text" class="form-control input-md"
+                                                                   placeholder="{{context_detailMergeSecretKeyPlaceholder}}(S...)" ng-blur="context_detailMergeSecretKeyBlur()"/>
+                                                            <div class="input-group-btn">
+                                                                <button class="btn btn-danger btn-md" ng-click="context_detailMergeSecretKey='';context_detailMergePublicAddr='';context_detailMergeBalance='-';context_detailMergeConfirm=false;context_detailMergeConfirmCheckState=true;"><i class="fa fa-remove"></i></button>
+                                                            </div>
+                                                        </div>
+                                                    </dd>
+                                                    <dd style="margin-top: 2px;margin-bottom: 5px;"><a style="color: #73716e">{{context_detailMergeSecretKeyExplanation}}</a></dd>
+
+                                                    <dt><a style="font-size: 20px;"><i class="fa fa-home"></i> {{context_detailPublicAddrTitle}}</a></dt>
+                                                    <dd style="margin-top: 2px;" ng-show="context_detailMergePublicAddr"><pre>{{context_detailMergePublicAddr}}</pre></dd>
+                                                    <dd>{{context_detailMergeAmountExplanation}}
+                                                        <i class="fa fa-spinner fa-pulse" ng-show="context_detailMergeBalance == '' && context_detailMergePublicAddr != ''"></i>
+                                                        {{context_detailMergeBalance}} XLM</dd>
+                                                    <dd style="margin-bottom: 5px;">{{context_detailMergeAtLeastBalance}}</dd>
+                                                    <dd>
+                                                        <div class="pull-left">
+                                                            <label class="checkbox-inline">
+                                                                <input type="checkbox" style="color: #001f3f" ng-model="context_detailMergeConfirm" ng-disabled="context_detailMergeConfirmCheckState"> <a style="color: red"> {{context_detailMergeConfirmTitle}}</a>
+                                                            </label>
+                                                        </div>
+                                                    </dd>
+                                                </dl>
+
+                                                <!-- 警告 -->
+                                                <div class="alert alert-info" role="modal" style="margin: 10px 0px 10px 10px" ng-show="context_merge_AlertMessage">
+                                                    <i class="fa fa-remove"></i>
+                                                    <a class="close fa fa-remove" data-dismiss="modal" ng-click="context_merge_AlertMessage=''"></a>
+                                                    <b>Alert!</b> {{context_merge_AlertMessage}}.
+                                                </div> <!-- 警告 -->
+                                            </div>
+                                        </div><!-- /.box-body -->
+                                        <div class="box-footer">
+                                            <div class="row">
+                                                <div class="checkbox pull-left" style="margin-right: 10px; margin-left: 13px" ng-show="false">
+                                                    <label>
+                                                        <input type="checkbox" ng-checked="context_detailMergeUserAgent"> {{context_pay_UserAgentTitle}}<a style="color: red">{{context_pay_UserAgentExplanation}}</a>
+                                                    </label>
+                                                </div>
+
+                                                <div class="panel pull-right" style="margin-right: 13px">
+                                                    <button class="btn btn-primary btn-md" ng-click="context_detailMergeBtnClick(current_account_index)" ng-disabled="context_detailMergeSecretKey == '' || context_detailMergePublicAddr == '' || context_detailMergeConfirm == false"><i class="fa {{context_detailMergeBtnIcon}}"></i> {{context_detailMergeBtnTitle}}</button>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.box-footer -->
+                                    </div><!-- /.box 合并 -->
+
+                                    <!-- 账户设置 -->
+                                    <div class="box box-danger" ng-show="AccSettingsViewVisible">
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <button class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-user"></i>
+
+                                            <h3 class="box-title">{{currentNickName}} - {{leftside_menu_acc_SettingTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                        <div class="box-body">
+                                            <form >
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <input ng-model="context_settingAccNickName" class="form-control input-lg" placeholder="{{context_settingAccNickNamePlaceholder}}"/>
+                                                        <div class="input-group-btn">
+                                                            <button class="btn btn-danger btn-lg" ng-click="context_settingAccNickName = ''"><i class="fa fa-remove"></i></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <pre style="font-size: 20px; ">{{context_settingAccPublicAddr}}</pre>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <div ng-show="false" ng-model="context_settingAccSecretSave"></div>
+                                                    <pre style="font-size: 20px; "><a class="abutton {{context_settingSecretKeyBtnIcon}}" ng-click="context_settingSecretKeyBtnClick(current_account_index)"></a> {{context_settingAccSecretKey}}</pre>
+                                                </div>
+
+                                                <div class="form-group" ng-show="hasGA">
+                                                    <label>
+                                                        <input type="checkbox" ng-checked="context_settingGAChecked"> {{toolbar_addAcc_GATitle}}
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group text-center">
+                                                    <div class="panel-group">
+                                                        <button class="btn btn-danger btn-lg"  data-toggle="modal" data-target=".operations-model"
+                                                                ng-click="context_settingAccDeleteBtnClick(current_account_index)">
+                                                            <i class="fa fa-remove"></i> {{context_settingAccDeleteBtnTitle}}
+                                                        </button>
+                                                        <button class="btn btn-primary btn-lg" ng-click="context_settingAccModifyBtnClick(current_account_index)">
+                                                            <i class="fa fa-check"></i> {{context_settingAccModifyBtnTitle}}
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div><!-- /.box-body -->
+
+                                        <!-- Loading (remove the following to stop the loading)-->
+                                        <div class="overlay" ng-show="executing == 'fa fa-spinner fa-pulse'"></div>
+                                        <div class="loading-img text-center" ng-show="executing == 'fa fa-spinner fa-pulse'">
+                                            <i class="{{executing}} fa-5x" style="margin: 60px auto;"></i>
+                                        </div>
+                                        <!-- end loading -->
+                                    </div><!-- /.box 账户设置 -->
+
+                                    <!-- 所有好友 -->
+                                    <div class="box box-primary" ng-show="MenuAllFriendsVisible">
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <button class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-user-plus"></i>
+
+                                            <h3 class="box-title">{{leftside_menu_contactTitle}} - {{leftside_menu_friendsTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                        <!-- /.box-body -->
+                                        <div class="box-body chat">
+                                            <div class="panel panel-group">
+
+                                                <!-- 警告 -->
+                                                <div class="alert alert-danger" role="modal" style="margin: 10px 0px 10px 10px" ng-show="menu_friend_AlertMessage">
+                                                    <i class="fa fa-remove"></i>
+                                                    <a class="close fa fa-remove" data-dismiss="modal" ng-click="menu_friend_AlertMessage=''"></a>
+                                                    <pre style="background-color: transparent; border: transparent; font-size: 15px">{{menu_friend_AlertMessage}}</pre>
+                                                </div> <!-- 警告 -->
+
+                                                <!--查找好友 head-->
+                                                <h4 ng-model="menu_friend_searchShow" ng-init="menu_friend_searchShow = false">{{menu_friend_searchTitle}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <small style="font-size: 15px;">
+                                                        <a ng-show="menu_friend_searchShow" class="abutton" ng-click="menu_friend_searchShow = false" style="color: #001f3f">{{context_detailHideTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-down"></i></a>
+                                                        <a ng-show="!menu_friend_searchShow" class="abutton" ng-click="menu_friend_searchShow = true" style="color: #008d4c">{{context_detailShowTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i></a>
+                                                    </small>
+                                                </h4><!--查找好友 head-->
+                                                <!--查找好友 context-->
+                                                <div ng-show="menu_friend_searchShow">
+                                                    <div class="panel panel-group">
+                                                        <div class="input-group">
+                                                            <div class="input-group-btn">
+                                                                <button ng-model="menu_friend_SearchSelect" ng-init="menu_friend_SearchSelect = menu_friend_SearchSelect_Addr" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{menu_friend_SearchSelect}} <span class="caret"></span></button>
+                                                                <ul class="dropdown-menu">
+                                                                    <li><a class="abutton" ng-click="menu_friend_SearchSelect = menu_friend_SearchSelect_Addr;menu_friend_SearchPlaceholder = menu_friend_SearchAddrPlaceholder;">{{menu_friend_SearchSelect_Addr}}</a></li>
+                                                                    <li><a class="abutton" ng-click="menu_friend_SearchSelect = menu_friend_SearchSelect_NickName;menu_friend_SearchPlaceholder = menu_friend_SearchNickNamePlaceholder;">{{menu_friend_SearchSelect_NickName}}</a></li>
+                                                                </ul>
+                                                            </div><!-- /btn-group -->
+                                                            <input type="text" class="form-control" ng-model="menu_friend_SearchInput" aria-label="Text input with dropdown button" placeholder="{{menu_friend_SearchPlaceholder}}">
+                                                            <span class="input-group-btn">
+                                                                <a class="btn btn-info" type="button" ng-click="menu_friendsSearchBtnClick()">&nbsp;<i class="fa {{menu_friendsSearchBtnIcon}}"></i>&nbsp;</a>
+                                                            </span>
+                                                        </div>
+                                                        <br>
+
+                                                        <table class="table table-striped table-hover" style="font-size: 15px">
+                                                            <tbody>
+                                                            <tr ng-repeat="ret in menu_friend_SearchResult track by $index">
+                                                                <th scope="row">{{$index+1}}</th>
+                                                                <td>{{ret.nickName}}</td>
+                                                                <td style="word-wrap: break-word; word-break: break-all">{{ret.PublicAddr}}</td>
+                                                                <td class="text-center" style="word-wrap: break-word; word-break: break-all">
+                                                                    <a class="abutton fa {{ret.AddBtnIcon}} fa-2x" title="{{menu_friend_SearchAddTitle}}" ng-show="!ret.IsFriend"
+                                                                            ng-click="menu_friendsAddBtnClick($index)"></a>
+                                                                    <i class="fa fa-thumbs-o-up" ng-show="ret.IsFriend">{{menu_friend_IsFriendTitle}}</i>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div><!--查找好友 context-->
+                                                <br><br>
+
+                                                <!-- 好友列表 head -->
+                                                <h4 ng-model="menu_friend_listShow" ng-init="menu_friend_listShow = true">{{menu_friend_listTitle}} &nbsp;&nbsp;&nbsp;&nbsp;
+                                                    <small style="font-size: 15px;">
+                                                        <a ng-show="menu_friend_listShow" class="abutton" ng-click="menu_friend_listShow = false" style="color: #001f3f">{{context_detailHideTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-down"></i></a>
+                                                        <a ng-show="!menu_friend_listShow" class="abutton" ng-click="menu_friend_listShow = true" style="color: #008d4c">{{context_detailShowTitle}}&nbsp;&nbsp;&nbsp;<i class="fa fa-angle-double-right"></i></a>
+                                                    </small>
+                                                </h4><!-- 好友列表 head -->
+                                                <!-- 好友列表 context -->
+                                                <div ng-show="menu_friend_listShow">
+                                                    <div class="panel panel-group">
+                                                        <table class="table table-striped table-hover" style="font-size: 15px">
+                                                            <tbody>
+                                                            <tr ng-repeat="subInfo in AccountsManager.getFriends() track by $index">
+                                                                <th scope="row">{{$index+1}}</th>
+                                                                <td>{{subInfo.nickName}}</td>
+                                                                <td style="word-wrap: break-word; word-break: break-all">{{subInfo.PublicAddr}}</td>
+                                                                <td class="text-center" style="word-wrap: break-word; word-break: break-all">
+                                                                    <a class="abutton fa {{subInfo.AddBtnIcon}} fa-2x" title="{{menu_friend_SearchDelTitle}}"
+                                                                            ng-click="menu_friendsDeleteBtnClick($index)"></a>
+                                                                </td>
+                                                            </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div><!-- panel panel-group -->
+                                                </div><!-- 好友列表 context -->
+                                            </div><!-- /.panel-group -->
+                                        </div><!-- /.box-body -->
+                                    </div><!-- 所有好友 -->
+
+                                    <!-- 好友分组 -->
+                                    <div class="box box-primary" ng-show="false"> <!-- MenuGroupFriendsVisible -->
+                                        <div class="box-header">
+                                            <!-- tools box -->
+                                            <div class="pull-right box-tools">
+                                                <button class="btn btn-default btn-sm" data-widget='collapse' data-toggle="tooltip" title="Collapse"><i class="fa fa-minus"></i></button>
+                                            </div><!-- /. tools -->
+                                            <i class="fa fa-users"></i>
+
+                                            <h3 class="box-title">{{leftside_menu_contactTitle}} - {{leftside_menu_groupTitle}}</h3>
+                                        </div><!-- /.box-header -->
+                                    </div><!-- 好友分组 -->
+
+
+                                    <!-- 弹出界面 用户设置 -->
+                                    <div class="modal fade operations-model" ng-model="popup_modelIndex" tabindex="-1" role="dialog" aria-labelledby="operationslabel" style="display: none;">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #00CCFF">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true" class="fa fa-remove"></span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="operationslabel">{{popup_OperationTitle}}</h4>
+                                                </div> <!-- modal-header -->
+                                                <div class="modal-body text-center" style="background-color: #F7F7F7">
+                                                    <div ng-show="popup_deleteAccContextVisible">
+                                                        <h3>{{popup_DeleteAccTitle}}</h3>
+                                                    </div>
+                                                    <br>
+                                                    <div ng-show="popup_passwordVisible">
+                                                        <div class="panel panel-group" style="background-color: transparent">
+                                                            <dl class="dl-horizontal text-left">
+                                                                <div ng-show="!curAccInfo.UserGA">
+                                                                    <dt>
+                                                                        <label style="margin-top: 6px">
+                                                                            {{popup_loginPasswordTitle}}
+                                                                        </label>
+                                                                    </dt>
+                                                                    <dd>
+                                                                        <div class="input-group" >
+                                                                            <input type="password" class="form-control" ng-model="popup_loginPassword" placeholder="{{popup_loginPasswordPlaceholder}}"/>
+                                                                            <div class="input-group-btn" style="background-color: transparent">
+                                                                                <button class="btn btn-danger" ng-click="popup_loginPassword=''"><i class="fa fa-remove"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </dd>
+                                                                </div> <!-- enter password -->
+                                                                <div style="margin-top: 10px" ng-show="curAccInfo.UserGA">
+                                                                    <dt>
+                                                                        <label style="margin-top: 6px">
+                                                                            {{popup_GATitle}}
+                                                                        </label>
+                                                                    </dt>
+                                                                    <dd>
+                                                                        <div class="input-group" >
+                                                                            <input class="form-control" ng-model="popup_GA" placeholder="{{popup_GAPlaceholder}}"/>
+                                                                            <div class="input-group-btn" style="background-color: transparent">
+                                                                                <button class="btn btn-danger" ng-click="popup_GA=''"><i class="fa fa-remove"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </dd>
+                                                                </div> <!-- enter GA code -->
+                                                            </dl>
+                                                        </div>  <!-- panel-group -->
+                                                    </div> <!-- password and ga view -->
+                                                    <br>
+                                                    <div ng-show="popup_friendListVisible && curAccInfo != null && curAccInfo.Actived && selectionAccountList.length > 0">
+                                                        <div class="panel panel-group" style="background-color: transparent">
+                                                            <dl class="dl-horizontal text-left">
+                                                                <dt>
+                                                                    <label style="margin-top: 6px">
+                                                                        <input ng-model="popup_Mergeto" type="checkbox"> {{popup_MergetoTitle}}
+                                                                    </label>
+                                                                </dt>
+                                                                <dd>
+                                                                    <select ng-model="popup_MergetoAccName" class="form-control" style="background-color: transparent" ng-disabled="!popup_Mergeto">
+                                                                        <option ng-repeat="tmpAcc in selectionAccountList track by $index">{{tmpAcc.NickName}} {{tmpAcc.PublicAddr}}</option>
+                                                                    </select>
+                                                                </dd>
+                                                                <dd>
+                                                                    {{popup_MergetoPlaceholder}}
+                                                                </dd>
+                                                            </dl>
+                                                        </div>
+                                                    </div>
+                                                    <div class="inline">
+                                                        <a type="button" class="btn btn-warning btn-lg fa fa-remove" data-dismiss="modal" aria-label="Close"> {{popup_CancelBtnTitle}}</a>
+                                                        <a type="button" class="btn btn-success btn-lg fa fa-check" data-dismiss="modal" aria-label="Close" ng-click="popup_OKBtnClick(current_account_index,popup_modelIndex)"> {{popup_OKBtnTitle}}</a>
+                                                    </div>
+                                                </div> <!-- /.modal-body -->
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div> <!-- 弹出界面 用户设置 -->
+
+                                    <!-- 弹出界面 选择好友 -->
+                                    <div class="modal fade add_friend_model" tabindex="-1" role="dialog" aria-labelledby="addFriendLable" style="display: none;">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header" style="background-color: #00CCFF">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true" class="fa fa-remove"></span>
+                                                    </button>
+                                                    <h4 class="modal-title" id="addFriendLable">{{popup_SelectFriendTitle}}</h4>
+                                                </div> <!-- modal-header -->
+
+                                                <div class="modal-body text-center" style="background-color: #F7F7F7">
+                                                    <table class="table table-striped table-hover" style="font-size: 15px">
+                                                        <tbody>
+                                                        <tr class="abutton" ng-repeat="subInfo in AccountsManager.getFriends() track by $index" ng-click="selectFriendCheckBtnClick($index)">
+                                                            <td class="text-left">{{subInfo.nickName}}</td>
+                                                            <td style="word-wrap: break-word; word-break: break-all">{{subInfo.PublicAddr}}</td>
+                                                            <td class="text-center" style="word-wrap: break-word; word-break: break-all">
+                                                                <a class="abutton fa {{subInfo.AddBtnIcon}} fa-2x" title="{{menu_friend_SearchDelTitle}}"></a>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="inline">
+                                                        <a type="button" class="btn btn-warning btn-lg fa fa-remove" data-dismiss="modal" aria-label="Close"> {{popup_CancelBtnTitle}}</a>
+                                                        <a type="button" class="btn btn-success btn-lg fa fa-check" data-dismiss="modal" aria-label="Close" ng-click="popup_selectFriendOkBtnClick(current_account_index)"> {{popup_OKBtnTitle}}</a>
+                                                    </div>
+                                                </div><!-- /.modal-body -->
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- 弹出界面 选择好友 -->
+
+                                </section><!-- /.Left col -->
+                            </div><!-- /.row 中间主体部分 -->
+                        </section><!-- /.content 主要内容 -->
+                    </aside><!-- /.right-side 中间内容部分 -->
+                </div><!-- ./wrapper -->
+            </div>
+        </div>
+
+        <!-- jQuery 2.0.2 -->
+        <!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>-->
+        <!--<script src="temp/js/jquery.js"></script>-->
+        <!-- Bootstrap -->
+        <!--<script src="temp/js/bootstrap.js" type="text/javascript"></script>-->
+
+        <!-- custom app -->
+        <script>$(function ()
+            { $("[data-toggle='popover']").popover();
+            });
+
+        $('#popover_0_credit').popover();
+        </script>
+        <script src="../js/sha256.js"></script>
+        <script src="../js/tripledes.js" type="text/javascript"></script>
+        <script src="../js/enc-base64-min.js"></script>
+        <script src="../js/mode-ecb-min.js" type="text/javascript"></script>
+        <script src="js/stellar-base/stellardefined.js" type="text/javascript"></script>
+        <script src="js/main.js" type="text/javascript"></script>
+        <script src="js/operation_define.js" type="text/javascript"></script>
+        <script src="js/transaction_define.js" type="text/javascript"></script>
+        <script src="js/operation_format.js" type="text/javascript"></script>
+        <script src="js/transaction_format.js" type="text/javascript"></script>
+        <script src="js/arraylist.js" type="text/javascript"></script>
+        <script src="js/language.js" type="text/javascript"></script>
+        <script src="js/stellar-base/accInfo_decode.js" type="text/javascript"></script>
+        <script src="js/pro_accounts.js" type="text/javascript"></script>
+        <script src="js/stellar-base/stellar-operations.js" type="text/javascript"></script>
+        <script src="js/pro.js" type="text/javascript"></script>
+
+        <!-- AdminLTE App -->
+        <script src="js/AdminLTEapp.js" type="text/javascript"></script>
+
+    </body>
+</html>

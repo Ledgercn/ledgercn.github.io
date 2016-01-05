@@ -26,13 +26,10 @@ function mainContainController($cookies,$scope,$rootScope,$http,LANGUAGE) {
             $scope.ErrMsg = "We are building ....";
         }
     }
-    function transform(data){
-        return data;
-    }
 
     function initUserStatus(){
-        logUser = $cookies.get("uname");
-        userAuth = $cookies.get("auth");
+        logUser = $cookies.get(COOKIE_KEY_USERNAME);
+        userAuth = $cookies.get(COOKIE_KEY_USERAUTH);
 
         if (logUser != null && userAuth != null){
             postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
@@ -60,7 +57,7 @@ function mainContainController($cookies,$scope,$rootScope,$http,LANGUAGE) {
                                 gaUsed: data.data.user_ga_used
                             });
                             if ( data.data.update_auth ) {
-                                saveToCookie($cookies,"auth",data.data.user_auth)
+                                saveToCookie($cookies,COOKIE_KEY_USERAUTH,data.data.user_auth)
                             }
                             $scope.isLoading = false;
                             $scope.isLogin = true;
