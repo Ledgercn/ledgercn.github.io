@@ -12,8 +12,8 @@ homeapp.factory("COOKIE_SAVE",function(){
 });
 
 homeapp.factory("CURRENT_NETWORK",function(){
-    return {net:TEST_NET};
-    //return {net:LIVE_NET};
+    //return {net:TEST_NET};
+    return {net:LIVE_NET};
 });
 
 homeapp.controller('languageController',languageController);
