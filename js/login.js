@@ -110,7 +110,8 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                 PasswordNotEqu : "两次输入的密码不匹配!",
                 UserIsNotLogin : "用户还未登录，请先登录!",
                 ReCaptchaCodeError: "输入的验证码有误,请重新输入!",
-                ServerBusy: "服务器失去联系，请稍后再试!"
+                ServerBusy: "服务器失去联系，请稍后再试!",
+                loginRetry: "登录验证失败，可能由于你的账户在一个电脑上登录！"
             };
 
             $scope.AlertMsgTable = {
@@ -151,7 +152,8 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                 PasswordNotEqu : "The passwords do not match!",
                 UserIsNotLogin : "User is not logged in, please log in at first!",
                 ReCaptchaCodeError: "Verification code entered is incorrect, please re-enter!",
-                ServerBusy: "The server is out of contact. Please try again later!"
+                ServerBusy: "The server is out of contact. Please try again later!",
+                loginRetry: "Login verification failed! Your account is logged in to other computer!"
             };
 
             $scope.AlertMsgTable = {
@@ -232,6 +234,7 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
         $scope.gaUserPwVisible = false;
         $scope.gaWaitingVisible = false;
         $scope.gaRQcodeVisible = false;
+        $scope.gaActiveBtnIcon = "";
         //$scope.isGaShowKeyBtnClick = false;
         $scope.errorMessageGA = "";
     }
@@ -651,15 +654,30 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
         }else{
             $scope.gaUserPwVisible = false;
             $scope.gaWaitingVisible = true;
-            gaOperationNew();
+            $scope.gaActiveConfirmInput = "";
+            //gaOperationNew();
+            gaOperationGet();
         }
     };
 
-    function gaOperationNew() {
+    $scope.gaActiveBtnClick = function() {
+        $scope.errorMessageGA = "";
+        if($scope.gaActiveConfirmInput == null || $scope.gaActiveConfirmInput == "" || $scope.gaActiveConfirmInput.length < 5){
+            $scope.errorMessageGA = $scope.ErrMsgTable.ReCaptchaCodeError;
+            return;
+        }
+        if ($scope.gaActiveBtnIcon == WAIT_ICON_STATE) {
+            return;
+        }
+        $scope.gaActiveBtnIcon = WAIT_ICON_STATE;
+        gaOperationNew();
+    };
+
+    function gaOperationGet() {
         postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
         tx =  POST_TYPE_FLAG + "=" + PT_CHECK_GA_OPERA + "&" +
             POST_MARK_USER_NAME + "=" + encodeURIComponent($scope.loginUser) + "&" +
-            POST_MARK_MODIFY_GA + "=" + GA_PT_MODIFY_NEW;
+            POST_MARK_MODIFY_GA + "=" + GA_PT_MODIFY_GET;
 
         $http({
             method: 'POST',
@@ -676,8 +694,8 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                     $scope.gaKeyString = data.data.user_ga_key;
                     uri = data.data.user_ga_uri;
                     createRqcode(uri);
-                    $scope.hasGA = true;
-                    hasGAChanged();
+                    //$scope.hasGA = true;
+                    //hasGAChanged();
                 } else {
                     $scope.errorMessageGA = data.Error;
                 }
@@ -687,6 +705,57 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
             }).
             error(function (data, status, headers, config){
                 console.log("error\r\n",data);
+                $scope.errorMessageGA = $scope.ErrMsgTable.ServerBusy;
+                $scope.gaUserPwVisible = false;
+                $scope.gaWaitingVisible = false;
+            });
+    }
+
+    function gaOperationNew() {
+        userAuth = $cookies.get(COOKIE_KEY_USERAUTH);
+        if (userAuth == null || userAuth.length < 10){
+            $cookies.remove(COOKIE_KEY_USERNAME,{'path':'/'});
+            $cookies.remove(COOKIE_KEY_USERAUTH,{'path':'/'});
+            $cookies.remove(COOKIE_KEY_USERLEVEL,{'path':'/'});
+            $cookies.remove(COOKIE_KEY_SECRETSTR,{'path':'/'});
+            alert($scope.ErrMsgTable.loginRetry);
+            window.location.href = "login.html";
+        }
+        postUrl = BACK_SERVICE_URL + "/" + BACK_SERVICE_ACCOUNT;
+        tx =  POST_TYPE_FLAG + "=" + PT_CHECK_GA_OPERA + "&" +
+            POST_MARK_USER_NAME + "=" + encodeURIComponent($scope.loginUser) + "&" +
+            POST_MARK_MODIFY_GA + "=" + GA_PT_MODIFY_NEW + "&" +
+            POST_MARK_AUTHCODE + "=" + encodeURIComponent(userAuth) + "&" +
+            POST_MARK_GAKEY + "=" + encodeURIComponent($scope.gaKeyString) + "&" +
+            POST_MARK_GACODE + "=" + encodeURIComponent($scope.gaActiveConfirmInput);
+
+        $http({
+            method: 'POST',
+            url: postUrl,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+            transformRequest: transform,
+            data: tx
+        }).
+            success(function (data, status, headers, config){
+                console.log("success\r\n",data);
+                $scope.gaActiveBtnIcon = "";
+                if (data.Error == null){
+                    if (data.data.success){
+                        if ( data.data.update_auth ) {
+                            saveToCookie($cookies,COOKIE_KEY_USERAUTH,data.data.user_auth)
+                        }
+                        $scope.hasGA = true;
+                        hasGAChanged();
+                    }
+                } else {
+                    $scope.errorMessageGA = data.Error;
+                }
+            }).
+            error(function (data, status, headers, config){
+                console.log("error\r\n",data);
+                $scope.gaActiveBtnIcon = "";
                 $scope.errorMessageGA = $scope.ErrMsgTable.ServerBusy;
                 $scope.gaUserPwVisible = false;
                 $scope.gaWaitingVisible = false;

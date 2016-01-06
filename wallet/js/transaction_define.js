@@ -476,6 +476,12 @@ var BaseTransactionDef = function(main){
                     case "payment":
                         ret[i] = new PaymentOperationEx(this.mainAddr);
                         ret[i].DecodeBody(operater,this);
+                        if( ret[i].TransSourceAccount != this.mainAddr &&
+                            ret[i].SourceAccount != this.mainAddr &&
+                            ret[i].From != this.mainAddr &&
+                            ret[i].To != this.mainAddr) {
+                            ret[i] = null;
+                        }
                         break;
                     case "accountMerge":
                         ret[i] = new MergeOperationEx(this.mainAddr);
@@ -484,6 +490,12 @@ var BaseTransactionDef = function(main){
                     case "createAccount":
                         ret[i] = new CreateOperationEx(this.mainAddr);
                         ret[i].DecodeBody(operater,this);
+                        if( ret[i].TransSourceAccount != this.mainAddr &&
+                            ret[i].SourceAccount != this.mainAddr &&
+                            ret[i].Funder != this.mainAddr &&
+                            ret[i].Account != this.mainAddr) {
+                            ret[i] = null;
+                        }
                         break;
                     case "manageOffer":
                         ret[i] = new ManageOfferOperationEx(this.mainAddr);

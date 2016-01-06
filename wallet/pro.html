@@ -385,6 +385,7 @@
                                                             <button class="btn btn-danger btn-lg" ng-click="toolbar_addAcc_NickName = ''"><i class="fa fa-remove"></i></button>
                                                         </div>
                                                     </div>
+                                                    <p>{{toolbar_addAcc_NickNameMemo}}</p>
                                                 </div>
                                             </form>
                                         </div><!-- /.box-body -->
@@ -763,8 +764,8 @@
                                             <h3 class="box-title">{{currentNickName}} - {{leftside_menu_acc_SettingTitle}}</h3>
                                         </div><!-- /.box-header -->
                                         <div class="box-body">
-                                            <form >
-                                                <div class="form-group">
+                                            <form>
+                                                <div class="form-group" ng-show="false">
                                                     <div class="input-group">
                                                         <input ng-model="context_settingAccNickName" class="form-control input-lg" placeholder="{{context_settingAccNickNamePlaceholder}}"/>
                                                         <div class="input-group-btn">
@@ -793,7 +794,7 @@
                                                                 ng-click="context_settingAccDeleteBtnClick(current_account_index)">
                                                             <i class="fa fa-remove"></i> {{context_settingAccDeleteBtnTitle}}
                                                         </button>
-                                                        <button class="btn btn-primary btn-lg" ng-click="context_settingAccModifyBtnClick(current_account_index)">
+                                                        <button class="btn btn-primary btn-lg" ng-click="context_settingAccModifyBtnClick(current_account_index)" ng-show="false">
                                                             <i class="fa fa-check"></i> {{context_settingAccModifyBtnTitle}}
                                                         </button>
                                                     </div>

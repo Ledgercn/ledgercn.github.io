@@ -325,6 +325,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             $scope.toolbar_addAcc_GATitle = "使用Google验证";
             $scope.toolbar_addAcc_RandomBtnTitle = "随机生成";
             $scope.toolbar_addAcc_ConfirmBtnTitle = "确定添加";
+            $scope.toolbar_addAcc_NickNameMemo = "用户昵称设置后不可更改，全网唯一，其他账户可以通过你的昵称直接为你付款。";
 
             $scope.context_settingAccNickNamePlaceholder = "账户名称";
             $scope.context_settingAccDeleteBtnTitle = "删除账户";
@@ -386,6 +387,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             };
 
             $scope.PaymentMessages = {
+                CHECK_NICKNAME: "检查地址有效性...",
                 NETWORK_ERROR:"网络连接出现错误！",
                 START_SEND_AMOUNT:"开始发送...",
                 CHECK_DEST_VALID:"检查发送信息...",
@@ -431,6 +433,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             $scope.litbox_createAccMemo2 = "New or use an Existing account";
             $scope.litbox_createAccBtnTitle = "Create account";
             $scope.litbox_accDetailTitle = "Information";
+            $scope.toolbar_addAcc_NickNameMemo = "Wallet nickname can not be changed, the whole network only, other wallet can be paid directly to you through your nickname.";
 
             $scope.context_detailShowTitle = "Show";
             $scope.context_detailHideTitle = "Hide";
@@ -536,6 +539,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
            };
 
             $scope.PaymentMessages = {
+                CHECK_NICKNAME: "Checking destination ...",
                 NETWORK_ERROR:"Network is Invalid!",
                 START_SEND_AMOUNT:"Start sending...",
                 CHECK_DEST_VALID:"Check send informations...",
@@ -950,6 +954,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         initHistoryView();
         $scope.HistoryViewVisible = true;
         $scope.currentSelectIndex = 4;
+        $scope.current_account_index = index;
         $scope.curAccInfo = $scope.AccountsManager.getAccInfo(index);
         $scope.currentNickName = $scope.curAccInfo.NickName;
         LoadHistorys($scope.curAccInfo,index);
@@ -1024,6 +1029,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         initSettingView();
         $scope.currentSelectIndex = 6;
         $scope.AccSettingsViewVisible = true;
+        $scope.current_account_index = index;
         $scope.curAccInfo = $scope.AccountsManager.getAccInfo(index);
         $scope.currentNickName = $scope.curAccInfo.NickName;
         $scope.context_settingAccNickName = $scope.currentNickName;
@@ -1404,7 +1410,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         for(var i = 0 ; i < $scope.AccountsManager.FriendsCount() ; ++i){
             frInfo = $scope.AccountsManager.getFriendFromIndex(i);
             if(frInfo.AddBtnIcon == "fa-check-circle-o"){
-                $scope.context_pay_friends += $scope.AccountsManager.getFriendFromIndex(i).PublicAddr+";";
+                $scope.context_pay_friends += $scope.AccountsManager.getFriendFromIndex(i).nickName+";";
             }
         }
     };
@@ -1628,6 +1634,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         }
     }
 
+    // 发送 payment 按键事件
     $scope.context_pay_SendBtnClick = function(index){
         if($scope.context_pay_SendBtnIcon == "fa-pulse"){
             return;
@@ -1648,32 +1655,89 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         if(lastIndex == $scope.context_pay_friends.length-1){
             $scope.context_pay_friends = $scope.context_pay_friends.substring(0,lastIndex);
         }
-        destAddrs = $scope.context_pay_friends.split(";");
-        sendInfo = new(Array);
+
+        $scope.context_pay_SendBtnIcon = "fa-pulse";
+        $scope.context_payment_AlertMessage = "";
+
+        sendInfo = Nickname_addr_split($scope.context_pay_friends);
+        DecodeNickName2Addr(sendInfo,index);
+        //console.log(sendInfo);
+        //SendAmount($http,$cookies,index,$scope.curAccInfo,sendPaymentEndFunc,sendInfo);
+    };
+
+    function Nickname_addr_split(inputStr) {
+        destAddrs = inputStr.split(";");
+        retUsers = new(Array);
         for(var i = 0 ; i < destAddrs.length ; ++i){
             if(destAddrs[i] == $scope.curAccInfo.PublicAddr){
                 $scope.context_payment_AlertMessage = $scope.ErrorTable.FriendIncludeSelf + "[" + destAddrs[i] + "]";
                 return;
             }
+            tmpInfo = new(SendAmountDefine);
             try{
                 StellarBase.Keypair.fromAddress(destAddrs[i]);
+                tmpInfo.DestAddr = destAddrs[i];
             }
             catch(e){
-                $scope.context_payment_AlertMessage = $scope.ErrorTable.FriendsIsEmpty + "[" + destAddrs[i] + "]";
-                return;
+                tmpInfo.Nickname = destAddrs[i];
             }
-            tmpInfo = new(SendAmountDefine);
-            tmpInfo.DestAddr = destAddrs[i];
             tmpInfo.Amount = $scope.context_pay_amount;
             tmpInfo.MemoType = $scope.context_pay_memoTitle;
             tmpInfo.MemoText = $scope.context_pay_memo;
-            sendInfo[i] = tmpInfo;
+            retUsers[i] = tmpInfo;
         }
-        $scope.context_pay_SendBtnIcon = "fa-pulse";
-        $scope.context_payment_AlertMessage = "";
-        //console.log(sendInfo);
-        SendAmount($http,$cookies,index,$scope.curAccInfo,sendPaymentEndFunc,sendInfo);
-    };
+        return retUsers;
+    }
+
+    function SearchNickNameEndFunc(data,userIndex,infos,index){
+        if($scope.context_pay_SendBtnIcon == ""){
+            return;
+        }
+        if(data == null){
+            $scope.context_payment_AlertMessage += "\r\n"+$scope.PaymentMessages.NETWORK_ERROR;
+        } else if(data.Error != null){
+            $scope.context_payment_AlertMessage += "\r\n"+data.Error;
+        } else {
+            //console.log(" ======= friendSearchEndFunc =======\r\n",data);
+            if(data.data.success == true){
+                if(data.data.results != null){
+                    if(data.data.results.length == 0){
+                        $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
+                        $scope.context_pay_SendBtnIcon = "";
+                        return;
+                    }
+                    findout = false;
+                    for(var i = 0 ; i < data.data.results.length ; ++i){
+                        if(infos[index].Nickname == data.data.results[i].nickname){
+                            infos[index].DestAddr = data.data.results[i].public_address;
+                            findout = true;
+                            break;
+                        }
+                    }
+                    if(!findout){
+                        $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
+                        $scope.context_pay_SendBtnIcon = "";
+                        return;
+                    }
+                }
+            }
+        }
+        for(var j = 0 ; j < infos.length ; ++j){
+            if(infos[j].DestAddr == ""){
+                return;
+            }
+        }
+        SendAmount($http,$cookies,userIndex,$scope.curAccInfo,sendPaymentEndFunc,infos);
+    }
+
+    function DecodeNickName2Addr(userInfos,userIndex){
+        $scope.context_payment_AlertMessage = $scope.PaymentMessages.CHECK_NICKNAME;
+        for(var i = 0 ; i < userInfos.length ; ++i){
+            if(userInfos[i].DestAddr == ""){
+                $scope.AccountsManager.SearchNickName($http,userIndex,userInfos,i,SearchNickNameEndFunc);
+            }
+        }
+    }
 
     $scope.getShortAddress = function(credit){
         if(credit == null || credit.issuer == null || credit.issuer == ""){

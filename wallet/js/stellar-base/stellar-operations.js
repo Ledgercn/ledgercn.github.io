@@ -99,6 +99,7 @@ function GetAccHistoryDatas(http,index,acc,isNext,endFunc){
 
 function SendAmountDefine() {
     this.DestAddr = "";
+    this.Nickname = "";
     this.Amount = "";
     this.MemoType = "";
     this.MemoText = "";

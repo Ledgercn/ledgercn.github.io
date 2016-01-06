@@ -357,6 +357,30 @@ Pro_Accounts.prototype.FriendsCount = function(){
     return this.FriendList.size();
 };
 
+Pro_Accounts.prototype.SearchNickName = function(http,userIndex,userInfos,index,endFunc){
+    posturl = BACK_SERVICE_URL + "/" + BACK_SERVICE_AWALLET;
+    tx = POST_TYPE_FLAG + "=" + PT_SEARCH_WALLETS + "&" +
+        POST_MARK_WALLET_NICKNAME + "=" + encodeURIComponent(userInfos[index].Nickname);
+
+    http({
+        method: 'POST',
+        url: postUrl,
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+        },
+        transformRequest: transform,
+        data: tx
+    }).
+        success(function (data, status, headers, config){
+            console.log("success\r\n",data);
+            endFunc(data,userIndex,userInfos,index);
+        }).
+        error(function (data, status, headers, config){
+            console.log("error\r\n",data);
+            endFunc(data,userIndex,userInfos,index);
+        });
+};
+
 
 
 function FriendGroupInfo(){
@@ -403,7 +427,9 @@ proAccountHistory.prototype.AddHistoryDatas = function(datas,isDesc,paging_token
     }
 
     for(var i = startIndex ; (i >= 0 && i < datas.length) ; i=i+stepIndex){
-        this.Historys[this.Historys.length] = datas[i];
+        if(datas[i] != null){
+            this.Historys[this.Historys.length] = datas[i];
+        }
         if(this.First_token < paging_token){
             this.First_token = paging_token;
             this.First_ledger = ledger;

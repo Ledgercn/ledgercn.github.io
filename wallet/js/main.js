@@ -47,6 +47,7 @@ var POST_MARK_PASS_WORD       = "pw";
 var POST_MARK_NEW_PASS_WORD   = "npw";
 var POST_MARK_VICODE          = "vic";
 var POST_MARK_GACODE          = "gac";
+var POST_MARK_GAKEY           = "gakey";
 var POST_MARK_AUTHCODE        = "auth";
 var POST_MARK_HEART           = "hbit";
 var POST_MARK_FID             = "fid";

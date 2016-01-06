@@ -59,8 +59,11 @@
                 <div class="cinner" ng-controller="regMainViewController">
                     <div ng-show="isLogin">
                         <h3 class="cmajor">{{loginUser}}</h3>
+                        <!-- modal-body -->
                         <div class="modal-body">
+                            <!-- panel-group -->
                             <div class="panel-group" id="userMenuOperation" role="tablist" aria-multiselectable="false">
+                                <!-- 未激活用户显示 -->
                                 <div ng-show="userLevel == 0">
                                     <div class="panel btn-info">
                                         <div class="panel-heading" role="tab">
@@ -71,8 +74,9 @@
                                             </h4>
                                         </div>
                                     </div>
-                                </div>
+                                </div> <!-- 未激活用户显示 -->
 
+                                <!-- 激活用户显示 -->
                                 <div ng-show="userLevel > 0">
                                     <!-- 修改登录密码 -->
                                     <div class="panel panel-primary">
@@ -117,10 +121,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> <!-- 修改登录密码 -->
 
                                     <!-- GA配置 -->
                                     <div class="panel panel-primary">
+                                        <!-- panel-heading -->
                                         <div class="panel-heading" role="tab" id="userMenuGAConfig">
                                             <h4 class="panel-title text-center">
                                                 <a role="button" data-toggle="collapse" data-parent="#userMenuOperation"
@@ -128,23 +133,26 @@
                                                     {{gaConfigTitle}}
                                                 </a>
                                             </h4>
-                                        </div>
+                                        </div> <!-- panel-heading -->
+                                        <!-- panel-collapse -->
                                         <div id="userMenu_gaconfig_div" class="panel-collapse collapse" role="tabpanel"
                                              aria-labelledby="#userMenuGAConfig">
+                                            <!-- panel-body -->
                                             <div class="panel-body" style="color: #092f3d">
+                                                <!-- error message -->
                                                 <div class="alert alert-danger" role="modal" ng-show="errorMessageGA">
                                                     <a href="#" class="close fa fa-remove" data-dismiss="modal" ng-click="errorMessageGA = '' "></a>
                                                     <strong>Error!</strong> {{errorMessageGA}}
-                                                </div>
+                                                </div> <!-- error message -->
+                                                <!-- ga open / close -->
                                                 <div class="row text-center" style="margin: 10px auto;width: 400px;">
                                                     <a style="margin-right: 10px">{{gaCurrentStateTitle}}</a>
+                                                    <!-- ga open / close botton -->
                                                     <div class="btn-group" role="group" aria-label="...">
                                                         <button type="button" class="btn {{gaOpenBtnStatus}}" ng-click="gaSwitchBtnClick()">{{gaOpenBtnTitle}}</button>
                                                         <button type="button" class="btn {{gaCloseBtnStatus}}" ng-click="gaSwitchBtnClick()">{{gaCloseBtnTitle}}</button>
-                                                    </div>
-                                                    <!--<a type="button" class="btn fa {{gaShowKeyBtnIcon}} fa-2x" style="margin-left: 10px"-->
-                                                            <!--ng-show="gaCloseBtnStatus == 'btn-default'" ng-click="gaShowKeyBtnClick()"></a>-->
-                                                </div>
+                                                    </div> <!-- ga open / close botton -->
+                                                </div> <!-- ga open / close -->
 
                                                 <div class="alert alert-info" role="modal" ng-show="gaUserPwVisible">
                                                     <form class="form-horizontal"  ng-show="gaUserPwVisible" style="margin: auto 10px;">
@@ -175,12 +183,19 @@
                                                                 <h4>{{gaMemoTitle}}</h4>
                                                                 <p><strong>{{gaKeyString}}</strong></p>
                                                             </div>
+                                                            <div class="input-group" ng-show="!hasGA">
+                                                                <input type="text" class="form-control" placeholder="{{gaTotpCodePlaceholder}}"
+                                                                        ng-model="gaActiveConfirmInput">
+                                                                <span class="input-group-btn">
+                                                                    <a type="button" class="btn btn-success" ng-click="gaActiveBtnClick()"><i class="{{gaActiveBtnIcon}}"></i> {{gaOpenBtnTitle}}</a>
+                                                                </span>
+                                                            </div><!-- /input-group -->
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </div> <!-- panel-body -->
+                                        </div> <!-- panel-collapse -->
+                                    </div> <!-- GA配置 -->
 
                                     <!-- 退出登录 -->
                                     <div class="panel btn-danger">
@@ -191,10 +206,10 @@
                                                 </a>
                                             </h4>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    </div> <!-- 退出登录 -->
+                                </div> <!-- 激活用户显示 -->
+                            </div> <!-- panel-group -->
+                        </div> <!-- modal-body -->
                     </div>
                     <div ng-show="!isLogin">
                         <h3 class="cmajor">{{Title}}</h3>
@@ -271,7 +286,7 @@
 
     <script src="js/qrcode.js"></script>
     <script src="js/jquery.qrcode.js"></script>
-    <script type="text/ecmascript" src="js/md5.js"></script>
+    <!--<script type="text/ecmascript" src="js/md5.js"></script>-->
     <script src="wallet/js/language.js"></script>
     <script src="wallet/js/topMenuController.js"></script>
     <script src="js/sha256.js"></script>
