@@ -43,7 +43,7 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.PCWalletTitle = "账中 PC 钱包";
             $scope.PCWalletContext = "下载到本地计算机中，安全、方便、快捷的满足使用者基本需求。可以进行新恒星账户的状态查询、历史查询、支付、合并账户等操作。";
             $scope.PCWalletDownloadTitle = "下载使用";
-            $scope.ProWebWalletTitle = "注册用户 Web 钱包";
+            $scope.ProWebWalletTitle = "Web 钱包（注册用户）";
             $scope.ProWebWalletContext = "更加安全、方便，功能全面，历史信息精确查询，注册用户将获得更多服务内容!";
 
             $scope.GetMoreTitle = "了解更多";
@@ -70,7 +70,7 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.PCWalletTitle = "Wallet for PC";
             $scope.PCWalletContext = "Download to your computer, safe, convenient and efficient to meet the basic needs of the user. Lumen accounts can query the status of historical inquiry, payment, merge accounts and other operations.";
             $scope.PCWalletDownloadTitle = "Download";
-            $scope.ProWebWalletTitle = "Register User Web Wallet";
+            $scope.ProWebWalletTitle = "Web Wallet(Register User)";
             $scope.ProWebWalletContext = "More secure, convenient, comprehensive, accurate historical information inquiry, registered users will receive more services!";
 
             $scope.GetMoreTitle = "more";
