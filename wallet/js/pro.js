@@ -320,12 +320,13 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             $scope.context_detailMergeBtnTitle = "确认合并";
 
             $scope.toolbar_addAccTitle = "添加账户";
-            $scope.toolbar_addAcc_NickNamePlaceholder = "账户昵称(长度>=4)";
+            $scope.toolbar_addAcc_NickNamePlaceholder = "账户昵称(30 >= 长度 >= 4)，例如ledgercn.com";
             $scope.toolbar_addAcc_SecretKeyPlaceholder = "输入账户私有Key";
             $scope.toolbar_addAcc_GATitle = "使用Google验证";
             $scope.toolbar_addAcc_RandomBtnTitle = "随机生成";
             $scope.toolbar_addAcc_ConfirmBtnTitle = "确定添加";
             $scope.toolbar_addAcc_NickNameMemo = "用户昵称设置后不可更改，全网唯一，其他账户可以通过你的昵称直接为你付款。";
+            $scope.toolbar_addAcc_NickNameDesp = "用户昵称规则：可使用中文 英文字母(区分大小写) 数字 - _ 等字符，但是用户名中必须有一个英文字符'.'，英文字符'.'不允许在首、末位。";
 
             $scope.context_settingAccNickNamePlaceholder = "账户名称";
             $scope.context_settingAccDeleteBtnTitle = "删除账户";
@@ -433,7 +434,6 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             $scope.litbox_createAccMemo2 = "New or use an Existing account";
             $scope.litbox_createAccBtnTitle = "Create account";
             $scope.litbox_accDetailTitle = "Information";
-            $scope.toolbar_addAcc_NickNameMemo = "Wallet nickname can not be changed, the whole network only, other wallet can be paid directly to you through your nickname.";
 
             $scope.context_detailShowTitle = "Show";
             $scope.context_detailHideTitle = "Hide";
@@ -473,11 +473,13 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             $scope.context_detailMergeBtnTitle = "Confirm";
 
             $scope.toolbar_addAccTitle = "Add account";
-            $scope.toolbar_addAcc_NickNamePlaceholder = "Account nick name(Length >= 4)";
+            $scope.toolbar_addAcc_NickNamePlaceholder = "Account nick name(30 >= Length >= 4), For example: ledgercn.com";
             $scope.toolbar_addAcc_SecretKeyPlaceholder = "Enter account secret key";
             $scope.toolbar_addAcc_GATitle = "Enable google auth";
             $scope.toolbar_addAcc_RandomBtnTitle = "Randomly";
             $scope.toolbar_addAcc_ConfirmBtnTitle = "Confirm";
+            $scope.toolbar_addAcc_NickNameMemo = "Wallet nickname can not be changed, the whole network only, other wallet can be paid directly to you through your nickname.";
+            $scope.toolbar_addAcc_NickNameDesp = "Nickname rule: You can use Chinese / English / alphanumeric / - / _ , but in the nickname must have a '.', '.' are not allowed in the first or last place.";
 
             $scope.context_settingAccNickNamePlaceholder = "Account nick name";
             $scope.context_settingAccDeleteBtnTitle = "DELETE";
@@ -1763,6 +1765,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         }
     }
 
+    // 添加一个wallet账户确认按键事件
     $scope.toolbar_addAcc_ConfirmBtnClick = function(){
         $scope.toolbar_addAcc_SecretKeyBlur();
         if($scope.toolbar_AddAcc_AlertMessage != ""){
@@ -1773,10 +1776,16 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             return;
         }
 
-        if($scope.toolbar_addAcc_NickName == "" || $scope.toolbar_addAcc_NickName.length < 4){
+        if($scope.toolbar_addAcc_NickName == "" || $scope.toolbar_addAcc_NickName.length < 4 || $scope.toolbar_addAcc_NickName > 30){
             $scope.toolbar_AddAcc_AlertMessage = $scope.ErrorTable.NickNameFormatError;
             return;
         }
+        pointIndex = $scope.toolbar_addAcc_NickName.indexOf('.');
+        if(pointIndex == 0 || pointIndex == -1 || pointIndex == $scope.toolbar_addAcc_NickName.length-1){
+            $scope.toolbar_AddAcc_AlertMessage = $scope.ErrorTable.NickNameFormatError;
+            return;
+        }
+
         ssKey = $cookies.get(COOKIE_KEY_SECRETSTR);
         if (ssKey == null || ssKey.length < 10){
             $cookies.remove(COOKIE_KEY_USERNAME,{'path':'/'});
