@@ -700,7 +700,6 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                     $scope.errorMessageGA = data.Error;
                 }
                 $scope.gaUserPwVisible = false;
-                $scope.gaWaitingVisible = false;
                 $scope.gaRQcodeVisible = true;
             }).
             error(function (data, status, headers, config){
