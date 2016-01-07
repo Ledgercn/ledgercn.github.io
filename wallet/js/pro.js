@@ -1776,7 +1776,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             return;
         }
 
-        if($scope.toolbar_addAcc_NickName == "" || $scope.toolbar_addAcc_NickName.length < 4 || $scope.toolbar_addAcc_NickName > 30){
+        if($scope.toolbar_addAcc_NickName == "" || $scope.toolbar_addAcc_NickName.length < 4 || $scope.toolbar_addAcc_NickName.length > 30){
             $scope.toolbar_AddAcc_AlertMessage = $scope.ErrorTable.NickNameFormatError;
             return;
         }
