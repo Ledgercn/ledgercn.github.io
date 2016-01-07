@@ -508,6 +508,8 @@ function shortBalance(balance){
     if(balance == null && balance == "")
         return "-";
     ind = balance.indexOf(".");
+    if(ind == -1)
+        return balance;
     tmp = balance.substring(0,ind);
     return tmp;
 }
