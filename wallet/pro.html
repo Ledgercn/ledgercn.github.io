@@ -216,12 +216,12 @@
                                 </li>
                                 <li ng-repeat="accinfo in AccountsManager.getAccounts()">
                                     <a class="abutton" role="button" data-toggle="collapse" ng-click="leftside_menu_acc_InfoBtnClick($index)"
-                                       href="#{{accinfo.NickName}}_collapse" aria-expanded="false" aria-controls="{{accinfo.NickName}}_collapse">
+                                       href="#{{accinfo.getNickNameId()}}_collapse" aria-expanded="false" aria-controls="{{accinfo.getNickNameId()}}_collapse">
                                         <i class="fa fa-user"></i>
                                         <span>{{accinfo.NickName}}</span>
                                         <i class="fa fa-angle-left pull-right"></i>
                                     </a>
-                                    <ul class="cmenu collapse" id="{{accinfo.NickName}}_collapse">
+                                    <ul class="cmenu collapse" id="{{accinfo.getNickNameId()}}_collapse">
                                         <li><a class="abutton" ng-click="leftside_menu_acc_InfoBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_InfoTitle}}</a></li>
                                         <!--<li><a class="abutton" ng-click="leftside_menu_acc_PayBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_PayTitle}}</a></li>-->
                                         <!--<li><a class="abutton" ng-click="leftside_menu_acc_MergeBtnClick($index)"><i class="fa fa-angle-double-right"></i> &nbsp;&nbsp;&nbsp;{{leftside_menu_acc_MergeTitle}}</a></li>-->

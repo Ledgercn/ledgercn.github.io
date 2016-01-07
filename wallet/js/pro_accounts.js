@@ -471,6 +471,10 @@ function proAccountInfo(){
     this.AccHistorys = new(proAccountHistory);
 }
 
+proAccountInfo.prototype.getNickNameId = function(){
+    return this.NickName.replace('.','__').replace('#','__');
+};
+
 proAccountInfo.prototype.getBalanceShort = function() {
     if(this.Actived && this.Info != null){
         return shortBalance(this.Info.Balance_XLM);
