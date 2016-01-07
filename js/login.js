@@ -567,8 +567,8 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
             return;
         }
 
-        authStr = $cookies.get("auth");
-        if (authStr == ""){
+        authStr = $cookies.get(COOKIE_KEY_USERAUTH);
+        if (authStr == null || authStr.length < 10){
             $scope.errorMessageCPW = $scope.ErrMsgTable.UserIsNotLogin;
             resetChangePWView();
             return;
@@ -613,11 +613,16 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                     }
                     saveToCookie($cookies,COOKIE_KEY_USERNAME,data.data.login_user,-1);
                     saveToCookie($cookies,COOKIE_KEY_USERLEVEL,data.data.user_level,-1);
+                    oldssKey = $cookies.get(COOKIE_KEY_SECRETSTR);
                     saveToCookie($cookies,COOKIE_KEY_SECRETSTR,shastr,-1);
+                    if(data.data.update_auth == true){
+                        resetAllSSkey(shastr,oldssKey,data.data.login_user,data.data.user_auth);
+                    }else {
+                        resetAllSSkey(shastr,oldssKey,data.data.login_user,authStr);
+                    }
                 } else {
                     $scope.errorMessageCPW = data.Error;
                 }
-                resetChangePWView();
             }).
             error(function (data, status, headers, config){
                 console.log("error\r\n",data);
@@ -625,6 +630,79 @@ function regMainViewController($scope, $rootScope, $cookies, $location, $http, L
                 resetChangePWView();
             });
     };
+
+    function resetAllSSkey(ssKey,oldkey,logUser,auth){
+        posturl = BACK_SERVICE_URL + "/" + BACK_SERVICE_AWALLET;
+        tx = POST_TYPE_FLAG + "=" + PT_GET_WALLETS + "&" +
+            POST_MARK_USER_NAME + "=" + encodeURIComponent(logUser) + "&" +
+            POST_MARK_AUTHCODE + "=" + encodeURIComponent(auth);
+        tmpAList = new ArrayList();
+        $http({
+            method: 'POST',
+            url: postUrl,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+            transformRequest: transform,
+            data: tx
+        }).
+            success(function (data, status, headers, config){
+                console.log("[reloadAccounts] success\r\n",data);
+                if(data.data != null && data.data.results != null && data.data.results.length > 0){
+                    for(var i=0;i<data.data.results.length;i++){
+                        accInfo = new(proAccountInfo);
+                        accInfo.NickName = data.data.results[i].nickname;
+                        accInfo.PublicAddr = data.data.results[i].public_address;
+                        accInfo.SecretKey = data.data.results[i].secret_key;
+                        accInfo.UserGA = data.data.results[i].user_ga_used;
+                        accInfo.LoginUser = data.data.login_user;
+                        tmpAList.add(accInfo);
+                    }
+                    endGetAllWallet(tmpAList,ssKey,oldkey,auth);
+                }
+            }).
+            error(function (data, status, headers, config){
+                console.log("[reloadAccounts] error\r\n",data);
+                $scope.errorMessageCPW = $scope.ErrMsgTable.ServerBusy;
+                resetChangePWView();
+            });
+    }
+
+    function endGetAllWallet(alist,ssKey,oldkey,auth){
+        for(var i = 0; i< alist.size() ;++i){
+            accInfos = alist.get(i);
+            if(accInfos != null){
+                accInfos.SecretKey = UencSecretKey(accInfos.SecretKey,oldkey);
+                accInfos.SecretKey = EncSecretKey(accInfos.SecretKey,ssKey);
+
+                posturl = BACK_SERVICE_URL + "/" + BACK_SERVICE_AWALLET;
+                tx = POST_TYPE_FLAG + "=" + RT_UPDATE_WALLET_SSKEY + "&" +
+                    POST_MARK_USER_NAME + "=" + encodeURIComponent(logUser) + "&" +
+                    POST_MARK_AUTHCODE + "=" + encodeURIComponent(auth) + "&" +
+                    POST_MARK_WALLET_NICKNAME + "=" + encodeURIComponent(accInfos.NickName) + "&" +
+                    POST_MARK_WALLET_SKEY + "=" + encodeURIComponent(accInfos.SecretKey);
+                tmpAList = new ArrayList();
+                $http({
+                    method: 'POST',
+                    url: postUrl,
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                    },
+                    transformRequest: transform,
+                    data: tx
+                }).
+                    success(function (data, status, headers, config){
+                        console.log("[endGetAllWallet] success\r\n",data);
+                        resetChangePWView();
+                    }).
+                    error(function (data, status, headers, config){
+                        console.log("[endGetAllWallet] error\r\n",data);
+                        $scope.errorMessageCPW = $scope.ErrMsgTable.ServerBusy;
+                        resetChangePWView();
+                    });
+            }
+        }
+    }
 
     function resetChangePWView(){
         $scope.changePWBtnIcon = "fa fa-check";

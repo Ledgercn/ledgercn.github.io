@@ -31,6 +31,7 @@ var RT_UPDATE_WALLET_INFO      = "R0004";
 var RT_USER_DEL_WALLET_ACCOUNT = "R0005";
 var RT_USER_ADD_FRIEND         = "R0006";
 var RT_USER_DEL_FRIEND         = "R0007";
+var RT_UPDATE_WALLET_SSKEY     = "R0008";
 var PT_USER_LOGIN              = "L0001";
 var PT_USER_ACTIVE             = "L0002";
 
