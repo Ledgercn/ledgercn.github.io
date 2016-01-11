@@ -11,11 +11,13 @@ var TEST_NET = "TEST";
 
 var WAIT_ICON_STATE = "fa fa-spinner fa-pulse";
 
-//var BACK_SERVICE_URL = "http://192.168.1.101:1234";
+//var BACK_SERVICE_URL = "http://192.168.1.103:1234";
 var BACK_SERVICE_URL = "http://115.28.68.33:1234";
 var BACK_SERVICE_ACCOUNT = "account";
 var BACK_SERVICE_RECAPTCHA = "recaptcha";
 var BACK_SERVICE_AWALLET = "awallet";
+var LEDGERCN_FEDERATION_SERVER = "http://115.28.68.33:1888/federation";
+//var LEDGERCN_FEDERATION_SERVER = "http://192.168.1.103:1888/federation";
 
 var POST_TYPE_FLAG             = "PostType";
 var PT_CHECK_USERNAME          = "C0001";

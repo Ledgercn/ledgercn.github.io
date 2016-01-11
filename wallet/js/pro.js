@@ -898,6 +898,8 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
                     break;
             }
 
+            federationNickName($http,his);
+
             //console.log("\r\nHistory Time = ",his.created_datetime,"\r\n");
 
             if(dtime - endDate < 0){
@@ -928,6 +930,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
                     break;
             }
         }
+
         if($scope.HistoryListViewController.isEnd == false){
             acc.AccHistorys.Breakout = false;
             GetAccHistoryDatas($http,index,acc,true,LoadHistorysEndFunc);
