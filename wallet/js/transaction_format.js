@@ -223,7 +223,6 @@ function federationNickName(http,historyData){
         case PAYMENT_TYPE:
             if(historyData.SubType == PAYMENT_OUT) {
                 geturl += "?q=" + historyData.To;
-                //opera.addrTitle = getAddressShort(opera.To);
             }
             else{
                 geturl += "?q=" + historyData.SourceAccount;
@@ -260,12 +259,19 @@ function federationNickName(http,historyData){
                 if(suffixIndex <= 0)
                     return;
                 historyData.addrTitle = data.stellar_address.substr(0,suffixIndex);
+                historyData.isFederation = true;
+            } else {
+                //qiwa_federationNickname(http,historyData);
             }
         })
         .error(function (data,header,config,status) {
+
+            //qiwa_federationNickname(http,historyData);
+
             //console.log("error->data ============ \r\n", data);
             //console.log("error->header ============ \r\n", header);
             //console.log("error->config ============ \r\n", config);
             //console.log("error->status ============ \r\n", status);
         });
 }
+

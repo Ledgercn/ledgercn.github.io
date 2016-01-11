@@ -11,6 +11,7 @@ var PaymentOperationEx = function(mainAddr){
     this.source_account_sequence = 0;
     this.subTitle = "";
     this.addrTitle = "";
+    this.isFederation = false;
     this.showDetails = false;
 
     this.DecodeBody = function(body,trans){
@@ -74,6 +75,7 @@ var MergeOperationEx = function(mainAddr){
     this.source_account_sequence = 0;
     this.subTitle = "";
     this.addrTitle = "";
+    this.isFederation = false;
     this.showDetails = false;
 
     this.DecodeBody = function(body,trans){
@@ -121,6 +123,7 @@ var CreateOperationEx = function(mainAddr){
     this.source_account_sequence = 0;
     this.subTitle = "";
     this.addrTitle = "";
+    this.isFederation = false;
     this.showDetails = false;
 
     this.DecodeBody = function(body,trans){
@@ -225,6 +228,7 @@ var ManageOfferOperationEx = function(mainAddr){
     this.source_account_sequence = 0;
     this.subTitle = "";
     this.addrTitle = "";
+    this.isFederation = false;
     this.showDetails = false;
 
     this.DecodeBody = function(body,trans){
@@ -336,6 +340,7 @@ var SetOptionsOperationEx = function(mainAddr){
     this.source_account_sequence = 0;
     this.subTitle = "";
     this.addrTitle = "";
+    this.isFederation = false;
     this.showDetails = false;
 
     this.highThreshold = 0;
@@ -390,6 +395,7 @@ var ChangeTrustOperationEx = function(mainAddr){
     this.source_account_sequence = 0;
     this.subTitle = "";
     this.addrTitle = "";
+    this.isFederation = false;
     this.showDetails = false;
 
     this.DecodeBody = function(body,trans){
