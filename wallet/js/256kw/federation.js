@@ -15,14 +15,14 @@ function qiwa_federationNickname(http,historyData){
             }
             break;
         case CREATE_TYPE:
-            if (opera.SubType == CREATE_OUT){
+            if (historyData.SubType == CREATE_OUT){
                 geturl += "?q=" + historyData.Account;
             } else {
                 geturl += "?q=" + historyData.SourceAccount;
             }
             break;
         case MERGE_TYPE:
-            if(opera.SubType == MERGE_DESTROY){
+            if(historyData.SubType == MERGE_DESTROY){
                 geturl += "?q=" + historyData.Into;
             } else {
                 geturl += "?q=" + historyData.SourceAccount;
