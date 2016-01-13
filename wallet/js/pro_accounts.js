@@ -358,27 +358,62 @@ Pro_Accounts.prototype.FriendsCount = function(){
 };
 
 Pro_Accounts.prototype.SearchNickName = function(http,userIndex,userInfos,index,endFunc){
-    posturl = BACK_SERVICE_URL + "/" + BACK_SERVICE_AWALLET;
-    tx = POST_TYPE_FLAG + "=" + PT_SEARCH_WALLETS + "&" +
-        POST_MARK_WALLET_NICKNAME + "=" + encodeURIComponent(userInfos[index].Nickname);
+    var matchExp = /\*[\w]+\.[\w]+/i;
+    if(matchExp.test(userInfos[index].Nickname)){
+        matchStr = matchExp.exec(userInfos[index].Nickname);
+        domainStr = matchStr.toString().substr(1,matchStr.toString().length-1);
+        nick_name = userInfos[index].Nickname.substr(0,matchStr.index);
 
-    http({
-        method: 'POST',
-        url: postUrl,
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-        },
-        transformRequest: transform,
-        data: tx
-    }).
-        success(function (data, status, headers, config){
-            console.log("success\r\n",data);
-            endFunc(data,userIndex,userInfos,index);
-        }).
-        error(function (data, status, headers, config){
-            console.log("error\r\n",data);
-            endFunc(data,userIndex,userInfos,index);
-        });
+        geturl = "https://www."+domainStr+"/.well-known/stellar.toml";
+        http.get(geturl)
+            .success(function(data,status,header,config){
+                console.log("[success:data] = \r\n",data);
+                console.log("[success:status] = \r\n",status);
+                //console.log("[success:header] = \r\n",header);
+                //console.log("[success:config] = \r\n",config);
+                if(status == 200 && data != null){
+                    //federationUrl =
+                    matchExp = /[a-zA-z]+:\/\/[^s]*\/federation/i;
+                    if(matchExp.test(data)){
+                        geturl = matchExp.exec(data).toString();
+                        geturl += "?q=" + nick_name + "*"+domainStr+"&type=name";
+                        http.get(geturl)
+                            .success(function(data,status,header,config){
+                                console.log("success = "+domainStr + "\r\n",data);
+                                endFunc(data,status,userIndex,userInfos,index);
+                            })
+                            .error(function(data,status,header,config){
+                                console.log("error = "+domainStr + "\r\n",data);
+                                endFunc(data,status,userIndex,userInfos,index);
+                            });
+                    } else {
+                        endFunc(null,404,userIndex,userInfos,index);
+                    }
+                } else {
+                    endFunc(null,status,userIndex,userInfos,index);
+                }
+            })
+            .error(function(data,status,header,config){
+                console.log("[error:data] = \r\n",data);
+                console.log("[error:status] = \r\n",status);
+                console.log("[error:header] = \r\n",header);
+                endFunc(data,status,userIndex,userInfos,index);
+                //console.log("[error:status] = \r\n",status);
+                //console.log("[error:header] = \r\n",header);
+                //console.log("[error:config] = \r\n",config);
+            });
+    } else {
+        geturl = LEDGERCN_FEDERATION_SERVER + "?q=" + userInfos[index].Nickname + "*ledgercn.com&type=name";
+        http.get(geturl).
+            success(function (data, status, headers, config){
+                console.log("success\r\n",data);
+                endFunc(data,status,userIndex,userInfos,index);
+            }).
+            error(function (data, status, headers, config){
+                console.log("error\r\n",data);
+                endFunc(data,status,userIndex,userInfos,index);
+            });
+    }
 };
 
 

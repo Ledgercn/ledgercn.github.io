@@ -1694,37 +1694,28 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         return retUsers;
     }
 
-    function SearchNickNameEndFunc(data,userIndex,infos,index){
+    function SearchNickNameEndFunc(data,status,userIndex,infos,index){
         if($scope.context_pay_SendBtnIcon == ""){
             return;
         }
         if(data == null){
             $scope.context_payment_AlertMessage += "\r\n"+$scope.PaymentMessages.NETWORK_ERROR;
-        } else if(data.Error != null){
-            $scope.context_payment_AlertMessage += "\r\n"+data.Error;
+            $scope.context_pay_SendBtnIcon = "";
+            return;
+        } else if(status != 200){
+            $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
+            $scope.context_pay_SendBtnIcon = "";
+            return;
         } else {
             //console.log(" ======= friendSearchEndFunc =======\r\n",data);
-            if(data.data.success == true){
-                if(data.data.results != null){
-                    if(data.data.results.length == 0){
-                        $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
-                        $scope.context_pay_SendBtnIcon = "";
-                        return;
-                    }
-                    findout = false;
-                    for(var i = 0 ; i < data.data.results.length ; ++i){
-                        if(infos[index].Nickname == data.data.results[i].nickname){
-                            infos[index].DestAddr = data.data.results[i].public_address;
-                            findout = true;
-                            break;
-                        }
-                    }
-                    if(!findout){
-                        $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
-                        $scope.context_pay_SendBtnIcon = "";
-                        return;
-                    }
-                }
+            if(data.account_id != null){
+                //if(infos[index].Nickname == data.stellar_address){
+                    infos[index].DestAddr = data.account_id;
+                //} else {
+                //    $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
+                //    $scope.context_pay_SendBtnIcon = "";
+                //    return;
+                //}
             }
         }
         for(var j = 0 ; j < infos.length ; ++j){
