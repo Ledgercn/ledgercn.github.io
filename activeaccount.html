@@ -24,12 +24,12 @@
     <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
 </head>
 <body class="cbody" ng-app="activeaccapp">
-    <div ng-controller="languageController">
+    <div ng-controller="languageController"  ng-cloak>
         <i ng-model="currlanguage" ng-hide="true"></i>
     </div>
 
     <!-- 顶部菜单 -->
-    <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+    <header class="navbar navbar-inverse navbar-fixed-top" role="banner" ng-cloak>
         <div class="container-fluid" ng-controller="topMenuController as tMC">
             <a id="returnBtn" class="navbar-brand fa fa-reply navbar-left" href="/" ng-model="toMenuTitle"> {{toMenuTitle}}</a>
 
@@ -37,7 +37,7 @@
         </div>
     </header>
 
-    <div class="container-fluid ccontainer ctext" ng-controller="mainContainController" ng-init="initView(false);">
+    <div class="container-fluid ccontainer ctext" ng-controller="mainContainController" ng-init="initView(false);" ng-cloak>
         <div class="ccenter-container" ng-show="isLoading">
             <i class="{{loadingIcon}}">{{ErrMsg}}</i>
         </div>

@@ -26,12 +26,12 @@
     <script src="js/stellar-base/stellar-base.min.js"></script>
 </head>
 <body onpageshow="walletbody.loading()" ng-app="homeapp">
-    <div ng-controller="languageController">
+    <div ng-controller="languageController" ng-cloak>
         <i ng-model="currlanguage" ng-hide="true">{{currlanguage}}</i>
     </div>
 
     <!-- 顶部菜单 -->
-    <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+    <header class="navbar navbar-inverse navbar-fixed-top" role="banner" ng-cloak>
         <div class="container-fluid" ng-controller="topMenuController as tMC">
             <a class="navbar-brand fa fa-reply navbar-left" href="/" ng-model="toMenuTitle"> {{toMenuTitle}}</a>
 
@@ -39,7 +39,7 @@
         </div>
     </header>
 
-    <div class="container-fluid" >
+    <div class="container-fluid" ng-cloak>
     <!-- 中间部分 -->
     <div class="row" style="padding-top: 50px">
         <div class="bs-example" data-example-id="carousel-with-captions">

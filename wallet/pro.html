@@ -46,10 +46,10 @@
         <![endif]-->
     </head>
     <body class="skin-blue" ng-app="proapp">
-        <div ng-controller="languageController">
+        <div ng-controller="languageController" ng-cloak>
             <i ng-model="currlanguage" ng-hide="true">{{currlanguage}}</i>
         </div>
-        <div ng-controller="mainviewController">
+        <div ng-controller="mainviewController" ng-cloak>
             <div ng-show="!isLogin" class="container-fluid text-center" style="margin-top: 1px">
                 <div style="min-height: 200px">
                     <div ng-show="!ErrMsg">
