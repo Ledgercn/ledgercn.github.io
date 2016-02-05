@@ -358,6 +358,10 @@ Pro_Accounts.prototype.FriendsCount = function(){
 };
 
 Pro_Accounts.prototype.SearchNickName = function(http,userIndex,userInfos,index,endFunc){
+    if(userInfos[index].DestAddr != null && userInfos[index].DestAddr != ""){
+        endFunc(null,65535,userIndex,userInfos,index);
+        return;
+    }
     var matchExp = /\*[\w]+\.[\w]+/i;
     if(matchExp.test(userInfos[index].Nickname)){
         matchStr = matchExp.exec(userInfos[index].Nickname);

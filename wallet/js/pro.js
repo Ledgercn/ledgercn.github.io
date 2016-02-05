@@ -1689,6 +1689,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             tmpInfo.Amount = $scope.context_pay_amount;
             tmpInfo.MemoType = $scope.context_pay_memoTitle;
             tmpInfo.MemoText = $scope.context_pay_memo;
+            console.log(tmpInfo);
             retUsers[i] = tmpInfo;
         }
         return retUsers;
@@ -1698,26 +1699,29 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
         if($scope.context_pay_SendBtnIcon == ""){
             return;
         }
-        if(data == null){
-            $scope.context_payment_AlertMessage += "\r\n"+$scope.PaymentMessages.NETWORK_ERROR;
-            $scope.context_pay_SendBtnIcon = "";
-            return;
-        } else if(status != 200){
-            $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
-            $scope.context_pay_SendBtnIcon = "";
-            return;
-        } else {
-            //console.log(" ======= friendSearchEndFunc =======\r\n",data);
-            if(data.account_id != null){
-                //if(infos[index].Nickname == data.stellar_address){
+        if(status != 65535){
+            if(data == null){
+                $scope.context_payment_AlertMessage += "\r\n"+$scope.PaymentMessages.NETWORK_ERROR;
+                $scope.context_pay_SendBtnIcon = "";
+                return;
+            } else if(status != 200){
+                $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
+                $scope.context_pay_SendBtnIcon = "";
+                return;
+            } else {
+                //console.log(" ======= friendSearchEndFunc =======\r\n",data);
+                if(data.account_id != null){
+                    //if(infos[index].Nickname == data.stellar_address){
                     infos[index].DestAddr = data.account_id;
-                //} else {
-                //    $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
-                //    $scope.context_pay_SendBtnIcon = "";
-                //    return;
-                //}
+                    //} else {
+                    //    $scope.context_payment_AlertMessage +="\r\n" + $scope.ErrorTable.Search_NoResult + " [ " + infos[index].Nickname + " ] ";
+                    //    $scope.context_pay_SendBtnIcon = "";
+                    //    return;
+                    //}
+                }
             }
         }
+
         for(var j = 0 ; j < infos.length ; ++j){
             if(infos[j].DestAddr == ""){
                 return;
@@ -1729,9 +1733,9 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
     function DecodeNickName2Addr(userInfos,userIndex){
         $scope.context_payment_AlertMessage = $scope.PaymentMessages.CHECK_NICKNAME;
         for(var i = 0 ; i < userInfos.length ; ++i){
-            if(userInfos[i].DestAddr == ""){
+            //if(userInfos[i].DestAddr == ""){
                 $scope.AccountsManager.SearchNickName($http,userIndex,userInfos,i,SearchNickNameEndFunc);
-            }
+            //}
         }
     }
 
