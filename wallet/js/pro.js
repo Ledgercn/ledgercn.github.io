@@ -123,7 +123,7 @@ function mainviewController($cookies, $cookieStore, $scope, $rootScope, $http, L
                 data: tx
             }).
                 success(function (data, status, headers, config){
-                    console.log("success\r\n",data);
+                    //console.log("success\r\n",data);
                     if (data.Error == null){
                         if (data.data.success == true){
                             if (data.data.user_level >= 1){
@@ -1690,7 +1690,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             tmpInfo.Amount = $scope.context_pay_amount;
             tmpInfo.MemoType = $scope.context_pay_memoTitle;
             tmpInfo.MemoText = $scope.context_pay_memo;
-            console.log(tmpInfo);
+            //console.log(tmpInfo);
             retUsers[i] = tmpInfo;
         }
         return retUsers;

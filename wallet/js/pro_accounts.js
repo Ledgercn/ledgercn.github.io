@@ -44,7 +44,7 @@ Pro_Accounts.prototype.newAccount = function(http,acc,endFunc){
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("success\r\n",data);
+            //console.log("success\r\n",data);
             if(data.data != null && data.data.success){
                 tmpList.add(acc);
             }
@@ -72,7 +72,7 @@ Pro_Accounts.prototype.deleteAccount = function(http,acc,pw,endFunc){
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("success\r\n",data);
+            //console.log("success\r\n",data);
             if(data.data != null && data.data.success){
                 tmpList.removeValue(acc);
             }
@@ -101,7 +101,7 @@ Pro_Accounts.prototype.reloadAccounts = function(http,logUser,auth,endFunc){
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("[reloadAccounts] success\r\n",data);
+            //console.log("[reloadAccounts] success\r\n",data);
             if(data.data != null && data.data.results != null && data.data.results.length > 0){
                 for(var i=0;i<data.data.results.length;i++){
                     accInfo = new(proAccountInfo);
@@ -192,7 +192,7 @@ Pro_Accounts.prototype.UpdateAccountInfo = function(http,index,newAccInfo,endFun
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("success\r\n",data);
+            //console.log("success\r\n",data);
             if(data.data != null && data.data.success){
                 currAcc.NickName = data.data.nickname;
                 currAcc.UserGA = data.data.user_ga_used;
@@ -223,7 +223,7 @@ Pro_Accounts.prototype.SearchFriend = function(http,loginUser,auth,addr,nickname
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("success\r\n",data);
+            //console.log("success\r\n",data);
             //if(data.data != null && data.data.success){
             //    tmpList.add(acc);
             //}
@@ -265,7 +265,7 @@ Pro_Accounts.prototype.addFriend = function(http,loginUser,auth,fInfo,endFunc){
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("success\r\n",data);
+            //console.log("success\r\n",data);
             if(data.data != null && data.data.success){
                 tmpList.add(fInfo);
             }
@@ -298,7 +298,7 @@ Pro_Accounts.prototype.reloadFriends = function(http,logUser,auth,endFunc){
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("[reloadFriends] success\r\n",data);
+            //console.log("[reloadFriends] success\r\n",data);
             if(data.data != null && data.data.results != null && data.data.results.length > 0){
                 for(var i=0;i<data.data.results.length;i++){
                     fInfo = new(FriendInfo);
@@ -335,7 +335,7 @@ Pro_Accounts.prototype.deleteFriend = function(http,loginUser,auth,friend,endFun
         data: tx
     }).
         success(function (data, status, headers, config){
-            console.log("success\r\n",data);
+            //console.log("success\r\n",data);
             if(data.data != null && data.data.success){
                 tmpList.removeValue(friend);
             }
@@ -371,8 +371,8 @@ Pro_Accounts.prototype.SearchNickName = function(http,userIndex,userInfos,index,
         geturl = "https://www."+domainStr+"/.well-known/stellar.toml";
         http.get(geturl)
             .success(function(data,status,header,config){
-                console.log("[success:data] = \r\n",data);
-                console.log("[success:status] = \r\n",status);
+                //console.log("[success:data] = \r\n",data);
+                //console.log("[success:status] = \r\n",status);
                 //console.log("[success:header] = \r\n",header);
                 //console.log("[success:config] = \r\n",config);
                 if(status == 200 && data != null){
@@ -383,11 +383,11 @@ Pro_Accounts.prototype.SearchNickName = function(http,userIndex,userInfos,index,
                         geturl += "?q=" + nick_name + "*"+domainStr+"&type=name";
                         http.get(geturl)
                             .success(function(data,status,header,config){
-                                console.log("success = "+domainStr + "\r\n",data);
+                                //console.log("success = "+domainStr + "\r\n",data);
                                 endFunc(data,status,userIndex,userInfos,index);
                             })
                             .error(function(data,status,header,config){
-                                console.log("error = "+domainStr + "\r\n",data);
+                                //console.log("error = "+domainStr + "\r\n",data);
                                 endFunc(data,status,userIndex,userInfos,index);
                             });
                     } else {
@@ -410,7 +410,7 @@ Pro_Accounts.prototype.SearchNickName = function(http,userIndex,userInfos,index,
         geturl = LEDGERCN_FEDERATION_SERVER + "?q=" + userInfos[index].Nickname + "*ledgercn.com&type=name";
         http.get(geturl).
             success(function (data, status, headers, config){
-                console.log("success\r\n",data);
+                //console.log("success\r\n",data);
                 endFunc(data,status,userIndex,userInfos,index);
             }).
             error(function (data, status, headers, config){
