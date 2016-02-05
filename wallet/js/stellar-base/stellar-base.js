@@ -137,7 +137,7 @@ var StellarBase =
 	  }
 	});
 
-	var _asset = __webpack_require__(83);
+	var _asset = __webpack_require__(84);
 
 	Object.defineProperty(exports, "Asset", {
 	  enumerable: true,
@@ -198,7 +198,7 @@ var StellarBase =
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// Automatically generated on 2015-09-29T14:43:02-07:00
+	// Automatically generated on 2016-01-21T17:26:27+01:00
 	// DO NOT EDIT or your changes may be overwritten
 
 	/* jshint maxstatements:2147483647  */
@@ -217,6 +217,209 @@ var StellarBase =
 	var XDR = _interopRequireWildcard(_jsXdr);
 
 	var types = XDR.config(function (xdr) {
+
+	  // === xdr source ============================================================
+	  //
+	  //   typedef opaque Value<>;
+	  //
+	  // ===========================================================================
+	  xdr.typedef("Value", xdr.varOpaque());
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct SCPBallot
+	  //   {
+	  //       uint32 counter; // n
+	  //       Value value;    // x
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpBallot", [["counter", xdr.lookup("Uint32")], ["value", xdr.lookup("Value")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   enum SCPStatementType
+	  //   {
+	  //       SCP_ST_PREPARE = 0,
+	  //       SCP_ST_CONFIRM = 1,
+	  //       SCP_ST_EXTERNALIZE = 2,
+	  //       SCP_ST_NOMINATE = 3
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr["enum"]("ScpStatementType", {
+	    scpStPrepare: 0,
+	    scpStConfirm: 1,
+	    scpStExternalize: 2,
+	    scpStNominate: 3
+	  });
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct SCPNomination
+	  //   {
+	  //       Hash quorumSetHash; // D
+	  //       Value votes<>;      // X
+	  //       Value accepted<>;   // Y
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpNomination", [["quorumSetHash", xdr.lookup("Hash")], ["votes", xdr.varArray(xdr.lookup("Value"), 2147483647)], ["accepted", xdr.varArray(xdr.lookup("Value"), 2147483647)]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct
+	  //           {
+	  //               Hash quorumSetHash;       // D
+	  //               SCPBallot ballot;         // b
+	  //               SCPBallot* prepared;      // p
+	  //               SCPBallot* preparedPrime; // p'
+	  //               uint32 nC;                // c.n
+	  //               uint32 nH;                // h.n
+	  //           }
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpStatementPrepare", [["quorumSetHash", xdr.lookup("Hash")], ["ballot", xdr.lookup("ScpBallot")], ["prepared", xdr.option(xdr.lookup("ScpBallot"))], ["preparedPrime", xdr.option(xdr.lookup("ScpBallot"))], ["nC", xdr.lookup("Uint32")], ["nH", xdr.lookup("Uint32")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct
+	  //           {
+	  //               SCPBallot ballot;   // b
+	  //               uint32 nPrepared;   // p.n
+	  //               uint32 nCommit;     // c.n
+	  //               uint32 nH;          // h.n
+	  //               Hash quorumSetHash; // D
+	  //           }
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpStatementConfirm", [["ballot", xdr.lookup("ScpBallot")], ["nPrepared", xdr.lookup("Uint32")], ["nCommit", xdr.lookup("Uint32")], ["nH", xdr.lookup("Uint32")], ["quorumSetHash", xdr.lookup("Hash")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct
+	  //           {
+	  //               SCPBallot commit;         // c
+	  //               uint32 nH;                // h.n
+	  //               Hash commitQuorumSetHash; // D used before EXTERNALIZE
+	  //           }
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpStatementExternalize", [["commit", xdr.lookup("ScpBallot")], ["nH", xdr.lookup("Uint32")], ["commitQuorumSetHash", xdr.lookup("Hash")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   union switch (SCPStatementType type)
+	  //       {
+	  //       case SCP_ST_PREPARE:
+	  //           struct
+	  //           {
+	  //               Hash quorumSetHash;       // D
+	  //               SCPBallot ballot;         // b
+	  //               SCPBallot* prepared;      // p
+	  //               SCPBallot* preparedPrime; // p'
+	  //               uint32 nC;                // c.n
+	  //               uint32 nH;                // h.n
+	  //           } prepare;
+	  //       case SCP_ST_CONFIRM:
+	  //           struct
+	  //           {
+	  //               SCPBallot ballot;   // b
+	  //               uint32 nPrepared;   // p.n
+	  //               uint32 nCommit;     // c.n
+	  //               uint32 nH;          // h.n
+	  //               Hash quorumSetHash; // D
+	  //           } confirm;
+	  //       case SCP_ST_EXTERNALIZE:
+	  //           struct
+	  //           {
+	  //               SCPBallot commit;         // c
+	  //               uint32 nH;                // h.n
+	  //               Hash commitQuorumSetHash; // D used before EXTERNALIZE
+	  //           } externalize;
+	  //       case SCP_ST_NOMINATE:
+	  //           SCPNomination nominate;
+	  //       }
+	  //
+	  // ===========================================================================
+	  xdr.union("ScpStatementPledges", {
+	    switchOn: xdr.lookup("ScpStatementType"),
+	    switchName: "type",
+	    switches: [["scpStPrepare", "prepare"], ["scpStConfirm", "confirm"], ["scpStExternalize", "externalize"], ["scpStNominate", "nominate"]],
+	    arms: {
+	      prepare: xdr.lookup("ScpStatementPrepare"),
+	      confirm: xdr.lookup("ScpStatementConfirm"),
+	      externalize: xdr.lookup("ScpStatementExternalize"),
+	      nominate: xdr.lookup("ScpNomination")
+	    }
+	  });
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct SCPStatement
+	  //   {
+	  //       NodeID nodeID;    // v
+	  //       uint64 slotIndex; // i
+	  //  
+	  //       union switch (SCPStatementType type)
+	  //       {
+	  //       case SCP_ST_PREPARE:
+	  //           struct
+	  //           {
+	  //               Hash quorumSetHash;       // D
+	  //               SCPBallot ballot;         // b
+	  //               SCPBallot* prepared;      // p
+	  //               SCPBallot* preparedPrime; // p'
+	  //               uint32 nC;                // c.n
+	  //               uint32 nH;                // h.n
+	  //           } prepare;
+	  //       case SCP_ST_CONFIRM:
+	  //           struct
+	  //           {
+	  //               SCPBallot ballot;   // b
+	  //               uint32 nPrepared;   // p.n
+	  //               uint32 nCommit;     // c.n
+	  //               uint32 nH;          // h.n
+	  //               Hash quorumSetHash; // D
+	  //           } confirm;
+	  //       case SCP_ST_EXTERNALIZE:
+	  //           struct
+	  //           {
+	  //               SCPBallot commit;         // c
+	  //               uint32 nH;                // h.n
+	  //               Hash commitQuorumSetHash; // D used before EXTERNALIZE
+	  //           } externalize;
+	  //       case SCP_ST_NOMINATE:
+	  //           SCPNomination nominate;
+	  //       }
+	  //       pledges;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpStatement", [["nodeId", xdr.lookup("NodeId")], ["slotIndex", xdr.lookup("Uint64")], ["pledges", xdr.lookup("ScpStatementPledges")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct SCPEnvelope
+	  //   {
+	  //       SCPStatement statement;
+	  //       Signature signature;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpEnvelope", [["statement", xdr.lookup("ScpStatement")], ["signature", xdr.lookup("Signature")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct SCPQuorumSet
+	  //   {
+	  //       uint32 threshold;
+	  //       PublicKey validators<>;
+	  //       SCPQuorumSet innerSets<>;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpQuorumSet", [["threshold", xdr.lookup("Uint32")], ["validators", xdr.varArray(xdr.lookup("PublicKey"), 2147483647)], ["innerSets", xdr.varArray(xdr.lookup("ScpQuorumSet"), 2147483647)]]);
 
 	  // === xdr source ============================================================
 	  //
@@ -1042,18 +1245,60 @@ var StellarBase =
 
 	  // === xdr source ============================================================
 	  //
+	  //   struct LedgerSCPMessages
+	  //   {
+	  //       uint32 ledgerSeq;
+	  //       SCPEnvelope messages<>;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("LedgerScpMessages", [["ledgerSeq", xdr.lookup("Uint32")], ["messages", xdr.varArray(xdr.lookup("ScpEnvelope"), 2147483647)]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   struct SCPHistoryEntryV0
+	  //   {
+	  //       SCPQuorumSet quorumSets<>; // additional quorum sets used by ledgerMessages
+	  //       LedgerSCPMessages ledgerMessages;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.struct("ScpHistoryEntryV0", [["quorumSets", xdr.varArray(xdr.lookup("ScpQuorumSet"), 2147483647)], ["ledgerMessages", xdr.lookup("LedgerScpMessages")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   union SCPHistoryEntry switch (int v)
+	  //   {
+	  //   case 0:
+	  //       SCPHistoryEntryV0 v0;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.union("ScpHistoryEntry", {
+	    switchOn: xdr.int(),
+	    switchName: "v",
+	    switches: [[0, "v0"]],
+	    arms: {
+	      v0: xdr.lookup("ScpHistoryEntryV0")
+	    }
+	  });
+
+	  // === xdr source ============================================================
+	  //
 	  //   enum LedgerEntryChangeType
 	  //   {
 	  //       LEDGER_ENTRY_CREATED = 0, // entry was added to the ledger
 	  //       LEDGER_ENTRY_UPDATED = 1, // entry was modified in the ledger
-	  //       LEDGER_ENTRY_REMOVED = 2  // entry was removed from the ledger
+	  //       LEDGER_ENTRY_REMOVED = 2, // entry was removed from the ledger
+	  //       LEDGER_ENTRY_STATE = 3    // value of the entry
 	  //   };
 	  //
 	  // ===========================================================================
 	  xdr["enum"]("LedgerEntryChangeType", {
 	    ledgerEntryCreated: 0,
 	    ledgerEntryUpdated: 1,
-	    ledgerEntryRemoved: 2
+	    ledgerEntryRemoved: 2,
+	    ledgerEntryState: 3
 	  });
 
 	  // === xdr source ============================================================
@@ -1066,17 +1311,20 @@ var StellarBase =
 	  //       LedgerEntry updated;
 	  //   case LEDGER_ENTRY_REMOVED:
 	  //       LedgerKey removed;
+	  //   case LEDGER_ENTRY_STATE:
+	  //       LedgerEntry state;
 	  //   };
 	  //
 	  // ===========================================================================
 	  xdr.union("LedgerEntryChange", {
 	    switchOn: xdr.lookup("LedgerEntryChangeType"),
 	    switchName: "type",
-	    switches: [["ledgerEntryCreated", "created"], ["ledgerEntryUpdated", "updated"], ["ledgerEntryRemoved", "removed"]],
+	    switches: [["ledgerEntryCreated", "created"], ["ledgerEntryUpdated", "updated"], ["ledgerEntryRemoved", "removed"], ["ledgerEntryState", "state"]],
 	    arms: {
 	      created: xdr.lookup("LedgerEntry"),
 	      updated: xdr.lookup("LedgerEntry"),
-	      removed: xdr.lookup("LedgerKey")
+	      removed: xdr.lookup("LedgerKey"),
+	      state: xdr.lookup("LedgerEntry")
 	    }
 	  });
 
@@ -1164,6 +1412,7 @@ var StellarBase =
 	  //   {
 	  //       uint32 ledgerVersion;
 	  //       uint32 overlayVersion;
+	  //       uint32 overlayMinVersion;
 	  //       Hash networkID;
 	  //       string versionStr<100>;
 	  //       int listeningPort;
@@ -1173,7 +1422,7 @@ var StellarBase =
 	  //   };
 	  //
 	  // ===========================================================================
-	  xdr.struct("Hello", [["ledgerVersion", xdr.lookup("Uint32")], ["overlayVersion", xdr.lookup("Uint32")], ["networkId", xdr.lookup("Hash")], ["versionStr", xdr.string(100)], ["listeningPort", xdr.int()], ["peerId", xdr.lookup("NodeId")], ["cert", xdr.lookup("AuthCert")], ["nonce", xdr.lookup("Uint256")]]);
+	  xdr.struct("Hello", [["ledgerVersion", xdr.lookup("Uint32")], ["overlayVersion", xdr.lookup("Uint32")], ["overlayMinVersion", xdr.lookup("Uint32")], ["networkId", xdr.lookup("Hash")], ["versionStr", xdr.string(100)], ["listeningPort", xdr.int()], ["peerId", xdr.lookup("NodeId")], ["cert", xdr.lookup("AuthCert")], ["nonce", xdr.lookup("Uint256")]]);
 
 	  // === xdr source ============================================================
 	  //
@@ -1232,7 +1481,8 @@ var StellarBase =
 	  //           opaque ipv4[4];
 	  //       case IPv6:
 	  //           opaque ipv6[16];
-	  //       } ip;
+	  //       }
+	  //       ip;
 	  //       uint32 port;
 	  //       uint32 numFailures;
 	  //   };
@@ -1245,7 +1495,6 @@ var StellarBase =
 	  //   enum MessageType
 	  //   {
 	  //       ERROR_MSG = 0,
-	  //       HELLO = 1,
 	  //       AUTH = 2,
 	  //       DONT_HAVE = 3,
 	  //  
@@ -1260,13 +1509,16 @@ var StellarBase =
 	  //       // SCP
 	  //       GET_SCP_QUORUMSET = 9,
 	  //       SCP_QUORUMSET = 10,
-	  //       SCP_MESSAGE = 11
+	  //       SCP_MESSAGE = 11,
+	  //       GET_SCP_STATE = 12,
+	  //  
+	  //       // new messages
+	  //       HELLO = 13
 	  //   };
 	  //
 	  // ===========================================================================
 	  xdr["enum"]("MessageType", {
 	    errorMsg: 0,
-	    hello: 1,
 	    auth: 2,
 	    dontHave: 3,
 	    getPeer: 4,
@@ -1276,7 +1528,9 @@ var StellarBase =
 	    transaction: 8,
 	    getScpQuorumset: 9,
 	    scpQuorumset: 10,
-	    scpMessage: 11
+	    scpMessage: 11,
+	    getScpState: 12,
+	    hello: 13
 	  });
 
 	  // === xdr source ============================================================
@@ -1322,13 +1576,15 @@ var StellarBase =
 	  //       SCPQuorumSet qSet;
 	  //   case SCP_MESSAGE:
 	  //       SCPEnvelope envelope;
+	  //   case GET_SCP_STATE:
+	  //       uint32 getSCPLedgerSeq; // ledger seq requested ; if 0, requests the latest
 	  //   };
 	  //
 	  // ===========================================================================
 	  xdr.union("StellarMessage", {
 	    switchOn: xdr.lookup("MessageType"),
 	    switchName: "type",
-	    switches: [["errorMsg", "error"], ["hello", "hello"], ["auth", "auth"], ["dontHave", "dontHave"], ["getPeer", xdr["void"]()], ["peer", "peers"], ["getTxSet", "txSetHash"], ["txSet", "txSet"], ["transaction", "transaction"], ["getScpQuorumset", "qSetHash"], ["scpQuorumset", "qSet"], ["scpMessage", "envelope"]],
+	    switches: [["errorMsg", "error"], ["hello", "hello"], ["auth", "auth"], ["dontHave", "dontHave"], ["getPeer", xdr["void"]()], ["peer", "peers"], ["getTxSet", "txSetHash"], ["txSet", "txSet"], ["transaction", "transaction"], ["getScpQuorumset", "qSetHash"], ["scpQuorumset", "qSet"], ["scpMessage", "envelope"], ["getScpState", "getScpLedgerSeq"]],
 	    arms: {
 	      error: xdr.lookup("Error"),
 	      hello: xdr.lookup("Hello"),
@@ -1340,227 +1596,45 @@ var StellarBase =
 	      transaction: xdr.lookup("TransactionEnvelope"),
 	      qSetHash: xdr.lookup("Uint256"),
 	      qSet: xdr.lookup("ScpQuorumSet"),
-	      envelope: xdr.lookup("ScpEnvelope")
+	      envelope: xdr.lookup("ScpEnvelope"),
+	      getScpLedgerSeq: xdr.lookup("Uint32")
 	    }
 	  });
 
 	  // === xdr source ============================================================
 	  //
-	  //   struct AuthenticatedMessage
+	  //   struct
 	  //   {
 	  //      uint64 sequence;
 	  //      StellarMessage message;
 	  //      HmacSha256Mac mac;
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr.struct("AuthenticatedMessage", [["sequence", xdr.lookup("Uint64")], ["message", xdr.lookup("StellarMessage")], ["mac", xdr.lookup("HmacSha256Mac")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   typedef opaque Value<>;
-	  //
-	  // ===========================================================================
-	  xdr.typedef("Value", xdr.varOpaque());
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct SCPBallot
-	  //   {
-	  //       uint32 counter; // n
-	  //       Value value;    // x
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpBallot", [["counter", xdr.lookup("Uint32")], ["value", xdr.lookup("Value")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   enum SCPStatementType
-	  //   {
-	  //       SCP_ST_PREPARE = 0,
-	  //       SCP_ST_CONFIRM = 1,
-	  //       SCP_ST_EXTERNALIZE = 2,
-	  //       SCP_ST_NOMINATE = 3
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr["enum"]("ScpStatementType", {
-	    scpStPrepare: 0,
-	    scpStConfirm: 1,
-	    scpStExternalize: 2,
-	    scpStNominate: 3
-	  });
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct SCPNomination
-	  //   {
-	  //       Hash quorumSetHash; // D
-	  //       Value votes<>;      // X
-	  //       Value accepted<>;   // Y
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpNomination", [["quorumSetHash", xdr.lookup("Hash")], ["votes", xdr.varArray(xdr.lookup("Value"), 2147483647)], ["accepted", xdr.varArray(xdr.lookup("Value"), 2147483647)]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct
-	  //           {
-	  //               Hash quorumSetHash;       // D
-	  //               SCPBallot ballot;         // b
-	  //               SCPBallot* prepared;      // p
-	  //               SCPBallot* preparedPrime; // p'
-	  //               uint32 nC;                // n_c
-	  //               uint32 nP;                // n_P
-	  //           }
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpStatementPrepare", [["quorumSetHash", xdr.lookup("Hash")], ["ballot", xdr.lookup("ScpBallot")], ["prepared", xdr.option(xdr.lookup("ScpBallot"))], ["preparedPrime", xdr.option(xdr.lookup("ScpBallot"))], ["nC", xdr.lookup("Uint32")], ["nP", xdr.lookup("Uint32")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct
-	  //           {
-	  //               Hash quorumSetHash; // D
-	  //               uint32 nPrepared;   // n_p
-	  //               SCPBallot commit;   // c
-	  //               uint32 nP;          // n_P
-	  //           }
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpStatementConfirm", [["quorumSetHash", xdr.lookup("Hash")], ["nPrepared", xdr.lookup("Uint32")], ["commit", xdr.lookup("ScpBallot")], ["nP", xdr.lookup("Uint32")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct
-	  //           {
-	  //               SCPBallot commit; // c
-	  //               uint32 nP;        // n_P
-	  //               // not from the paper, but useful to build tooling to
-	  //               // traverse the graph based off only the latest statement
-	  //               Hash commitQuorumSetHash; // D used before EXTERNALIZE
-	  //           }
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpStatementExternalize", [["commit", xdr.lookup("ScpBallot")], ["nP", xdr.lookup("Uint32")], ["commitQuorumSetHash", xdr.lookup("Hash")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   union switch (SCPStatementType type)
-	  //       {
-	  //       case SCP_ST_PREPARE:
-	  //           struct
-	  //           {
-	  //               Hash quorumSetHash;       // D
-	  //               SCPBallot ballot;         // b
-	  //               SCPBallot* prepared;      // p
-	  //               SCPBallot* preparedPrime; // p'
-	  //               uint32 nC;                // n_c
-	  //               uint32 nP;                // n_P
-	  //           } prepare;
-	  //       case SCP_ST_CONFIRM:
-	  //           struct
-	  //           {
-	  //               Hash quorumSetHash; // D
-	  //               uint32 nPrepared;   // n_p
-	  //               SCPBallot commit;   // c
-	  //               uint32 nP;          // n_P
-	  //           } confirm;
-	  //       case SCP_ST_EXTERNALIZE:
-	  //           struct
-	  //           {
-	  //               SCPBallot commit; // c
-	  //               uint32 nP;        // n_P
-	  //               // not from the paper, but useful to build tooling to
-	  //               // traverse the graph based off only the latest statement
-	  //               Hash commitQuorumSetHash; // D used before EXTERNALIZE
-	  //           } externalize;
-	  //       case SCP_ST_NOMINATE:
-	  //           SCPNomination nominate;
 	  //       }
 	  //
 	  // ===========================================================================
-	  xdr.union("ScpStatementPledges", {
-	    switchOn: xdr.lookup("ScpStatementType"),
-	    switchName: "type",
-	    switches: [["scpStPrepare", "prepare"], ["scpStConfirm", "confirm"], ["scpStExternalize", "externalize"], ["scpStNominate", "nominate"]],
+	  xdr.struct("AuthenticatedMessageV0", [["sequence", xdr.lookup("Uint64")], ["message", xdr.lookup("StellarMessage")], ["mac", xdr.lookup("HmacSha256Mac")]]);
+
+	  // === xdr source ============================================================
+	  //
+	  //   union AuthenticatedMessage switch (uint32 v)
+	  //   {
+	  //   case 0:
+	  //       struct
+	  //   {
+	  //      uint64 sequence;
+	  //      StellarMessage message;
+	  //      HmacSha256Mac mac;
+	  //       } v0;
+	  //   };
+	  //
+	  // ===========================================================================
+	  xdr.union("AuthenticatedMessage", {
+	    switchOn: xdr.lookup("Uint32"),
+	    switchName: "v",
+	    switches: [[0, "v0"]],
 	    arms: {
-	      prepare: xdr.lookup("ScpStatementPrepare"),
-	      confirm: xdr.lookup("ScpStatementConfirm"),
-	      externalize: xdr.lookup("ScpStatementExternalize"),
-	      nominate: xdr.lookup("ScpNomination")
+	      v0: xdr.lookup("AuthenticatedMessageV0")
 	    }
 	  });
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct SCPStatement
-	  //   {
-	  //       NodeID nodeID;    // v
-	  //       uint64 slotIndex; // i
-	  //  
-	  //       union switch (SCPStatementType type)
-	  //       {
-	  //       case SCP_ST_PREPARE:
-	  //           struct
-	  //           {
-	  //               Hash quorumSetHash;       // D
-	  //               SCPBallot ballot;         // b
-	  //               SCPBallot* prepared;      // p
-	  //               SCPBallot* preparedPrime; // p'
-	  //               uint32 nC;                // n_c
-	  //               uint32 nP;                // n_P
-	  //           } prepare;
-	  //       case SCP_ST_CONFIRM:
-	  //           struct
-	  //           {
-	  //               Hash quorumSetHash; // D
-	  //               uint32 nPrepared;   // n_p
-	  //               SCPBallot commit;   // c
-	  //               uint32 nP;          // n_P
-	  //           } confirm;
-	  //       case SCP_ST_EXTERNALIZE:
-	  //           struct
-	  //           {
-	  //               SCPBallot commit; // c
-	  //               uint32 nP;        // n_P
-	  //               // not from the paper, but useful to build tooling to
-	  //               // traverse the graph based off only the latest statement
-	  //               Hash commitQuorumSetHash; // D used before EXTERNALIZE
-	  //           } externalize;
-	  //       case SCP_ST_NOMINATE:
-	  //           SCPNomination nominate;
-	  //       }
-	  //       pledges;
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpStatement", [["nodeId", xdr.lookup("NodeId")], ["slotIndex", xdr.lookup("Uint64")], ["pledges", xdr.lookup("ScpStatementPledges")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct SCPEnvelope
-	  //   {
-	  //       SCPStatement statement;
-	  //       Signature signature;
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpEnvelope", [["statement", xdr.lookup("ScpStatement")], ["signature", xdr.lookup("Signature")]]);
-
-	  // === xdr source ============================================================
-	  //
-	  //   struct SCPQuorumSet
-	  //   {
-	  //       uint32 threshold;
-	  //       PublicKey validators<>;
-	  //       SCPQuorumSet innerSets<>;
-	  //   };
-	  //
-	  // ===========================================================================
-	  xdr.struct("ScpQuorumSet", [["threshold", xdr.lookup("Uint32")], ["validators", xdr.varArray(xdr.lookup("PublicKey"), 2147483647)], ["innerSets", xdr.varArray(xdr.lookup("ScpQuorumSet"), 2147483647)]]);
 
 	  // === xdr source ============================================================
 	  //
@@ -1966,7 +2040,7 @@ var StellarBase =
 	  //
 	  //   struct ClaimOfferAtom
 	  //   {
-	  //       // emited to identify the offer
+	  //       // emitted to identify the offer
 	  //       AccountID sellerID; // Account that owns the offer
 	  //       uint64 offerID;
 	  //  
@@ -17845,6 +17919,8 @@ var StellarBase =
 	 */
 	/* eslint-disable no-proto */
 
+	'use strict'
+
 	var base64 = __webpack_require__(14)
 	var ieee754 = __webpack_require__(15)
 	var isArray = __webpack_require__(16)
@@ -17927,8 +18003,10 @@ var StellarBase =
 	    return new Buffer(arg)
 	  }
 
-	  this.length = 0
-	  this.parent = undefined
+	  if (!Buffer.TYPED_ARRAY_SUPPORT) {
+	    this.length = 0
+	    this.parent = undefined
+	  }
 
 	  // Common case.
 	  if (typeof arg === 'number') {
@@ -18059,6 +18137,10 @@ var StellarBase =
 	if (Buffer.TYPED_ARRAY_SUPPORT) {
 	  Buffer.prototype.__proto__ = Uint8Array.prototype
 	  Buffer.__proto__ = Uint8Array
+	} else {
+	  // pre-set for values that may exist in the future
+	  Buffer.prototype.length = undefined
+	  Buffer.prototype.parent = undefined
 	}
 
 	function allocate (that, length) {
@@ -18208,10 +18290,6 @@ var StellarBase =
 	  }
 	}
 	Buffer.byteLength = byteLength
-
-	// pre-set for values that may exist in the future
-	Buffer.prototype.length = undefined
-	Buffer.prototype.parent = undefined
 
 	function slowToString (encoding, start, end) {
 	  var loweredCase = false
@@ -19608,8 +19686,10 @@ var StellarBase =
 /* 16 */
 /***/ function(module, exports) {
 
+	var toString = {}.toString;
+
 	module.exports = Array.isArray || function (arr) {
-	  return Object.prototype.toString.call(arr) == '[object Array]';
+	  return toString.call(arr) == '[object Array]';
 	};
 
 
@@ -27128,7 +27208,7 @@ var StellarBase =
 	   * `Keypair` represents public (and secret) keys of the account.
 	   *
 	   * Use more convenient methods to create `Keypair` object:
-	   * * `{@link Keypair.fromAddress}`
+	   * * `{@link Keypair.fromAccountId}`
 	   * * `{@link Keypair.fromSeed}`
 	   * * `{@link Keypair.random}`
 	   *
@@ -27156,13 +27236,13 @@ var StellarBase =
 	   */
 
 	  _createClass(Keypair, [{
-	    key: "accountId",
-	    value: function accountId() {
+	    key: "xdrAccountId",
+	    value: function xdrAccountId() {
 	      return new _generatedStellarXdr_generated2["default"].AccountId.keyTypeEd25519(this._publicKey);
 	    }
 	  }, {
-	    key: "publicKey",
-	    value: function publicKey() {
+	    key: "xdrPublicKey",
+	    value: function xdrPublicKey() {
 	      return new _generatedStellarXdr_generated2["default"].PublicKey.keyTypeEd25519(this._publicKey);
 	    }
 
@@ -27178,7 +27258,7 @@ var StellarBase =
 	  }, {
 	    key: "signatureHint",
 	    value: function signatureHint() {
-	      var a = this.accountId().toXDR();
+	      var a = this.xdrAccountId().toXDR();
 
 	      return a.slice(a.length - 4);
 	    }
@@ -27188,8 +27268,8 @@ var StellarBase =
 	     * @returns {string}
 	     */
 	  }, {
-	    key: "address",
-	    value: function address() {
+	    key: "accountId",
+	    value: function accountId() {
 	      return strkey.encodeCheck("accountId", this._publicKey);
 	    }
 
@@ -27316,15 +27396,15 @@ var StellarBase =
 
 	    /**
 	     * Creates a new `Keypair` object from account ID.
-	     * @param {string} address account ID
+	     * @param {string} accountId account ID (ex. `GB3KJPLFUYN5VL6R3GU3EGCGVCKFDSD7BEDX42HWG5BWFKB3KQGJJRMA`)
 	     * @returns {Keypair}
 	     */
 	  }, {
-	    key: "fromAddress",
-	    value: function fromAddress(address) {
-	      var publicKey = strkey.decodeCheck("accountId", address);
+	    key: "fromAccountId",
+	    value: function fromAccountId(accountId) {
+	      var publicKey = strkey.decodeCheck("accountId", accountId);
 	      if (publicKey.length !== 32) {
-	        throw new Error('Invalid Stellar address');
+	        throw new Error('Invalid Stellar accountId');
 	      }
 	      return new this({ publicKey: publicKey });
 	    }
@@ -27437,32 +27517,12 @@ var StellarBase =
 			}
 
 			/**
-	   * Alias for {@link Network.usePublicNetwork}.
-	   * @deprecated Use {@link Network.usePublicNetwork} method
-	   */
-		}, {
-			key: "usePublicNet",
-			value: function usePublicNet() {
-				this.usePublicNetwork();
-			}
-
-			/**
 	   * Use test network.
 	   */
 		}, {
 			key: "useTestNetwork",
 			value: function useTestNetwork() {
 				this.use(new Network(Networks.TESTNET));
-			}
-
-			/**
-	   * Alias for {@link Network.useTestNetwork}.
-	   * @deprecated Use {@link Network.useTestNetwork} method
-	   */
-		}, {
-			key: "useTestNet",
-			value: function useTestNet() {
-				this.useTestNetwork();
 			}
 
 			/**
@@ -28615,11 +28675,11 @@ var StellarBase =
 
 	var _strkey = __webpack_require__(67);
 
-	var _asset = __webpack_require__(83);
+	var _asset = __webpack_require__(84);
 
 	var _lodash = __webpack_require__(10);
 
-	var _bignumberJs = __webpack_require__(84);
+	var _bignumberJs = __webpack_require__(83);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
@@ -28656,21 +28716,21 @@ var StellarBase =
 	        /**
 	        * Create and fund a non existent account.
 	        * @param {object} opts
-	        * @param {string} opts.destination - Destination address to create an account for.
+	        * @param {string} opts.destination - Destination account ID to create an account for.
 	        * @param {string} opts.startingBalance - Amount in XLM the account should be funded for. Must be greater
 	        *                                   than the [reserve balance amount](https://www.stellar.org/developers/learn/concepts/fees.html).
 	        * @param {string} [opts.source] - The source account for the payment. Defaults to the transaction's source account.
 	        * @returns {xdr.CreateAccountOp}
 	        */
 	        value: function createAccount(opts) {
-	            if (!_account.Account.isValidAddress(opts.destination)) {
+	            if (!_account.Account.isValidAccountId(opts.destination)) {
 	                throw new Error("destination is invalid");
 	            }
 	            if (!this.isValidAmount(opts.startingBalance)) {
 	                throw new TypeError('startingBalance argument must be of type String and represent a positive number');
 	            }
 	            var attributes = {};
-	            attributes.destination = _keypair.Keypair.fromAddress(opts.destination).accountId();
+	            attributes.destination = _keypair.Keypair.fromAccountId(opts.destination).xdrAccountId();
 	            attributes.startingBalance = this._toXDRAmount(opts.startingBalance);
 	            var createAccount = new _generatedStellarXdr_generated2["default"].CreateAccountOp(attributes);
 
@@ -28684,7 +28744,7 @@ var StellarBase =
 	        /**
 	        * Create a payment operation.
 	        * @param {object} opts
-	        * @param {string} opts.destination - The destination address.
+	        * @param {string} opts.destination - The destination account ID.
 	        * @param {Asset} opts.asset - The asset to send.
 	        * @param {string} opts.amount - The amount to send.
 	        * @param {string} [opts.source] - The source account for the payment. Defaults to the transaction's source account.
@@ -28693,7 +28753,7 @@ var StellarBase =
 	    }, {
 	        key: "payment",
 	        value: function payment(opts) {
-	            if (!_account.Account.isValidAddress(opts.destination)) {
+	            if (!_account.Account.isValidAccountId(opts.destination)) {
 	                throw new Error("destination is invalid");
 	            }
 	            if (!opts.asset) {
@@ -28704,7 +28764,7 @@ var StellarBase =
 	            }
 
 	            var attributes = {};
-	            attributes.destination = _keypair.Keypair.fromAddress(opts.destination).accountId();
+	            attributes.destination = _keypair.Keypair.fromAccountId(opts.destination).xdrAccountId();
 	            attributes.asset = opts.asset.toXdrObject();
 	            attributes.amount = this._toXDRAmount(opts.amount);
 	            var payment = new _generatedStellarXdr_generated2["default"].PaymentOp(attributes);
@@ -28739,7 +28799,7 @@ var StellarBase =
 	            if (!this.isValidAmount(opts.sendMax)) {
 	                throw new TypeError('sendMax argument must be of type String and represent a positive number');
 	            }
-	            if (!_account.Account.isValidAddress(opts.destination)) {
+	            if (!_account.Account.isValidAccountId(opts.destination)) {
 	                throw new Error("destination is invalid");
 	            }
 	            if (!opts.destAsset) {
@@ -28752,7 +28812,7 @@ var StellarBase =
 	            var attributes = {};
 	            attributes.sendAsset = opts.sendAsset.toXdrObject();
 	            attributes.sendMax = this._toXDRAmount(opts.sendMax);
-	            attributes.destination = _keypair.Keypair.fromAddress(opts.destination).accountId();
+	            attributes.destination = _keypair.Keypair.fromAccountId(opts.destination).xdrAccountId();
 	            attributes.destAsset = opts.destAsset.toXdrObject();
 	            attributes.destAmount = this._toXDRAmount(opts.destAmount);
 
@@ -28822,11 +28882,11 @@ var StellarBase =
 	    }, {
 	        key: "allowTrust",
 	        value: function allowTrust(opts) {
-	            if (!_account.Account.isValidAddress(opts.trustor)) {
+	            if (!_account.Account.isValidAccountId(opts.trustor)) {
 	                throw new Error("trustor is invalid");
 	            }
 	            var attributes = {};
-	            attributes.trustor = _keypair.Keypair.fromAddress(opts.trustor).accountId();
+	            attributes.trustor = _keypair.Keypair.fromAccountId(opts.trustor).xdrAccountId();
 	            if (opts.assetCode.length <= 4) {
 	                var code = (0, _lodash.padRight)(opts.assetCode, 4, '\0');
 	                attributes.asset = _generatedStellarXdr_generated2["default"].AllowTrustOpAsset.assetTypeCreditAlphanum4(code);
@@ -28853,7 +28913,7 @@ var StellarBase =
 	        *   - AUTH_REQUIRED_FLAG = 0x1
 	        *   - AUTH_REVOCABLE_FLAG = 0x2
 	        * @param {object} opts
-	        * @param {string} [opts.inflationDest] - Set this address as the account's inflation destination.
+	        * @param {string} [opts.inflationDest] - Set this account ID as the account's inflation destination.
 	        * @param {number} [opts.clearFlags] - Bitmap integer for which flags to clear.
 	        * @param {number} [opts.setFlags] - Bitmap integer for which flags to set.
 	        * @param {number} [opts.masterWeight] - The master key weight.
@@ -28874,10 +28934,10 @@ var StellarBase =
 	            var attributes = {};
 
 	            if (opts.inflationDest) {
-	                if (!_account.Account.isValidAddress(opts.inflationDest)) {
+	                if (!_account.Account.isValidAccountId(opts.inflationDest)) {
 	                    throw new Error("inflationDest is invalid");
 	                }
-	                attributes.inflationDest = _keypair.Keypair.fromAddress(opts.inflationDest).accountId();
+	                attributes.inflationDest = _keypair.Keypair.fromAccountId(opts.inflationDest).xdrAccountId();
 	            }
 
 	            attributes.clearFlags = opts.clearFlags;
@@ -28910,7 +28970,7 @@ var StellarBase =
 	            attributes.homeDomain = opts.homeDomain;
 
 	            if (opts.signer) {
-	                if (!_account.Account.isValidAddress(opts.signer.address)) {
+	                if (!_account.Account.isValidAccountId(opts.signer.address)) {
 	                    throw new Error("signer.address is invalid");
 	                }
 
@@ -28919,7 +28979,7 @@ var StellarBase =
 	                }
 
 	                attributes.signer = new _generatedStellarXdr_generated2["default"].Signer({
-	                    pubKey: _keypair.Keypair.fromAddress(opts.signer.address).accountId(),
+	                    pubKey: _keypair.Keypair.fromAccountId(opts.signer.address).xdrAccountId(),
 	                    weight: opts.signer.weight
 	                });
 	            }
@@ -28940,9 +29000,12 @@ var StellarBase =
 	        * @param {Asset} opts.selling - What you're selling.
 	        * @param {Asset} opts.buying - What you're buying.
 	        * @param {string} opts.amount - The total amount you're selling. If 0, deletes the offer.
-	        * @param {number|string|BigNumber} opts.price - The exchange rate ratio (selling / buying).
+	        * @param {number|string|BigNumber|Object} opts.price - The exchange rate ratio (selling / buying)
+	        * @param {number} opts.price.n - If `opts.price` is an object: the price numerator
+	        * @param {number} opts.price.d - If `opts.price` is an object: the price denominator
 	        * @param {number|string} [opts.offerId ]- If `0`, will create a new offer (default). Otherwise, edits an exisiting offer.
 	        * @param {string} [opts.source] - The source account (defaults to transaction source).
+	        * @throws {Error} Throws `Error` when the best rational approximation of `price` cannot be found.
 	        * @returns {xdr.ManageOfferOp}
 	        */
 	    }, {
@@ -28984,8 +29047,11 @@ var StellarBase =
 	        * @param {Asset} opts.selling - What you're selling.
 	        * @param {Asset} opts.buying - What you're buying.
 	        * @param {string} opts.amount - The total amount you're selling. If 0, deletes the offer.
-	        * @param {number|string|BigNumber} opts.price - The exchange rate ratio (selling / buying)
+	        * @param {number|string|BigNumber|Object} opts.price - The exchange rate ratio (selling / buying)
+	        * @param {number} opts.price.n - If `opts.price` is an object: the price numerator
+	        * @param {number} opts.price.d - If `opts.price` is an object: the price denominator
 	        * @param {string} [opts.source] - The source account (defaults to transaction source).
+	        * @throws {Error} Throws `Error` when the best rational approximation of `price` cannot be found.
 	        * @returns {xdr.CreatePassiveOfferOp}
 	        */
 	    }, {
@@ -29022,10 +29088,10 @@ var StellarBase =
 	        key: "accountMerge",
 	        value: function accountMerge(opts) {
 	            var opAttributes = {};
-	            if (!_account.Account.isValidAddress(opts.destination)) {
+	            if (!_account.Account.isValidAccountId(opts.destination)) {
 	                throw new Error("destination is invalid");
 	            }
-	            opAttributes.body = _generatedStellarXdr_generated2["default"].OperationBody.accountMerge(_keypair.Keypair.fromAddress(opts.destination).accountId());
+	            opAttributes.body = _generatedStellarXdr_generated2["default"].OperationBody.accountMerge(_keypair.Keypair.fromAccountId(opts.destination).xdrAccountId());
 	            this.setSourceAccount(opAttributes, opts);
 
 	            return new _generatedStellarXdr_generated2["default"].Operation(opAttributes);
@@ -29051,10 +29117,10 @@ var StellarBase =
 	        key: "setSourceAccount",
 	        value: function setSourceAccount(opAttributes, opts) {
 	            if (opts.source) {
-	                if (!_account.Account.isValidAddress(opts.source)) {
+	                if (!_account.Account.isValidAccountId(opts.source)) {
 	                    throw new Error("Source address is invalid");
 	                }
-	                opAttributes.sourceAccount = _keypair.Keypair.fromAddress(opts.source).accountId();
+	                opAttributes.sourceAccount = _keypair.Keypair.fromAccountId(opts.source).xdrAccountId();
 	            }
 	        }
 
@@ -29188,6 +29254,11 @@ var StellarBase =
 	                return false;
 	            }
 
+	            // > Max value
+	            if (amount.times(ONE).greaterThan(new _bignumberJs2["default"](MAX_INT64).toString())) {
+	                return false;
+	            }
+
 	            // Decimal places (max 7)
 	            if (amount.decimalPlaces() > 7) {
 	                return false;
@@ -29241,15 +29312,23 @@ var StellarBase =
 	    }, {
 	        key: "_toXDRPrice",
 	        value: function _toXDRPrice(price) {
-	            price = new _bignumberJs2["default"](price);
-	            if (price.lte(0)) {
+	            var xdrObject = undefined;
+	            if (price.n && price.d) {
+	                xdrObject = new _generatedStellarXdr_generated2["default"].Price(price);
+	            } else {
+	                price = new _bignumberJs2["default"](price);
+	                var approx = (0, _utilContinued_fraction.best_r)(price);
+	                xdrObject = new _generatedStellarXdr_generated2["default"].Price({
+	                    n: parseInt(approx[0]),
+	                    d: parseInt(approx[1])
+	                });
+	            }
+
+	            if (xdrObject.n() < 0 || xdrObject.d() < 0) {
 	                throw new Error('price must be positive');
 	            }
-	            var approx = (0, _utilContinued_fraction.best_r)(price);
-	            return new _generatedStellarXdr_generated2["default"].Price({
-	                n: parseInt(approx[0]),
-	                d: parseInt(approx[1])
-	            });
+
+	            return xdrObject;
 	        }
 	    }]);
 
@@ -29262,15 +29341,23 @@ var StellarBase =
 /* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
+	Object.defineProperty(exports, '__esModule', {
 	    value: true
 	});
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var _bignumberJs = __webpack_require__(83);
+
+	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
+
+	var _lodash = __webpack_require__(10);
 
 	var _strkey = __webpack_require__(67);
 
@@ -29283,49 +29370,62 @@ var StellarBase =
 	     * See [Accounts](https://stellar.org/developers/learn/concepts/accounts.html) for more information about how
 	     * accounts work in Stellar.
 	     * @constructor
-	     * @param {string} address ID of the account
-	     * @param {number} sequence current sequence number of the account
+	     * @param {string} accountId ID of the account (ex. `GB3KJPLFUYN5VL6R3GU3EGCGVCKFDSD7BEDX42HWG5BWFKB3KQGJJRMA`)
+	     * @param {string} sequence current sequence number of the account
 	     */
 
-	    function Account(address, sequence) {
+	    function Account(accountId, sequence) {
 	        _classCallCheck(this, Account);
 
-	        if (!Account.isValidAddress(address)) {
+	        if (!Account.isValidAccountId(accountId)) {
 	            throw new Error('address is invalid');
 	        }
-	        this.address = address;
-	        this.sequence = sequence;
+	        if (!(0, _lodash.isString)(sequence)) {
+	            throw new Error('sequence must be of type string');
+	        }
+	        this._accountId = accountId;
+	        this.sequence = new _bignumberJs2['default'](sequence);
 	    }
 
 	    /**
-	     * Returns true if the given address is a valid Stellar address.
-	     * @param {string} address account ID to check
+	     * Returns true if the given accountId is a valid Stellar account ID.
+	     * @param {string} accountId account ID to check
 	     * @returns {boolean}
 	     */
 
 	    _createClass(Account, [{
-	        key: "getAddress",
+	        key: 'accountId',
+
+	        /**
+	         * Returns Stellar account ID, ex. `GB3KJPLFUYN5VL6R3GU3EGCGVCKFDSD7BEDX42HWG5BWFKB3KQGJJRMA`
+	         * @returns {string}
+	         */
+	        value: function accountId() {
+	            return this._accountId;
+	        }
 
 	        /**
 	         * @returns {string}
 	         */
-	        value: function getAddress() {
-	            return this.address;
+	    }, {
+	        key: 'sequenceNumber',
+	        value: function sequenceNumber() {
+	            return this.sequence.toString();
 	        }
 
 	        /**
-	         * @returns {number}
+	         * Increments sequence number in this object by one.
 	         */
 	    }, {
-	        key: "getSequenceNumber",
-	        value: function getSequenceNumber() {
-	            return this.sequence;
+	        key: 'incrementSequenceNumber',
+	        value: function incrementSequenceNumber() {
+	            this.sequence = this.sequence.add(1);
 	        }
 	    }], [{
-	        key: "isValidAddress",
-	        value: function isValidAddress(address) {
+	        key: 'isValidAccountId',
+	        value: function isValidAccountId(accountId) {
 	            try {
-	                var decoded = (0, _strkey.decodeCheck)("accountId", address);
+	                var decoded = (0, _strkey.decodeCheck)("accountId", accountId);
 	                if (decoded.length !== 32) {
 	                    return false;
 	                }
@@ -29343,208 +29443,6 @@ var StellarBase =
 
 /***/ },
 /* 83 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var _generatedStellarXdr_generated = __webpack_require__(2);
-
-	var _generatedStellarXdr_generated2 = _interopRequireDefault(_generatedStellarXdr_generated);
-
-	var _account = __webpack_require__(82);
-
-	var _keypair = __webpack_require__(63);
-
-	var _strkey = __webpack_require__(67);
-
-	var _lodash = __webpack_require__(10);
-
-	var Asset = (function () {
-	  /**
-	   * Asset class represents an asset, either the native asset (`XLM`)
-	   * or a asset code / issuer address pair.
-	   *
-	   * An asset code describes an asset code and issuer pair. In the case of the native
-	   * asset XLM, the issuer will be null.
-	   *
-	   * @constructor
-	   * @param {string} code - The asset code.
-	   * @param {string} issuer - The account ID of the issuer.
-	   */
-
-	  function Asset(code, issuer) {
-	    _classCallCheck(this, Asset);
-
-	    if (code.length > 12) {
-	      throw new Error("Asset code must be 12 characters at max");
-	    }
-	    if (String(code).toLowerCase() !== "xlm" && !issuer) {
-	      throw new Error("Issuer cannot be null");
-	    }
-	    if (issuer && !_account.Account.isValidAddress(issuer)) {
-	      throw new Error("Issuer is invalid");
-	    }
-
-	    this.code = code;
-	    this.issuer = issuer;
-	  }
-
-	  /**
-	  * Returns an asset object for the native asset.
-	  * @Return {Asset}
-	  */
-
-	  _createClass(Asset, [{
-	    key: "toXdrObject",
-
-	    /**
-	     * Returns the xdr object for this asset.
-	     * @returns {xdr.Asset}
-	     */
-	    value: function toXdrObject() {
-	      if (this.isNative()) {
-	        return _generatedStellarXdr_generated2["default"].Asset.assetTypeNative();
-	      } else {
-	        var xdrType = undefined,
-	            xdrTypeString = undefined;
-	        if (this.code.length <= 4) {
-	          xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum4;
-	          xdrTypeString = 'assetTypeCreditAlphanum4';
-	        } else {
-	          xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum12;
-	          xdrTypeString = 'assetTypeCreditAlphanum12';
-	        }
-
-	        // pad code with null bytes if necessary
-	        var padLength = this.code.length <= 4 ? 4 : 12;
-	        var paddedCode = (0, _lodash.padRight)(this.code, padLength, '\0');
-
-	        var assetType = new xdrType({
-	          assetCode: paddedCode,
-	          issuer: _keypair.Keypair.fromAddress(this.issuer).accountId()
-	        });
-
-	        return new _generatedStellarXdr_generated2["default"].Asset(xdrTypeString, assetType);
-	      }
-	    }
-
-	    /**
-	     * Return the asset code
-	     * @returns {string}
-	     */
-	  }, {
-	    key: "getCode",
-	    value: function getCode() {
-	      return (0, _lodash.clone)(this.code);
-	    }
-
-	    /**
-	     * Return the asset issuer
-	     * @returns {string}
-	     */
-	  }, {
-	    key: "getIssuer",
-	    value: function getIssuer() {
-	      return (0, _lodash.clone)(this.issuer);
-	    }
-
-	    /**
-	     * Return the asset type. Can be one of following types:
-	     *
-	     * * `native`
-	     * * `credit_alphanum4`
-	     * * `credit_alphanum12`
-	     *
-	     * @see [Assets concept](https://www.stellar.org/developers/learn/concepts/assets.html)
-	     * @returns {string}
-	     */
-	  }, {
-	    key: "getAssetType",
-	    value: function getAssetType() {
-	      if (this.isNative()) {
-	        return 'native';
-	      } else {
-	        if (this.code.length >= 1 && this.code.length <= 4) {
-	          return "credit_alphanum4";
-	        } else if (this.code.length >= 5 && this.code.length <= 12) {
-	          return "credit_alphanum12";
-	        }
-	      }
-	    }
-
-	    /**
-	     * Returns true if this asset object is the native asset.
-	     * @returns {boolean}
-	     */
-	  }, {
-	    key: "isNative",
-	    value: function isNative() {
-	      return !this.issuer;
-	    }
-
-	    /**
-	     * Returns true if this asset equals the given asset.
-	     * @param {Asset} asset Asset to compare
-	     * @returns {boolean}
-	     */
-	  }, {
-	    key: "equals",
-	    value: function equals(asset) {
-	      return this.code == asset.getCode() && this.issuer == asset.getIssuer();
-	    }
-	  }], [{
-	    key: "native",
-	    value: function native() {
-	      return new Asset("XLM");
-	    }
-
-	    /**
-	     * Returns an asset object from its XDR object representation.
-	     * @param {xdr.Asset} assetXdr - The asset xdr object.
-	     * @returns {Asset}
-	     */
-	  }, {
-	    key: "fromOperation",
-	    value: function fromOperation(assetXdr) {
-	      var anum = undefined,
-	          code = undefined,
-	          issuer = undefined;
-	      switch (assetXdr["switch"]()) {
-	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeNative():
-	          return this.native();
-	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum4():
-	          anum = assetXdr.alphaNum4();
-	          issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
-	          code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
-	          return new this(code, issuer);
-	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum12():
-	          anum = assetXdr.alphaNum12();
-	          issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
-	          code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
-	          return new this(code, issuer);
-	        default:
-	          throw new Error("Invalid asset type: " + assetXdr["switch"]().name);
-	      }
-	    }
-	  }]);
-
-	  return Asset;
-	})();
-
-	exports.Asset = Asset;
-
-/***/ },
-/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! bignumber.js v2.0.7 https://github.com/MikeMcl/bignumber.js/LICENCE */
@@ -32233,22 +32131,224 @@ var StellarBase =
 
 
 /***/ },
-/* 85 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
-	Object.defineProperty(exports, '__esModule', {
+	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
-	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var _generatedStellarXdr_generated = __webpack_require__(2);
+
+	var _generatedStellarXdr_generated2 = _interopRequireDefault(_generatedStellarXdr_generated);
+
+	var _account = __webpack_require__(82);
+
+	var _keypair = __webpack_require__(63);
+
+	var _strkey = __webpack_require__(67);
+
+	var _lodash = __webpack_require__(10);
+
+	var Asset = (function () {
+	  /**
+	   * Asset class represents an asset, either the native asset (`XLM`)
+	   * or a asset code / issuer account ID pair.
+	   *
+	   * An asset code describes an asset code and issuer pair. In the case of the native
+	   * asset XLM, the issuer will be null.
+	   *
+	   * @constructor
+	   * @param {string} code - The asset code.
+	   * @param {string} issuer - The account ID of the issuer.
+	   */
+
+	  function Asset(code, issuer) {
+	    _classCallCheck(this, Asset);
+
+	    if (code.length > 12) {
+	      throw new Error("Asset code must be 12 characters at max");
+	    }
+	    if (String(code).toLowerCase() !== "xlm" && !issuer) {
+	      throw new Error("Issuer cannot be null");
+	    }
+	    if (issuer && !_account.Account.isValidAccountId(issuer)) {
+	      throw new Error("Issuer is invalid");
+	    }
+
+	    this.code = code;
+	    this.issuer = issuer;
+	  }
+
+	  /**
+	  * Returns an asset object for the native asset.
+	  * @Return {Asset}
+	  */
+
+	  _createClass(Asset, [{
+	    key: "toXdrObject",
+
+	    /**
+	     * Returns the xdr object for this asset.
+	     * @returns {xdr.Asset}
+	     */
+	    value: function toXdrObject() {
+	      if (this.isNative()) {
+	        return _generatedStellarXdr_generated2["default"].Asset.assetTypeNative();
+	      } else {
+	        var xdrType = undefined,
+	            xdrTypeString = undefined;
+	        if (this.code.length <= 4) {
+	          xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum4;
+	          xdrTypeString = 'assetTypeCreditAlphanum4';
+	        } else {
+	          xdrType = _generatedStellarXdr_generated2["default"].AssetAlphaNum12;
+	          xdrTypeString = 'assetTypeCreditAlphanum12';
+	        }
+
+	        // pad code with null bytes if necessary
+	        var padLength = this.code.length <= 4 ? 4 : 12;
+	        var paddedCode = (0, _lodash.padRight)(this.code, padLength, '\0');
+
+	        var assetType = new xdrType({
+	          assetCode: paddedCode,
+	          issuer: _keypair.Keypair.fromAccountId(this.issuer).xdrAccountId()
+	        });
+
+	        return new _generatedStellarXdr_generated2["default"].Asset(xdrTypeString, assetType);
+	      }
+	    }
+
+	    /**
+	     * Return the asset code
+	     * @returns {string}
+	     */
+	  }, {
+	    key: "getCode",
+	    value: function getCode() {
+	      return (0, _lodash.clone)(this.code);
+	    }
+
+	    /**
+	     * Return the asset issuer
+	     * @returns {string}
+	     */
+	  }, {
+	    key: "getIssuer",
+	    value: function getIssuer() {
+	      return (0, _lodash.clone)(this.issuer);
+	    }
+
+	    /**
+	     * Return the asset type. Can be one of following types:
+	     *
+	     * * `native`
+	     * * `credit_alphanum4`
+	     * * `credit_alphanum12`
+	     *
+	     * @see [Assets concept](https://www.stellar.org/developers/learn/concepts/assets.html)
+	     * @returns {string}
+	     */
+	  }, {
+	    key: "getAssetType",
+	    value: function getAssetType() {
+	      if (this.isNative()) {
+	        return 'native';
+	      } else {
+	        if (this.code.length >= 1 && this.code.length <= 4) {
+	          return "credit_alphanum4";
+	        } else if (this.code.length >= 5 && this.code.length <= 12) {
+	          return "credit_alphanum12";
+	        }
+	      }
+	    }
+
+	    /**
+	     * Returns true if this asset object is the native asset.
+	     * @returns {boolean}
+	     */
+	  }, {
+	    key: "isNative",
+	    value: function isNative() {
+	      return !this.issuer;
+	    }
+
+	    /**
+	     * Returns true if this asset equals the given asset.
+	     * @param {Asset} asset Asset to compare
+	     * @returns {boolean}
+	     */
+	  }, {
+	    key: "equals",
+	    value: function equals(asset) {
+	      return this.code == asset.getCode() && this.issuer == asset.getIssuer();
+	    }
+	  }], [{
+	    key: "native",
+	    value: function native() {
+	      return new Asset("XLM");
+	    }
+
+	    /**
+	     * Returns an asset object from its XDR object representation.
+	     * @param {xdr.Asset} assetXdr - The asset xdr object.
+	     * @returns {Asset}
+	     */
+	  }, {
+	    key: "fromOperation",
+	    value: function fromOperation(assetXdr) {
+	      var anum = undefined,
+	          code = undefined,
+	          issuer = undefined;
+	      switch (assetXdr["switch"]()) {
+	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeNative():
+	          return this.native();
+	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum4():
+	          anum = assetXdr.alphaNum4();
+	          issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
+	          code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
+	          return new this(code, issuer);
+	        case _generatedStellarXdr_generated2["default"].AssetType.assetTypeCreditAlphanum12():
+	          anum = assetXdr.alphaNum12();
+	          issuer = (0, _strkey.encodeCheck)("accountId", anum.issuer().ed25519());
+	          code = (0, _lodash.trimRight)(anum.assetCode(), '\0');
+	          return new this(code, issuer);
+	        default:
+	          throw new Error("Invalid asset type: " + assetXdr["switch"]().name);
+	      }
+	    }
+	  }]);
+
+	  return Asset;
+	})();
+
+	exports.Asset = Asset;
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; })();
 
 	exports.best_r = best_r;
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _bignumberJs = __webpack_require__(84);
+	var _bignumberJs = __webpack_require__(83);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
@@ -32258,14 +32358,15 @@ var StellarBase =
 	 * Calculates and returns the best rational approximation of the given real number.
 	 * @private
 	 * @param {string|number|BigNumber} number
+	 * @throws Error Throws `Error` when the best rational approximation cannot be found.
 	 * @returns {array} first element is n (numerator), second element is d (denominator)
 	 */
 
 	function best_r(number) {
-	  number = new _bignumberJs2['default'](number);
+	  number = new _bignumberJs2["default"](number);
 	  var a;
 	  var f;
-	  var fractions = [[new _bignumberJs2['default'](0), new _bignumberJs2['default'](1)], [new _bignumberJs2['default'](1), new _bignumberJs2['default'](0)]];
+	  var fractions = [[new _bignumberJs2["default"](0), new _bignumberJs2["default"](1)], [new _bignumberJs2["default"](1), new _bignumberJs2["default"](0)]];
 	  var i = 2;
 	  while (true) {
 	    if (number.gt(MAX_INT)) {
@@ -32282,14 +32383,18 @@ var StellarBase =
 	    if (f.eq(0)) {
 	      break;
 	    }
-	    number = new _bignumberJs2['default'](1).div(f);
-	    i = i + 1;
+	    number = new _bignumberJs2["default"](1).div(f);
+	    i++;
 	  }
 
 	  var _fractions = _slicedToArray(fractions[fractions.length - 1], 2);
 
 	  var n = _fractions[0];
 	  var d = _fractions[1];
+
+	  if (n.isZero() || d.isZero()) {
+	    throw new Error("Couldn't find approximation");
+	  }
 
 	  return [n.toNumber(), d.toNumber()];
 	}
@@ -32327,6 +32432,10 @@ var StellarBase =
 	var _transaction = __webpack_require__(80);
 
 	var _memo = __webpack_require__(87);
+
+	var _bignumberJs = __webpack_require__(83);
+
+	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 
 	var _lodash = __webpack_require__(10);
 
@@ -32426,18 +32535,6 @@ var StellarBase =
 	        }
 
 	        /**
-	         * Adds the given signer's signature to the transaction.
-	         * @deprecated Use {@link Transaction#sign}
-	         * @returns {TransactionBuilder}
-	         */
-	    }, {
-	        key: "addSigner",
-	        value: function addSigner(keypair) {
-	            this.signers.push(keypair);
-	            return this;
-	        }
-
-	        /**
 	         * This will build the transaction and sign it with the {@link Keypair} passed to {@link TransactionBuilder#addSigner}.
 	         * It will also increment the source account's sequence number by 1.
 	         * @returns {Transaction} This method will return the built {@link Transaction}.
@@ -32445,10 +32542,12 @@ var StellarBase =
 	    }, {
 	        key: "build",
 	        value: function build() {
+	            var sequenceNumber = new _bignumberJs2["default"](this.source.sequenceNumber()).add(1);
+
 	            var attrs = {
-	                sourceAccount: _keypair.Keypair.fromAddress(this.source.address).accountId(),
+	                sourceAccount: _keypair.Keypair.fromAccountId(this.source.accountId()).xdrAccountId(),
 	                fee: this.baseFee * this.operations.length,
-	                seqNum: _generatedStellarXdr_generated2["default"].SequenceNumber.fromString(String(Number(this.source.sequence) + 1)),
+	                seqNum: _generatedStellarXdr_generated2["default"].SequenceNumber.fromString(sequenceNumber.toString()),
 	                memo: this.memo,
 	                ext: new _generatedStellarXdr_generated2["default"].TransactionExt(0)
 	            };
@@ -32462,7 +32561,7 @@ var StellarBase =
 	            var tx = new _transaction.Transaction(xenv);
 	            tx.sign.apply(tx, _toConsumableArray(this.signers));
 
-	            this.source.sequence = this.source.sequence + 1;
+	            this.source.incrementSequenceNumber();
 	            return tx;
 	        }
 	    }]);
@@ -32496,7 +32595,7 @@ var StellarBase =
 
 	var _jsXdr = __webpack_require__(3);
 
-	var _bignumberJs = __webpack_require__(84);
+	var _bignumberJs = __webpack_require__(83);
 
 	var _bignumberJs2 = _interopRequireDefault(_bignumberJs);
 

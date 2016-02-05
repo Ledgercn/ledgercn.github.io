@@ -219,7 +219,7 @@ function paymentStep2Execute(http,cookies,index,acc,endFunc,sendInfo){
 
 // 目标账户存在，发送，不存在创建
 function paymentStep3Execute(http,cookies,index,acc,endFunc,sendInfo){
-    sourceAcc = new StellarBase.Account(acc.PublicAddr,GetAccSequence(acc.Info));
+    sourceAcc = new StellarBase.Account(acc.PublicAddr,""+acc.Info.Sequence); //GetAccSequence(acc.Info)+"");
     tmemo = StellarBase.Memo.none();
     if(sendInfo[0].MemoText != ""){
         try{
@@ -289,11 +289,13 @@ function paymentStep3Execute(http,cookies,index,acc,endFunc,sendInfo){
     skey = "";
     base64 = "";
     try{
-        transaction.addSigner(srcSct);
+        transaction = transaction.build();
+        transaction.sign(srcSct);//.addSigner(srcSct);
 
-        result = transaction.build();
+        //result = transaction.build();
 
-        base64 = result.toEnvelope().toXDR().toString("base64");
+        //base64 = result.toEnvelope().toXDR().toString("base64");
+        base64 = transaction.toEnvelope().toXDR().toString("base64");
     }
     catch(e){
         endFunc(SEND_FAILURE,e.message);
@@ -337,7 +339,7 @@ function MergeAccount(http,cookies,index,srcAcc,destAcc,endFunc){
     }
 
     tmemo = "www.ledgercn.com";
-    sourceAcc = new StellarBase.Account(srcAcc.PublicAddr,srcAcc.Info.Sequence);
+    sourceAcc = new StellarBase.Account(srcAcc.PublicAddr,""+srcAcc.Info.Sequence);
     mergeOper = StellarBase.Operation.accountMerge({
         destination:destAcc.PublicAddr,
         source:srcAcc.PublicAddr
@@ -352,11 +354,13 @@ function MergeAccount(http,cookies,index,srcAcc,destAcc,endFunc){
     srcKey = "";
 
     try{
-        transaction.addSigner(srcSct);
+        transaction = transaction.build();
+        transaction.sign(srcSct);//.addSigner(srcSct);
 
-        result = transaction.build();
+        //result = transaction.build();
 
-        base64 = result.toEnvelope().toXDR().toString("base64");
+        //base64 = result.toEnvelope().toXDR().toString("base64");
+        base64 = transaction.toEnvelope().toXDR().toString("base64");
     }
     catch(e){
         endFunc(MERGE_FAILURE,e.message);

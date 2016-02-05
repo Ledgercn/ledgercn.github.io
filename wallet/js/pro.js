@@ -1443,7 +1443,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
                 $scope.toolbar_AddAcc_AlertMessage = $scope.ErrorTable.SecretKeyError;
                 return;
             }
-            $scope.toolbar_addAcc_PublicAddr = srcSct.address();
+            $scope.toolbar_addAcc_PublicAddr = srcSct.accountId();
         }catch(e){
             $scope.toolbar_AddAcc_AlertMessage = e.message;
             return;
@@ -1479,7 +1479,8 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
                 $scope.context_merge_AlertMessage = $scope.ErrorTable.SecretKeyError;
                 return;
             }
-            $scope.context_detailMergePublicAddr = srcSct.address();
+            //console.log(srcSct);
+            $scope.context_detailMergePublicAddr = srcSct.accountId();
         }catch(e){
             $scope.context_detailMergePublicAddr = "";
             $scope.context_merge_AlertMessage = e.message;
@@ -1555,7 +1556,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
     $scope.toolbar_addAcc_RandomBtnClick = function(){
         keypa = StellarBase.Keypair.random();
         $scope.toolbar_addAcc_SecretKey = keypa.seed();
-        $scope.toolbar_addAcc_PublicAddr = keypa.address();
+        $scope.toolbar_addAcc_PublicAddr = keypa.accountId();
     };
 
     $scope.getAccountBalanceClick = function(index){
@@ -1680,7 +1681,7 @@ function contentController($cookies, $cookieStore, $scope, $rootScope, $http,LAN
             }
             tmpInfo = new(SendAmountDefine);
             try{
-                StellarBase.Keypair.fromAddress(destAddrs[i]);
+                StellarBase.Keypair.fromAccountId(destAddrs[i]);
                 tmpInfo.DestAddr = destAddrs[i];
             }
             catch(e){
