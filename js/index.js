@@ -68,7 +68,7 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.WebWalletContext = "Open the your browser, your can get historical action queries, payment and other operations easily and quickly. You can use any electronic device include PC, mobile phone, or PAD.";
             $scope.WebWalletUseTitle = "Starting";
             $scope.PCWalletTitle = "Wallet for PC";
-            $scope.PCWalletContext = "Downloading to your electronic devices, this program will meet your needs in difference level safely, convenient and efficiently. Lumen accounts can query the status of historical inquiry, payment, merge accounts and other operations.";
+            $scope.PCWalletContext = "Downloading to your electronic devices, this program will meet your needs in difference level safely, conveniently and efficiently. Lumen accounts can query the status of historical inquiry, payment, merge accounts and other operations.";
             $scope.PCWalletDownloadTitle = "Download";
             $scope.ProWebWalletTitle = "Web Wallet(Register User)";
             $scope.ProWebWalletContext = "More secure, convenient, comprehensive, accurate historical information inquires. Registered members will receive more advanced services.";
