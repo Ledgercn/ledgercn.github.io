@@ -63,9 +63,9 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.SectionTwoTitle = "Open general ledger";
             $scope.SectionThreeTitle = "Our Introduction";
             $scope.SectionFourTitle = "Our services";
-            $scope.SectionFourContext = "In our network, we are dedicated to provide the services as shown in the followings. We will try our best to deliver a variety of services. Your supports and trusts are our best resources!";
+            $scope.SectionFourContext = "In our network, we are dedicated to provide the services as shown in the followings. We will try our best to deliver a verity of high quality services. Your supports and trusts are our best resources!";
             $scope.WebWalletTitle = "Wallet for Web";
-            $scope.WebWalletContext = "Open the your browser, your can get historical action queries, payment and other operations easily and quickly. You can use any electronic device include PC, mobile phone, or PAD.";
+            $scope.WebWalletContext = "Open the your browser, your can get historical action queries, payments and other operations easily and quickly. You can use any electronic devices including PC, mobile phone, or PAD.";
             $scope.WebWalletUseTitle = "Starting";
             $scope.PCWalletTitle = "Wallet for PC";
             $scope.PCWalletContext = "Downloading to your electronic devices, this program will meet your needs in difference level safely, conveniently and efficiently. Lumen accounts can query the status of historical inquiry, payment, merge accounts and other operations.";
