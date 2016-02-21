@@ -61,17 +61,17 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
 
             $scope.SectionOneTitle = "What is the Lumen or Stellar coin?";
             $scope.SectionTwoTitle = "Open general ledger";
-            $scope.SectionThreeTitle = "Our introduced";
+            $scope.SectionThreeTitle = "Our Introduction";
             $scope.SectionFourTitle = "Our services";
-            $scope.SectionFourContext = "In our network, we are dedicated to provide the services as shown in the followings. We will try out best to deliver a variety of application and services. Your support and confidence in our service are the source of progress.";
+            $scope.SectionFourContext = "In our network, we are dedicated to provide the services as shown in the followings. We will try our best to deliver a variety of services. Your supports and trusts are our best resources!";
             $scope.WebWalletTitle = "Wallet for Web";
-            $scope.WebWalletContext = "Open the your browser, your can easily and quickly get historical action queries, payment and other operations. PC, mobile phone, PAD can use!";
+            $scope.WebWalletContext = "Open the your browser, your can get historical action queries, payment and other operations easily and quickly. You can use any electronic device include PC, mobile phone, or PAD.";
             $scope.WebWalletUseTitle = "Starting";
             $scope.PCWalletTitle = "Wallet for PC";
-            $scope.PCWalletContext = "Download to your computer, safe, convenient and efficient to meet the basic needs of the user. Lumen accounts can query the status of historical inquiry, payment, merge accounts and other operations.";
+            $scope.PCWalletContext = "Downloading to your electronic devices, this program will meet your needs in difference level safely, convenient and efficiently. Lumen accounts can query the status of historical inquiry, payment, merge accounts and other operations.";
             $scope.PCWalletDownloadTitle = "Download";
             $scope.ProWebWalletTitle = "Web Wallet(Register User)";
-            $scope.ProWebWalletContext = "More secure, convenient, comprehensive, accurate historical information inquiry, registered users will receive more services!";
+            $scope.ProWebWalletContext = "More secure, convenient, comprehensive, accurate historical information inquires. Registered members will receive more advanced services.";
 
             $scope.GetMoreTitle = "more";
             $scope.footerQQGroupTitle = "QQ Group:";
