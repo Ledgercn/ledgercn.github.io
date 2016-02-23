@@ -1,6 +1,6 @@
 
 function isValidAddress(addr) {
-    return StellarBase.Account.isValidAddress(addr);
+    return StellarBase.Account.isValidAccountId(addr);
 }
 
 function isKaypairValid(privSeed,publicAddr){
