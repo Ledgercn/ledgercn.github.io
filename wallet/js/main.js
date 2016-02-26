@@ -12,7 +12,7 @@ var TEST_NET = "TEST";
 var WAIT_ICON_STATE = "fa fa-spinner fa-pulse";
 
 //var BACK_SERVICE_URL = "http://192.168.1.103:1234";
-var BACK_SERVICE_URL = "http://115.28.68.33:1234";
+var BACK_SERVICE_URL = "http://www.ledgercn.com:1234";
 var BACK_SERVICE_ACCOUNT = "account";
 var BACK_SERVICE_RECAPTCHA = "recaptcha";
 var BACK_SERVICE_AWALLET = "awallet";
