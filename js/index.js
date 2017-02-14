@@ -45,6 +45,11 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.PCWalletDownloadTitle = "下载使用";
             $scope.ProWebWalletTitle = "Web 钱包（注册用户）";
             $scope.ProWebWalletContext = "更加安全、方便，功能全面，历史信息精确查询，注册用户将获得更多服务内容!";
+            $scope.BlockChainTitle = "区块链浏览";
+            $scope.BlockChainContext = "方便，全面，历史信息精确，全区块链信息查询!";
+            $scope.BlockChainAddress = 'http://explorer.ledgercn.com/index.html?l=cn';
+            $scope.WechatTitle = "微信公众号";
+            $scope.WechatContext = "打开手机关注公众号，方便快捷，功能全面!";
 
             $scope.GetMoreTitle = "了解更多";
             $scope.footerQQGroupTitle = "QQ群:";
@@ -72,6 +77,11 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.PCWalletDownloadTitle = "Download";
             $scope.ProWebWalletTitle = "Web Wallet(Register User)";
             $scope.ProWebWalletContext = "More secure, convenient, comprehensive, accurate historical information inquires. Registered members will receive more advanced services.";
+            $scope.BlockChainTitle = "BlockChain Explorer";
+            $scope.BlockChainContext = "More convenient, comprehensive, historical information inquires. All of informations in Stellar block-chain!";
+            $scope.BlockChainAddress = 'http://explorer.ledgercn.com/index.html?l=en';
+            $scope.WechatTitle = "Wechat - LumenStar";
+            $scope.WechatContext = "Welcome to the LumenStar subscription service dedicated to the development of block chain applications!";
 
             $scope.GetMoreTitle = "more";
             $scope.footerQQGroupTitle = "QQ Group:";
