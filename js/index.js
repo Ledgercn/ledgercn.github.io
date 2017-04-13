@@ -50,6 +50,9 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.BlockChainAddress = 'http://explorer.ledgercn.com/index.html?l=cn';
             $scope.WechatTitle = "微信公众号";
             $scope.WechatContext = "打开手机关注公众号，方便快捷，功能全面!";
+            $scope.anchorTitle = "自由发资产";
+            $scope.anchorContext = "方便，快捷，无门槛，1XML/天，人人都能拥有自己的资产";
+            $scope.anchorAddress = 'http://anchor.ledgercn.com?l=cn';
 
             $scope.GetMoreTitle = "了解更多";
             $scope.footerQQGroupTitle = "QQ群:";
@@ -82,10 +85,12 @@ function indexMainController($cookies, $cookieStore, $scope, $http, $rootScope) 
             $scope.BlockChainAddress = 'http://explorer.ledgercn.com/index.html?l=en';
             $scope.WechatTitle = "Wechat - LumenStar";
             $scope.WechatContext = "Welcome to the LumenStar subscription service dedicated to the development of block chain applications!";
+            $scope.anchorTitle = "Free Asset";
+            $scope.anchorContext = "Convenient, fast, no threshold, 1XML / day, everyone can have their own assets";
+            $scope.anchorAddress = 'http://anchor.ledgercn.com?l=en';
 
             $scope.GetMoreTitle = "more";
             $scope.footerQQGroupTitle = "QQ Group:";
-
         }
     }
 
